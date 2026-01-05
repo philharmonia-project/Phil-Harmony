@@ -22,18 +22,13 @@ ALLOWED_HOSTS = [
     "localhost",
     ".railway.app",
     ".up.railway.app",
-    "phil-harmony-production.up.railway.app",  # Updated domain
+    "phil-harmony-production.up.railway.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://phil-harmony-production.up.railway.app",  # Updated domain
+    "https://phil-harmony-production.up.railway.app",
     "https://*.railway.app",
 ]
-
-# Add Railway internal hostname for private networking
-RAILWAY_PRIVATE_HOSTNAME = "phil-harmony.railway.internal"
-if RAILWAY_PRIVATE_HOSTNAME:
-    ALLOWED_HOSTS.append(RAILWAY_PRIVATE_HOSTNAME)
 
 # --------------------------
 # HTTPS / SSL SETTINGS (Fix Google OAuth redirect)
@@ -101,7 +96,6 @@ WSGI_APPLICATION = "HARMONY.wsgi.application"
 # --------------------------
 # DATABASE
 # --------------------------
-# Railway automatically provides DATABASE_URL
 if os.environ.get("DATABASE_URL"):
     DATABASES = {
         "default": dj_database_url.config(
@@ -140,10 +134,6 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# Use Whitenoise for static files in production
-if os.environ.get("RAILWAY_ENVIRONMENT"):
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # --------------------------
 # MEDIA FILES
