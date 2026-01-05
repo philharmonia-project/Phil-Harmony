@@ -1,0 +1,1058 @@
+  :root {
+      --gold: #FFD700;
+      --gold-dark: #D4AF37;
+      --white: #FFFFFF;
+      --black: #121212;
+      --overlay: rgba(0, 0, 0, 0.6);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+    }
+
+    body::-webkit-scrollbar {
+      width: 0px; /* Hide vertical scroll bar */
+      height: 0px; /* Hide horizontal scroll bar */
+  }
+
+    
+    .front {
+      height: 80vh;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Improved video styling with fallback */
+    .bg-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(60%) contrast(110%);
+      transition: filter 0.5s ease;
+    }
+    
+    /* Enhanced overlay text with responsive design */
+    .text-overlay {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 10%;
+      color: var(--white);
+      background: linear-gradient(90deg, var(--overlay) 0%, transparent 100%);
+    }
+    
+    .content-wrapper {
+      max-width: 600px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .text-overlay h1 {
+      font-size: clamp(3rem, 8vw, 5rem);
+      line-height: 1.1;
+      color: var(--gold);
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      margin-bottom: 1.5rem;
+    }
+    
+    .text-overlay p {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      text-shadow: 1px 1px 2px var(--black);
+      font-weight: 300;
+    }
+    
+    /* Improved button styles */
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .read-btn {
+      padding: 1rem 2rem;
+      background-color: var(--gold);
+      color: var(--black);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .read-btn:hover {
+      background-color: var(--gold-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    }
+    
+    .sound-btn {
+      padding: 1rem 1.5rem;
+      background-color: transparent;
+      color: var(--white);
+      border: 2px solid var(--white);
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .sound-btn:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Ripple effect */
+    .ripple {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+    
+    @keyframes ripple {
+      to {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+    
+    /* Pulse animation for CTA */
+    .pulse1 {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+      }
+    }
+    
+    /* Social icons with modern look */
+    .social-icons {
+      position: absolute;
+      right: 2rem;
+      top: 40%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      z-index: 10;
+    }
+    
+    .social-icons a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 1.5rem;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+    
+    .social-icons a:hover {
+      color: var(--gold);
+      background: rgba(255, 215, 0, 0.2);
+      transform: translateY(-3px);
+    }
+    
+    /* Cultural pattern decoration  */
+    .cultural-pattern {
+      position: absolute;
+      right: -100px;
+      bottom: -100px;
+      width: 300px;
+      height: 300px;
+      background-image: url('/static/images/phil.png');
+      background-size: contain;
+      opacity: 0.2;
+      z-index: 1;
+    }
+  
+    
+    /* Loading animation */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--black);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    
+    .loading-overlay.loaded {
+      opacity: 0;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 215, 0, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--gold);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .text-overlay {
+        padding: 0 5%;
+        background: var(--overlay);
+        justify-content: center;
+        text-align: center;
+      }
+      
+      .content-wrapper {
+        max-width: 100%;
+      }
+      
+      .button-group {
+        justify-content: center;
+      }
+      
+      .social-icons {
+        flex-direction: row;
+        top: 70%;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto;
+      }
+      
+      .cultural-pattern {
+        display: none;
+      }
+    }
+    
+    /* Animation classes */
+    .fade-in {
+      animation: fadeIn 0.5s ease-in forwards;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .fade-out {
+      animation: fadeOut 0.5s ease-out forwards;
+    }
+    
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+    }
+    
+  /* END *//* END *//* END *//* END *//* END */
+
+
+  /* General Styles for Modals - Compact */
+  .FrontLmodal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  /* Modal Content - Compact */
+  .FrontLmodal-content {
+    display: flex;
+    flex-direction: row;
+    background-color: #F9E79F;
+    border: 2px solid #D4AC0D;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    max-width: 90%;
+    width: 750px;
+    min-height: 450px;
+    transition: all 0.3s ease;
+  }
+
+  /* Responsive Layout - Compact */
+  @media (max-width: 768px) {
+    .FrontLmodal-content {
+      flex-direction: column;
+      width: 85%;
+      max-width: 450px;
+      min-height: auto;
+    }
+    
+    .FrontLmodal-content .FrontLleft-section,
+    .FrontLmodal-content .FrontLright-section {
+      flex: 1 1 100%;
+      width: 100%;
+    }
+    
+    .FrontLmodal-content .FrontLleft-section {
+      border-radius: 15px 15px 0 0;
+      padding: 25px 15px;
+    }
+    
+    .FrontLmodal-content .FrontLright-section {
+      border-radius: 0 0 15px 15px;
+      padding: 25px 15px;
+    }
+    
+    #loginForm {
+      margin-top: 15px;
+    }
+    
+    .FrontLform-group-row {
+      flex-direction: column;
+      gap: 0;
+    }
+    
+    .FrontLmodal-content .FrontLleft-section h2 {
+      margin-bottom: 25px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .FrontLmodal-content {
+      width: 95%;
+      max-width: 100%;
+    }
+    
+    .FrontLmodal-content .FrontLleft-section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+    }
+    
+    .FrontLmodal-content .FrontLright-section button {
+      padding: 8px 30px;
+      width: 100%;
+    }
+  }
+
+  /* Left Section - Compact */
+  .FrontLmodal-content .FrontLleft-section {
+    background-color: #FAD7A1;
+    color: #333;
+    padding: 30px 15px;
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px 0 0 15px;
+    background-image: url('/static/images/kulintang.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .FrontLmodal-content .FrontLleft-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(250, 215, 161, 0.7);
+    z-index: 0;
+  }
+
+  .FrontLmodal-content .FrontLleft-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 100px;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #fefefe;
+    font-family: 'Arial', sans-serif;
+    position: relative;
+    z-index: 1;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .FrontLmodal-content .FrontLleft-section p {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    font-family: 'Arial', sans-serif;
+    color: #5D4037;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+    padding: 8px 15px;
+    text-align: center;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+    background: rgba(249, 231, 159, 0.7);
+    border-radius: 8px;
+  }
+
+  .FrontLmodal-content .FrontLleft-section button {
+    background-color: #FFF;
+    color: #D4AC0D;
+    border: 2px dashed #D4AC0D;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    position: relative;
+    z-index: 1;
+    min-width: 150px;
+  }
+
+  .FrontLmodal-content .FrontLleft-section button:hover {
+    background-color: #D4AC0D;
+    color: white;
+    border-style: solid;
+  }
+
+  /* Right Section - Compact */
+  .FrontLmodal-content .FrontLright-section {
+    flex: 1.5;
+    padding: 30px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #loginForm {
+    margin-top: 30px;
+  }
+
+  /* Form Animations - Compact */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-15px); }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  .fade-out {
+    animation: fadeOut 0.3s ease forwards;
+  }
+
+  /* Input Group with Floating Placeholders - Compact */
+  .FrontLlogin-input-group,
+  .FrontLinput-group {
+    position: relative;
+    margin-bottom: 1.2rem;
+    width: 100%;
+  }
+
+  .FrontLlogin-input-group input,
+  .FrontLinput-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+    border: 1px solid #D4AC0D;
+    border-radius: 8px;
+    outline: none;
+    background: #F9E79F;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+  }
+
+  .FrontLlogin-input-group input:focus,
+  .FrontLinput-group input:focus {
+    border-color: #F1C40F;
+    box-shadow: 0 0 5px rgba(212, 172, 13, 0.5);
+  }
+
+  .FrontLlogin-input-group label,
+  .FrontLinput-group label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    color: #0f0e0e;
+    pointer-events: none;
+    transition: all 0.2s ease-in-out;
+    background: transparent;
+    padding: 0 4px;
+  }
+
+  .FrontLlogin-input-group input:focus + label,
+  .FrontLlogin-input-group input:not(:placeholder-shown) + label,
+  .FrontLinput-group input:focus + label,
+  .FrontLinput-group input:not(:placeholder-shown) + label {
+    top: -8px;
+    left: 8px;
+    font-size: 0.75rem;
+    color: #0f0e0e;
+    background: #F9E79F;
+  }
+
+  /* Error Message Styling - Compact */
+  .FrontLerror-message {
+    color: #E74C3C;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    text-align: left;
+    padding: 4px 8px;
+    background: rgba(231, 76, 60, 0.1);
+    border-radius: 4px;
+    border-left: 2px solid #E74C3C;
+    animation: shake 0.5s ease;
+    display: none;
+  }
+
+  .FrontLerror-message.show {
+    display: block;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-4px); }
+    40%, 80% { transform: translateX(4px); }
+  }
+
+  /* Side-by-Side First Name and Last Name - Compact */
+  .FrontLform-group-row {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+  }
+
+  .FrontLform-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Enhanced Button Design with Animation - Compact */
+  .FrontLmodal-content .FrontLright-section button {
+    padding: 8px 60px;
+    font-size: 0.9rem;
+    background-color: #D4AC0D;
+    color: white;
+    border: 2px solid #D4AC0D;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 3px 8px rgba(212, 172, 13, 0.3);
+    margin-top: 8px;
+    align-self: center;
+  }
+
+  .FrontLmodal-content .FrontLright-section button:hover {
+    background-color: #B8860B;
+    border-color: #B8860B;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(212, 172, 13, 0.5);
+  }
+
+  /* Close Button - Compact */
+  .FrontLclose {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    color: #D4AC0D;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+    z-index: 10;
+    background: rgba(249, 231, 159, 0.7);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .FrontLclose:hover {
+    color: #FF5722;
+    transform: scale(1.2);
+    animation: FrontLbounce 0.6s ease infinite;
+  }
+
+  /* Logo Styling - Compact */
+  .FrontLmodal-content .FrontLright-section img {
+    height: auto;
+    max-width: 160px;
+    margin: 0 auto 15px;
+    display: block;
+  }
+
+  /* Form Container - Compact */
+  .FrontLform-container {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+
+/* ----------------------------------------------------
+   FINAL RESPONSIVE FIXES FOR ALL DEVICES (320px+)
+---------------------------------------------------- */
+
+/* Fix scaling for the front hero section */
+@media (max-width: 480px) {
+  .front {
+    height: 90vh;
+  }
+
+  .text-overlay {
+    padding: 0 4%;
+    text-align: center;
+    background: rgba(0,0,0,0.55);
+  }
+
+  .text-overlay h1 {
+    font-size: 2.2rem !important;
+  }
+
+  .text-overlay p {
+    font-size: 0.9rem !important;
+    line-height: 1.5;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .read-btn,
+  .sound-btn {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 0.8rem 1.2rem;
+    justify-content: center;
+  }
+
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+    flex-direction: row;
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: 20px;
+    transform: translateX(-50%);
+  }
+
+  .social-icons a {
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Fix extremely small phones (320px - 360px) */
+@media (max-width: 360px) {
+
+  .text-overlay h1 {
+    font-size: 1.9rem !important;
+  }
+
+  .text-overlay p {
+    font-size: 0.8rem !important;
+  }
+
+  .read-btn,
+  .sound-btn {
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .FrontLmodal-content {
+    width: 95% !important;
+    padding: 10px;
+  }
+
+  .FrontLmodal-content .FrontLleft-section h2 {
+    font-size: 1.1rem !important;
+    margin-bottom: 15px;
+  }
+
+  .FrontLmodal-content .FrontLright-section {
+    padding: 15px !important;
+  }
+
+  .FrontLlogin-input-group input,
+  .FrontLinput-group input {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  .FrontLmodal-content .FrontLright-section button {
+    width: 100%;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+  }
+
+  .FrontLclose {
+    width: 26px;
+    height: 26px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Better responsiveness for tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .text-overlay {
+    padding-left: 8%;
+  }
+
+  .text-overlay h1 {
+    font-size: 3.2rem;
+  }
+
+  .text-overlay p {
+    font-size: 1.05rem;
+  }
+
+  .FrontLmodal-content {
+    max-width: 700px;
+  }
+}
+
+/* Fix modal center alignment for all screens */
+@media (max-width: 768px) {
+  .FrontLmodal {
+    padding-top: 40px;
+  }
+
+  .FrontLmodal-content {
+    margin: auto;
+  }
+}
+
+/* Ensure modal never breaks layout */
+.FrontLmodal-content {
+  max-width: 95%;
+  width: 750px;
+}
+
+
+      /* Google Login Popup Styles */
+    .google-popup-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        justify-content: center;
+        align-items: center;
+        z-index: 1001;
+    }
+
+    .google-popup-content {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        width: 90%;
+        max-width: 400px;
+        overflow: hidden;
+        position: relative;
+        border: 2px solid #F8E4C9;
+        animation: popupSlideIn 0.3s ease-out;
+    }
+
+    @keyframes popupSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .google-popup-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 1.5rem;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    .google-popup-close:hover {
+        color: #ff4757;
+        transform: scale(1.1);
+    }
+
+    .google-popup-header {
+        background: #F8E4C9;
+        padding: 30px 20px 20px;
+        text-align: center;
+        color: #5a4a32;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .google-popup-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(248, 228, 201, 0.8) 0%, rgba(248, 228, 201, 0.9) 100%);
+        z-index: 1;
+    }
+
+    .google-popup-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 2;
+        color: #DB4437;
+    }
+
+    .google-popup-title {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+        font-weight: 700;
+        position: relative;
+        z-index: 2;
+    }
+
+    .google-popup-subtitle {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 2;
+    }
+
+    .google-popup-body {
+        padding: 25px;
+    }
+
+    .google-features {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: rgba(248, 228, 201, 0.2);
+        border-radius: 10px;
+        border-left: 3px solid #F8E4C9;
+    }
+
+    .feature-item i {
+        color: #DB4437;
+        font-size: 1.1rem;
+        width: 20px;
+    }
+
+    .feature-item span {
+        color: #333;
+        font-size: 0.9rem;
+    }
+
+    .google-popup-footer {
+        display: flex;
+        gap: 12px;
+        padding: 20px 25px 25px;
+        background: #fef9f3;
+        border-top: 1px solid #F8E4C9;
+    }
+
+    .google-popup-btn {
+        flex: 1;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .google-popup-cancel {
+        background: white;
+        color: #666;
+        border: 1px solid #F8E4C9;
+    }
+
+    .google-popup-cancel:hover {
+        background: #fef9f3;
+        border-color: #E6C9A5;
+    }
+
+    .google-popup-confirm {
+        background: #F8E4C9;
+        color: #5a4a32;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid #E6C9A5;
+    }
+
+    .google-popup-confirm:hover {
+        background: #f5d9b2;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(248, 228, 201, 0.5);
+    }
+
+    /* Enhanced Google Button Styles */
+    .google-login-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #F8E4C9;
+        border: 2px solid #E6C9A5;
+        padding: 14px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 20px 0 15px 0;
+        transition: all 0.3s ease;
+        color: #5a4a32;
+        text-decoration: none;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(248, 228, 201, 0.5);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .google-login-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: left 0.5s;
+    }
+
+    .google-login-btn:hover::before {
+        left: 100%;
+    }
+
+    .google-login-btn:hover {
+        background-color: #f5d9b2;
+        box-shadow: 0 6px 20px rgba(248, 228, 201, 0.7);
+        border-color: #d4b98c;
+        transform: translateY(-2px);
+    }
+
+    .google-login-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(248, 228, 201, 0.5);
+    }
+
+    .google-login-btn i {
+        margin-right: 12px;
+        font-size: 1.3rem;
+        color: #DB4437;
+        transition: transform 0.3s ease;
+    }
+
+    .google-login-btn:hover i {
+        transform: scale(1.1);
+    }
+
+    /* Divider for Google button */
+    .login-divider {
+        display: flex;
+        align-items: center;
+        margin: 25px 0;
+        color: #0f0e0e;
+        font-size: 0.9rem;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #a90707;
+    }
+
+    .login-divider::before {
+        margin-right: 15px;
+    }
+
+    .login-divider::after {
+        margin-left: 15px;
+    }

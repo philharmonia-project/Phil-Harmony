@@ -1,0 +1,38 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateHomePage' HomePage.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Main Heading Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_main_heading" name="main_heading" class="form-control" 
+                           placeholder=" " value="{{ HomePage.main_heading }}" required />
+                    <label for="id_main_heading" class="floating-label">Main Heading</label>
+                </div>
+                
+                <!-- Highlight Word Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_highlight_word" name="highlight_word" class="form-control" 
+                           placeholder=" " value="{{ HomePage.highlight_word }}" required />
+                    <label for="id_highlight_word" class="floating-label">Highlight Word</label>
+                </div>
+                
+                <!-- Description Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_description" name="description" class="form-control" 
+                              placeholder=" " rows="5">{{ HomePage.description }}</textarea>
+                    <label for="id_description" class="floating-label">Description</label>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Save Home Page</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

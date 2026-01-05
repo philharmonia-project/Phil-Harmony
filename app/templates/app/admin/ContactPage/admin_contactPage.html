@@ -1,0 +1,397 @@
+{% load static %}
+<style>
+       .create-ContactPage {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-ContactPage span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-ContactPage::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-ContactPage:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-ContactPage:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-ContactPage:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-ContactPage:active {
+        transform: scale(0.98);
+    }
+    
+    .create-ContactPage:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-ContactPage {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-ContactPage::before {
+            content: '+ Contact Page';
+            font-size: 1.1rem;
+        }
+        
+        .create-ContactPage span {
+            display: none;
+        }
+        
+        .create-ContactPage::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-ContactPage {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-ContactPage:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-ContactPage btn-style" id="create-contactpage-btn">
+                <span>Contact Page</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="ContactPage" placeholder="Search Contact Page...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if ContactPages %}
+        <!-- Mobile Cards View -->
+        <div id="services-list" class="list-section mobile-cards">
+            {% for page in ContactPages %}
+            <div class="instrument-card">
+                <div class="card-header">
+                    <div class="instrument-title">
+                        <h3>{{ page.header_title }}</h3>
+                        <p>Contact Page</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="instrument-detail">
+                        <span class="detail-label">Header Description:</span>
+                        <span class="detail-value">{{ page.header_description|truncatewords:12 }}</span>
+                    </div>
+                    <div class="instrument-detail">
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">{{ page.location_address|linebreaks }}</span>
+                    </div>
+                    <div class="instrument-detail">
+                        <span class="detail-label">Phone:</span>
+                        <span class="detail-value">
+                            Landline: {{ page.landline_phone }}<br>
+                            Mobile: {{ page.mobile_phone }}
+                        </span>
+                    </div>
+                    <div class="instrument-detail">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">
+                            Primary: {{ page.primary_email }}<br>
+                            Secondary: {{ page.secondary_email }}
+                        </span>
+                    </div>
+                    <div class="instrument-detail">
+                        <span class="detail-label">Hours:</span>
+                        <span class="detail-value">
+                            {{ page.weekdays_hours }}<br>
+                            {{ page.saturday_hours }}<br>
+                            {{ page.sunday_hours }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="instrument-actions">
+                        <a class="action-link edit-ContactPage" href="" data-ContactPage-id="{{ page.pk }}">
+                            <i class="fa-solid fa-pen" title="Edit Contact Page"></i>
+                        </a>
+                        <a class="action-link delete-ContactPage" href="" data-ContactPage-id2="{{ page.pk }}">
+                            <i class="fa-solid fa-trash" title="Delete Contact Page"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Desktop Table View -->
+        <div id="services-table" class="table-section">
+            <table id="user-table" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Header Title</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Operating Hours</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-tbody" class="ContactPage1">
+                    {% for page in ContactPages %}
+                    <tr>
+                        <td>
+                            <strong>{{ page.header_title }}</strong><br>
+                            <small>{{ page.header_description|truncatewords:8 }}</small>
+                        </td>
+                        <td>{{ page.location_address|linebreaks }}</td>
+                        <td>
+                            <strong>Landline:</strong> {{ page.landline_phone }}<br>
+                            <strong>Mobile:</strong> {{ page.mobile_phone }}
+                        </td>
+                        <td>
+                            <strong>Primary:</strong> {{ page.primary_email }}<br>
+                            <strong>Secondary:</strong> {{ page.secondary_email }}
+                        </td>
+                        <td>
+                            {{ page.weekdays_hours }}<br>
+                            {{ page.saturday_hours }}<br>
+                            {{ page.sunday_hours }}
+                        </td>
+                        <td>
+                            <a class="action-link edit-ContactPage" href="" data-ContactPage-id="{{ page.pk }}">
+                                <i class="fa-solid fa-pen" title="Edit Contact Page"></i>
+                            </a>
+                            |
+                            <a class="action-link delete-ContactPage" href="" data-ContactPage-id2="{{ page.pk }}">
+                                <i class="fa-solid fa-trash" title="Delete Contact Page"></i>
+                            </a>
+                            <!-- |
+                            <a class="action-link View-ContactPage" href="">
+                                <i class="fa-solid fa-eye" title="View Contact Page"></i>
+                            </a> -->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">No Contact Page found. Start by adding one!</p>
+        {% endif %}
+    </div>
+</div>
+
+<!--UPDATE ContactPage-->
+<div id="Edit-ContactPage-Modal" class="Edit-ContactPage-Modal">
+    <div class="Edit-ContactPage-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-ContactPage-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE ContactPage-->
+<div id="Delete-ContactPage-Modal" class="Delete-ContactPage-Modal">
+    <div class="Delete-ContactPage-modal-content">
+
+        <div id="Delete-ContactPage-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE ContactPage-->
+ <div id="Create-ContactPage-Modal" class="Create-ContactPage-Modal">
+    <div class="Create-ContactPage-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-ContactPage-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+// create ContactPage
+document.addEventListener("DOMContentLoaded", () => {
+    const addContactPagemodal = document.getElementById("Create-ContactPage-Modal");
+    const closeBtn = addContactPagemodal.querySelector(".close-btn1");
+    const addContactPagemodalFormContainer = document.getElementById("Create-ContactPage-modal-form-container");
+    const addContactPageLinks = document.querySelectorAll(".create-ContactPage");
+
+    // Handle clicking on the edit link
+    addContactPageLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_ContactPage/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addContactPagemodalFormContainer.innerHTML = data;
+                    addContactPagemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addContactPagemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addContactPagemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Instrument
+document.addEventListener("DOMContentLoaded", () => {
+    const delContactPagemodal = document.getElementById("Delete-ContactPage-Modal");
+    const closeBtn = delContactPagemodal.querySelector(".close-btn1");
+    const delContactPagemodalFormContainer = document.getElementById("Delete-ContactPage-modal-form-container");
+    const delContactPageLinks = document.querySelectorAll(".delete-ContactPage");
+
+    // Handle clicking on the edit link
+    delContactPageLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const ContactPageId = link.getAttribute("data-ContactPage-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_ContactPage/${ContactPageId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delContactPagemodalFormContainer.innerHTML = data;
+                    delContactPagemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delContactPagemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delContactPagemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update ContactPage
+document.addEventListener("DOMContentLoaded", () => {
+    const updateContactPagemodal = document.getElementById("Edit-ContactPage-Modal");
+    const closeBtn = updateContactPagemodal.querySelector(".close-btn1");
+    const ContactPagemodalFormContainer = document.getElementById("Edit-ContactPage-modal-form-container");
+    const editContactPageLinks = document.querySelectorAll(".edit-ContactPage");
+
+    // Handle clicking on the edit link
+    editContactPageLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const ContactPageId = link.getAttribute("data-ContactPage-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_ContactPage/${ContactPageId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    ContactPagemodalFormContainer.innerHTML = data;
+                    updateContactPagemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    ContactPagemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateContactPagemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputContactPage = document.querySelector(".ContactPage"); // Input field
+    const ContactPageTableRows = document.querySelectorAll(".ContactPage1 tr"); // Desktop table rows
+    const ContactPages = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputContactPage.addEventListener("input", () => {
+        const query = searchInputContactPage.value.toLowerCase().trim();
+
+        // Search in desktop table
+        ContactPageTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        ContactPages.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

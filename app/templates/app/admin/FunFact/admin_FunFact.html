@@ -1,0 +1,360 @@
+<style>
+       .create-Funfact {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Funfact span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Funfact::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Funfact:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Funfact:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Funfact:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Funfact:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Funfact:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Funfact {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Funfact::before {
+            content: '+ Funfact';
+            font-size: 1.1rem;
+        }
+        
+        .create-Funfact span {
+            display: none;
+        }
+        
+        .create-Funfact::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Funfact {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Funfact:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Funfact btn-style" id="create-funfact-btn">
+                <span>Fun Fact</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Funfact" placeholder="Search for Fun Facts...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <!-- Fun Fact Management Section -->
+    <div id="user-section">
+        {% if funfacts %}
+           
+                <!-- Fun Facts List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for funfact in funfacts %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instruments-image">
+                               
+                            </div>
+                            <div class="instrument-title">
+                                <h3>{{ funfact.instrument.name }}</h3>
+                                <p>Fun Fact</p>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">{{ funfact.description|truncatewords:12 }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Funfact" href="" data-Funfact-id="{{ funfact.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Fun Fact"></i>
+                                </a>
+                                <a class="action-link delete-Funfact" href="" data-Funfact-id2="{{ funfact.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Fun Fact"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+           
+                <!-- Fun Facts Table - Desktop Only -->
+                <div id="funfacts-table" class="table-section">
+                    <table id="funfact-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Instrument</th>
+                                <th>Description</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="funfact-tbody" class="Funfact1">
+                            {% for funfact in funfacts %}
+                            <tr>
+                                <td>{{ funfact.instrument.name }}</td>
+                                <td>{{ funfact.description|truncatewords:10 }}</td>
+                                <td>{{ funfact.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a class="action-link edit-Funfact" href="" data-Funfact-id="{{ funfact.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Fun Fact"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Funfact" href="" data-Funfact-id2="{{ funfact.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Fun Fact"></i>
+                                    </a>
+                                    <!-- |
+                                    <a class="action-link View-Funfact" href="">
+                                        <i class="fa-solid fa-eye" title="View Fun Fact"></i>
+                                    </a> -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            
+        {% else %}
+        <p class="text-center">No Fun Facts found. Start by adding a new Fun Fact!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<!-- Modal Dialogs -->
+<div id="Edit-Funfact-Modal" class="Edit-Funfact-Modal">
+    <div class="Edit-Funfact-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Funfact-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Delete-Funfact-Modal" class="Delete-Funfact-Modal">
+    <div class="Delete-Funfact-modal-content">
+        <div id="Delete-Funfact-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Create-Funfact-Modal" class="Create-Funfact-Modal">
+    <div class="Create-Funfact-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Funfact-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+
+<script>
+// create Funfact
+document.addEventListener("DOMContentLoaded", () => {
+    const addFunfactmodal = document.getElementById("Create-Funfact-Modal");
+    const closeBtn = addFunfactmodal.querySelector(".close-btn1");
+    const addFunfactmodalFormContainer = document.getElementById("Create-Funfact-modal-form-container");
+    const addFunfactLinks = document.querySelectorAll(".create-Funfact");
+
+    // Handle clicking on the edit link
+    addFunfactLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Funfact/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addFunfactmodalFormContainer.innerHTML = data;
+                    addFunfactmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addFunfactmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addFunfactmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Instrument
+document.addEventListener("DOMContentLoaded", () => {
+    const delFunfactmodal = document.getElementById("Delete-Funfact-Modal");
+    const closeBtn = delFunfactmodal.querySelector(".close-btn1");
+    const delFunfactmodalFormContainer = document.getElementById("Delete-Funfact-modal-form-container");
+    const delFunfactLinks = document.querySelectorAll(".delete-Funfact");
+
+    // Handle clicking on the edit link
+    delFunfactLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const FunfactId = link.getAttribute("data-Funfact-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Funfact/${FunfactId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delFunfactmodalFormContainer.innerHTML = data;
+                    delFunfactmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delFunfactmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delFunfactmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Funfact
+document.addEventListener("DOMContentLoaded", () => {
+    const updateFunfactmodal = document.getElementById("Edit-Funfact-Modal");
+    const closeBtn = updateFunfactmodal.querySelector(".close-btn1");
+    const FunfactmodalFormContainer = document.getElementById("Edit-Funfact-modal-form-container");
+    const editFunfactLinks = document.querySelectorAll(".edit-Funfact");
+
+    // Handle clicking on the edit link
+    editFunfactLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const FunfactId = link.getAttribute("data-Funfact-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Funfact/${FunfactId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    FunfactmodalFormContainer.innerHTML = data;
+                    updateFunfactmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    FunfactmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateFunfactmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputFunfact = document.querySelector(".Funfact"); // Input field
+    const FunfactTableRows = document.querySelectorAll(".Funfact1 tr"); // Desktop table rows
+    const FunfactCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputFunfact.addEventListener("input", () => {
+        const query = searchInputFunfact.value.toLowerCase().trim();
+
+        // Search in desktop table
+        FunfactTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        FunfactCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

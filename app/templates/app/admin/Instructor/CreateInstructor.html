@@ -1,0 +1,113 @@
+{% load static %}
+
+<div id="Instrument8">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'CreateInstructor' %}" class="admin-form8">
+        {% csrf_token %}
+        
+        <div class="form-sections-container8">
+            <!-- Image Section -->
+            <div class="form-section8">
+                <h3 class="section-title8">Instructor Image</h3>
+                <div class="form-group8">
+                    <label for="id_image" class="form-label8">Current Image</label>
+                    {% if section.image %}
+                        <img src="{{ section.image.url }}" class="img-fluid8 instrument-image8" alt="Discover Image" style="max-width: 100%; margin-bottom: 10px;">
+                    {% else %}
+                        <img src="{% static 'images/phil.png' %}" class="img-fluid8 instrument-image8" alt="Default Discover Image" style="max-width: 100%; margin-bottom: 10px;">
+                    {% endif %}
+                
+                    <label for="id_image" class="custom-file-button8">
+                        <span>Choose Image</span>
+                        <input type="file" id="id_image" name="image" class="form-control8 hidden-file-input8">
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Videos Section -->
+            <div class="form-section8">
+                <h3 class="section-title8">Videos</h3>
+                <div class="form-group8">
+                    <label for="id_video1" class="form-label8">Video 1</label>
+                    {% if instructor.video1 %}
+                    <video width="100%" controls style="margin-bottom: 10px;">
+                        <source src="{{ instructor.video1.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    {% else %}
+                    <img src="{% static 'images/phil.png' %}" class="img-fluid8 video-placeholder8" alt="Default Video" style="max-width: 100%; margin-bottom: 10px;">
+                    {% endif %}
+                    <label for="id_video1" class="custom-file-button8">
+                        <span>Choose Video File</span>
+                        <input type="file" id="id_video1" name="video1" class="form-control8 hidden-file-input8" accept="video/*">
+                    </label>
+                </div>
+                
+                <div class="form-group8">
+                    <label for="id_video2" class="form-label8">Video 2</label>
+                    {% if instructor.video2 %}
+                    <video width="100%" controls style="margin-bottom: 10px;">
+                        <source src="{{ instructor.video2.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    {% else %}
+                    <img src="{% static 'images/phil.png' %}" class="img-fluid8 video-placeholder8" alt="Default Video" style="max-width: 100%; margin-bottom: 10px;">
+                    {% endif %}
+                    <label for="id_video2" class="custom-file-button8">
+                        <span>Choose Video File</span>
+                        <input type="file" id="id_video2" name="video2" class="form-control8 hidden-file-input8" accept="video/*">
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Content Section -->
+            <div class="form-section8">
+                <h3 class="section-title8">Content</h3>
+                <div class="form-group8">
+                    <label for="id_title" class="form-label8">Section Title</label>
+                    <input type="text" id="id_title" name="title" class="form-control8" required value="{{ section.title }}">
+                </div>
+                
+                <div class="form-group8">
+                    <label for="id_description" class="form-label8">Description</label>
+                    <textarea id="id_description" name="description" class="form-control8" required>{{ section.description }}</textarea>
+                </div>
+                
+                <div class="form-group8">
+                    <label for="id_mastering_title" class="form-label8">Mastering Title</label>
+                    <input type="text" id="id_mastering_title" name="mastering_title" class="form-control8" required value="{{ section.mastering_title }}">
+                </div>
+            </div>
+            
+            <!-- Mastering Content Section -->
+            <div class="form-section8">
+                <h3 class="section-title8">Mastering Content</h3>
+                <div class="form-group8">
+                    <label for="id_mastering_paragraph1" class="form-label8">Mastering Paragraph 1</label>
+                    <textarea id="id_mastering_paragraph1" name="mastering_paragraph1" class="form-control8" required>{{ section.mastering_paragraph1 }}</textarea>
+                </div>
+                
+                <div class="form-group8">
+                    <label for="id_mastering_paragraph2" class="form-label8">Mastering Paragraph 2</label>
+                    <textarea id="id_mastering_paragraph2" name="mastering_paragraph2" class="form-control8" required>{{ section.mastering_paragraph2 }}</textarea>
+                </div>
+                
+                <div class="form-group8">
+                    <label for="id_video_description" class="form-label8">Video Description</label>
+                    <textarea id="id_video_description" name="video_description" class="form-control8" required>{{ section.video_description }}</textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center;">
+            <button type="submit" class="btn-primary8">Save Discover Section</button>
+        </div>
+        <div id="error-message-container8" style="color: red; display: none; text-align: center;"></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('id_video2').addEventListener('change', function(e) {
+        var fileName = e.target.files[0] ? e.target.files[0].name : "No file selected";
+        document.querySelector('label[for="id_video2"]').setAttribute('data-file', fileName);
+    });
+</script>

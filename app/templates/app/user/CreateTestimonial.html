@@ -1,0 +1,389 @@
+{% load static %}
+
+<style>
+    /* Modern CSS Variables - Renamed with 'testimonial' prefix */
+    :root {
+        --testimonial-primary-color: #6366f1;
+        --testimonial-primary-hover: #4f46e5;
+        --testimonial-text-primary: #1f2937;
+        --testimonial-text-secondary: #6b7280;
+        --testimonial-bg-white: #ffffff;
+        --testimonial-bg-gray: #f9fafb;
+        --testimonial-border-color: #e5e7eb;
+        --testimonial-border-focus: #a5b4fc;
+        --testimonial-success: #10b981;
+        --testimonial-error: #ef4444;
+        --testimonial-warning: #f59e0b;
+        --testimonial-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --testimonial-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --testimonial-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --testimonial-radius-sm: 6px;
+        --testimonial-radius-md: 8px;
+        --testimonial-radius-lg: 12px;
+        --testimonial-transition: all 0.2s ease-in-out;
+    }
+
+    /* Main Container */
+    #Testimonial {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2.5rem;
+        background: var(--testimonial-bg-white);
+        border-radius: var(--testimonial-radius-lg);
+        box-shadow: var(--testimonial-shadow-lg);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* Form Layout */
+    .form-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    /* Form Groups */
+    .form-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Floating Label Styles */
+    .floating-label-group {
+        position: relative;
+    }
+
+    .floating-label {
+        position: absolute;
+        left: 12px;
+        top: 12px;
+        color: var(--testimonial-text-secondary);
+        font-size: 1rem;
+        pointer-events: none;
+        transition: var(--testimonial-transition);
+        background: var(--testimonial-bg-white);
+        padding: 0 4px;
+        z-index: 1;
+    }
+
+    /* Form Controls */
+    .form-control {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 1rem;
+        border: 1px solid var(--testimonial-border-color);
+        border-radius: var(--testimonial-radius-md);
+        background-color: var(--testimonial-bg-white);
+        transition: var(--testimonial-transition);
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--testimonial-primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    /* Floating Label Animation */
+    .form-control:focus + .floating-label,
+    .form-control:not(:placeholder-shown) + .floating-label {
+        top: -10px;
+        left: 10px;
+        font-size: 0.8rem;
+        color: var(--testimonial-primary-color);
+        font-weight: 500;
+    }
+
+    /* Textarea Specific Styles */
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+        line-height: 1.5;
+    }
+
+    /* Modern Star Rating Styles */
+    .star-rating-group {
+        margin: 1.5rem 0;
+    }
+
+    .star-label {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--testimonial-text-primary);
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .star-rating {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 4px;
+    }
+
+    .star-rating input {
+        display: none;
+    }
+
+    .star-rating label {
+        font-size: 2.5rem;
+        color: #e5e7eb;
+        cursor: pointer;
+        transition: var(--testimonial-transition);
+        position: relative;
+        padding: 0 2px;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: #fbbf24;
+    }
+
+    .star-rating input:checked ~ label,
+    .star-rating:not(:hover) input:checked ~ label {
+        color: var(--testimonial-warning);
+    }
+
+    /* Button Styles */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 24px;
+        font-size: 1rem;
+        font-weight: 500;
+        text-align: center;
+        border-radius: var(--testimonial-radius-md);
+        cursor: pointer;
+        transition: var(--testimonial-transition);
+        border: none;
+        font-family: inherit;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary {
+        background-color: var(--testimonial-primary-color);
+        color: white;
+        width: 100%;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--testimonial-primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    /* Select Dropdown Styles */
+    select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 1em;
+        padding-right: 40px;
+    }
+
+    /* Error Message */
+    #error-message-container {
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: var(--testimonial-radius-md);
+        background-color: #fef2f2;
+        color: var(--testimonial-error);
+        border: 1px solid #fecaca;
+        display: none;
+        font-size: 0.875rem;
+    }
+
+    /* Form Header */
+    .form-header {
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .form-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--testimonial-text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-subtitle {
+        font-size: 0.875rem;
+        color: var(--testimonial-text-secondary);
+    }
+
+    /* Loading Animation */
+    .btn-loading {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    .btn-loading::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        border: 2px solid transparent;
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: button-loading-spinner 1s ease infinite;
+    }
+
+    @keyframes button-loading-spinner {
+        from {
+            transform: rotate(0turn);
+        }
+        to {
+            transform: rotate(1turn);
+        }
+    }
+
+    /* Success Animation */
+    @keyframes success-pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 640px) {
+        #Testimonial {
+            margin: 1rem;
+            padding: 1.5rem;
+        }
+        
+        .star-rating label {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div id="Testimonial">
+    <div class="form-header">
+        <h2 class="form-title">Share Your Experience</h2>
+        <p class="form-subtitle">Your feedback helps us improve our services</p>
+    </div>
+    
+    <form method="POST" enctype="multipart/form-data" action="{% url 'CreateTestimonial' %}" class="admin-form" id="testimonial-form">
+        <div class="form-layout">
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Display current user (readonly) -->
+                <div class="form-group">
+                    <input type="text" 
+                           id="display_user" 
+                           class="form-control" 
+                           value="{{ current_user.username }}" 
+                           readonly>
+                    <label for="display_user" class="floating-label">Your Username</label>
+                    <input type="hidden" name="user" value="{{ current_user.id }}">
+                </div>
+
+                <!-- Message Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_message" name="message" class="form-control" rows="4" placeholder=" " required></textarea>
+                    <label for="id_message" class="floating-label">Testimonial Message</label>
+                </div>
+
+                <!-- Rating Field -->
+                <div class="form-group star-rating-group">
+                    <label class="star-label">Rating</label>
+                    <div class="star-rating">
+                        {% for i in "54321" %}
+                        <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" />
+                        <label for="star{{ i }}" title="{{ i }} stars">★</label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary" id="submit-btn">
+                    <span class="btn-text">Add Testimonial</span>
+                </button>
+                <div id="error-message-container"></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const starRatings = document.querySelectorAll('.star-rating');
+        const form = document.getElementById('testimonial-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const btnText = submitBtn.querySelector('.btn-text');
+        const errorContainer = document.getElementById('error-message-container');
+        
+        // Star rating functionality
+        starRatings.forEach(rating => {
+            const inputs = rating.querySelectorAll('input[type="radio"]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    rating.setAttribute('data-rating', this.value);
+                });
+                
+                input.addEventListener('click', function() {
+                    const value = this.value;
+                    inputs.forEach(star => star.checked = false);
+                    inputs.forEach(star => {
+                        if (star.value >= value) {
+                            star.checked = true;
+                        }
+                    });
+                });
+            });
+        });
+        
+        // Form submission handling
+        form.addEventListener('submit', function(e) {
+            // Basic validation
+            const message = document.getElementById('id_message').value.trim();
+            const rating = document.querySelector('input[name="rating"]:checked');
+            
+            if (!message) {
+                e.preventDefault();
+                showError('Please enter a testimonial message.');
+                return;
+            }
+            
+            if (!rating) {
+                e.preventDefault();
+                showError('Please select a rating.');
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.classList.add('btn-loading');
+            btnText.textContent = 'Submitting...';
+        });
+        
+        function showError(message) {
+            errorContainer.textContent = message;
+            errorContainer.style.display = 'block';
+            
+            // Auto-hide error after 5 seconds
+            setTimeout(() => {
+                errorContainer.style.display = 'none';
+            }, 5000);
+        }
+    });
+</script>

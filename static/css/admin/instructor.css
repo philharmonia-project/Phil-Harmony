@@ -1,0 +1,341 @@
+
+
+/*=============== CREATE MODAL FOR Instructor ===============*/
+.Create-Instructor-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+  }
+  
+  /* Show modal when triggered */
+  .Create-Instructor-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+  }
+  
+  /* Modal Content Styling */
+  .Create-Instructor-modal-content {
+    background: var(--body-color); /* Modal content background */
+    padding: 10px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1100px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+  }
+  
+  /* Show modal content with transition */
+  .Create-Instructor-Modal.show .Create-Instructor-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+  }
+
+/*=============== UPDATE MODAL FOR Instructor ===============*/
+.Edit-Instructor-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Edit-Instructor-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Edit-Instructor-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 10px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1100px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Edit-Instructor-Modal.show .Edit-Instructor-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+/*=============== DELETE MODAL FOR Instructor ===============*/
+.Delete-Instructor-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Delete-Instructor-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Delete-Instructor-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Delete-Instructor-Modal.show .Delete-Instructor-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+/*=============== Enhanced Close Button ===============*/
+.close-btn1 {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #ff4500; /* Vibrant red */
+    cursor: pointer;
+    z-index: 1050;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .close-btn1:hover {
+    color: #b41727; /* Darker red on hover */
+    transform: rotate(90deg) scale(1.1); /* Slight rotation and enlarge */
+  }
+  
+
+
+/* ===== Base Styles ===== */
+#Instrument8 {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
+/* ===== Form Container Styles ===== */
+.admin-form8 {
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    box-shadow: 0 3px 8px hsl(228, 15%, 20%);
+    padding: 15px;
+}
+
+/* ===== Form Layout Styles ===== */
+.form-sections-container8 {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 15px;
+}
+
+.form-section8 {
+    flex: 1;
+    min-width: 180px;
+    padding: 15px;
+    background-color: var(--bg-color);
+    border-radius: 6px;
+    border: 1px solid var(--text-color1);
+}
+
+.section-title8 {
+    font-weight: 600;
+    color: var(--title-color);
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--text-color1);
+    font-size: 1rem;
+}
+
+/* ===== Form Element Styles ===== */
+.form-group8 {
+    margin-bottom: 15px;
+}
+
+.form-row8 {
+    display: flex;
+    gap: 12px;
+}
+
+.form-row8 .form-group8 {
+    flex: 1;
+}
+
+.form-control8 {
+    width: 100%;
+    padding: 8px 10px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--text-color1);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    transition: border-color 0.3s ease;
+}
+
+.form-control8:focus {
+    outline: none;
+    border-color: var(--text-color2);
+}
+
+textarea.form-control8 {
+    min-height: 70px;
+    resize: vertical;
+}
+
+.form-label8 {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: var(--title-color);
+    font-weight: 500;
+}
+
+/* ===== Button Styles ===== */
+.btn-primary8 {
+    background-color: var(--text-color1);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary8:hover {
+    background-color: var(--text-color2);
+}
+
+/* ===== Instrument8 Specific Styles ===== */
+#Instrument8 .form-section8 {
+    min-width: 220px;
+}
+
+#Instrument8 .instrument-image8,
+#Instrument8 .video-placeholder8 {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    border: 1px solid var(--text-color1);
+    display: block;
+}
+
+#Instrument8 video {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    background-color: #000;
+    display: block;
+}
+
+#Instrument8 .form-control8[type="file"] {
+    padding: 6px 5px;
+    line-height: 1.3;
+}
+
+#Instrument8 textarea.form-control8 {
+    min-height: 80px;
+}
+
+/* ===== Error Message Styles ===== */
+#error-message-container8 {
+    color: #e74c3c;
+    margin-top: 12px;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+
+
+/* Custom File Button Styles */
+.custom-file-button8 {
+    display: block;
+    padding: 5px 10px;
+    background-color: var(--text-color1);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+.custom-file-button8:hover {
+    background-color: var(--text-color2);
+}
+
+/* Hide the default file input */
+.hidden-file-input8 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Optional: Style for when a file is selected */
+.custom-file-button8::after {
+    content: attr(data-file);
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: var(--text-color);
+    font-weight: normal;
+}

@@ -1,0 +1,387 @@
+{% load static %}
+<style>
+       .create-View {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-View span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-View::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-View:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-View:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-View:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-View:active {
+        transform: scale(0.98);
+    }
+    
+    .create-View:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-View {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-View::before {
+            content: '+ View';
+            font-size: 1.1rem;
+        }
+        
+        .create-View span {
+            display: none;
+        }
+        
+        .create-View::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-View {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-View:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-View btn-style" id="create-image-btn">
+                <span>Instrument Views</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="View" placeholder="Search for Instrument Images...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <!-- Instrument Image Management Section -->
+    <div id="images-section">
+        {% if InsImage %}
+           
+                <!-- Instrument Images List - Mobile Cards Only -->
+                <div id="images-list" class="list-section mobile-cards">
+                    {% for image in InsImage %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instruments-image">
+                                {% if image.image %}
+                                <img src="{{ image.image.url }}" alt="{{ image.caption|default:image.get_view_type_display }}" loading="lazy">
+                                {% else %}
+                                <span>No image available</span>
+                                {% endif %}
+                            </div>
+                            <div class="image-title">
+                                <h3>{{ image.instrument.name }}</h3>
+                                <p>{{ image.get_view_type_display }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="image-detail">
+                                <span class="detail-label">Instrument:</span>
+                                <span class="detail-value">{{ image.instrument.name }}</span>
+                            </div>
+                            <div class="image-detail">
+                                <span class="detail-label">View Type:</span>
+                                <span class="detail-value">{{ image.get_view_type_display }}</span>
+                            </div>
+                            <div class="image-detail">
+                                <span class="detail-label">Caption:</span>
+                                <span class="detail-value">{{ image.caption|truncatewords:10|default:"No caption" }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <div class="image-actions">
+                                <a class="action-link edit-View" href="" data-View-id="{{ image.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Image"></i>
+                                </a>
+                                <a class="action-link delete-View" href="" data-View-id2="{{ image.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Image"></i>
+                                </a>
+                            </div>
+                            <div class="image-date">
+                                Added: {{ image.created_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+           
+                <!-- Instrument Images Table - Desktop Only -->
+                <div id="images-table" class="table-section">
+                    <table id="image-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Instrument</th>
+                                <th>View Type</th>
+                                <th>Caption</th>
+                                <th>Created At</th>
+                                <th>Updated At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="image-tbody" class="View1">
+                            {% for image in InsImage %}
+                            <tr>
+                                <td>
+                                    {% if image.image %}
+                                    <img src="{{ image.image.url }}" class="img-fluid rounded" alt="{{ image.caption|default:image.get_view_type_display }}" loading="lazy">
+                                    {% else %}
+                                    <span>No image available</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ image.instrument.name }}</td>
+                                <td>{{ image.get_view_type_display }}</td>
+                                <td>{{ image.caption|truncatewords:5|default:"No caption" }}</td>
+                                <td>{{ image.created_at|date:"M d, Y" }}</td>
+                                <td>{{ image.updated_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a class="action-link edit-View" href="" data-View-id="{{ image.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Image"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-View" href="" data-View-id2="{{ image.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Image"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            
+        {% else %}
+        <p class="text-center">No Instrument Images found. Start by adding new images!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<!--UPDATE View-->
+<div id="Edit-View-Modal" class="Edit-View-Modal">
+    <div class="Edit-View-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-View-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE View-->
+<div id="Delete-View-Modal" class="Delete-View-Modal">
+    <div class="Delete-View-modal-content">
+
+        <div id="Delete-View-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE View-->
+ <div id="Create-View-Modal" class="Create-View-Modal">
+    <div class="Create-View-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-View-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // create View
+document.addEventListener("DOMContentLoaded", () => {
+    const addViewmodal = document.getElementById("Create-View-Modal");
+    const closeBtn = addViewmodal.querySelector(".close-btn1");
+    const addViewmodalFormContainer = document.getElementById("Create-View-modal-form-container");
+    const addViewLinks = document.querySelectorAll(".create-View");
+
+    // Handle clicking on the edit link
+    addViewLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_View/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addViewmodalFormContainer.innerHTML = data;
+                    addViewmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addViewmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addViewmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete View
+document.addEventListener("DOMContentLoaded", () => {
+    const delViewmodal = document.getElementById("Delete-View-Modal");
+    const closeBtn = delViewmodal.querySelector(".close-btn1");
+    const delViewmodalFormContainer = document.getElementById("Delete-View-modal-form-container");
+    const delViewLinks = document.querySelectorAll(".delete-View");
+
+    // Handle clicking on the edit link
+    delViewLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const ViewId = link.getAttribute("data-View-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_View/${ViewId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delViewmodalFormContainer.innerHTML = data;
+                    delViewmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delViewmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delViewmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update View
+document.addEventListener("DOMContentLoaded", () => {
+    const updateViewmodal = document.getElementById("Edit-View-Modal");
+    const closeBtn = updateViewmodal.querySelector(".close-btn1");
+    const ViewmodalFormContainer = document.getElementById("Edit-View-modal-form-container");
+    const editViewLinks = document.querySelectorAll(".edit-View");
+
+    // Handle clicking on the edit link
+    editViewLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const ViewId = link.getAttribute("data-View-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_View/${ViewId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    ViewmodalFormContainer.innerHTML = data;
+                    updateViewmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    ViewmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateViewmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputView = document.querySelector(".View"); // Input field
+    const ViewTableRows = document.querySelectorAll(".View1 tr"); // Desktop table rows
+    const ViewCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputView.addEventListener("input", () => {
+        const query = searchInputView.value.toLowerCase().trim();
+
+        // Search in desktop table
+        ViewTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        ViewCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

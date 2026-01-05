@@ -1,0 +1,51 @@
+{% load static %}
+
+<div id="delete-form" class="delete-container1">
+    <form method="POST" action="{% url 'DeletePrincipleCard' card.pk %}" class="admin-form1">
+        {% csrf_token %}
+
+        <div class="delete-card1">
+            <!-- Image Preview -->
+            <div class="image-section1">
+              
+            </div>
+
+            <!-- Delete Confirmation -->
+            <div class="delete-content1">
+                <h1 class="delete-title1">Are you sure you want to delete "<span>{{ card.card_type }}</span>"?</h1>
+                <p class="delete-warning1">This action cannot be undone. All related data will be permanently removed.</p>
+
+                <!-- Instrument Details (Read-Only) -->
+                <div class="form-group1">
+                    <label for="id_name1" class="floating-label1">Principle Title</label>
+                    <input type="text" id="id_name1" name="title" class="form-control1" value="{{ card.guiding_principles.title }}" readonly />
+                </div>
+
+                <div class="form-group1">
+                    {% if card.description %}
+                        <label for="id_description1" class="floating-label1">Description</label>
+                        <textarea id="id_description1" name="description" class="form-control1" readonly>{{ card.description }}</textarea>
+                    {% elif card.bullet_points %}
+                        <label for="id_description1" class="floating-label1">Bullet Points</label>
+                        <ul id="id_description1" class="form-control1" style="list-style-type: disc; padding-left: 20px;">
+                            {% for point in card.get_bullet_list %}
+                                <li>{{ point }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <label for="id_description1" class="floating-label1">No Description or Bullet Points</label>
+                        <textarea id="id_description1" name="description" class="form-control1" readonly></textarea>
+                    {% endif %}
+                </div>
+                
+
+                <!-- Buttons: Delete & Cancel -->
+                <div class="button-group1">
+                    <button type="submit" class="btn-danger1">Delete</button>
+                    <a href="{% url 'admin_main' %}" class="btn-secondary1">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

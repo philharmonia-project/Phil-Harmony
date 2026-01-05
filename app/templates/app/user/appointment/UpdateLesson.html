@@ -1,0 +1,59 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UserUpdateLesson' Lesson.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- School Name Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_school_name" name="school_name" class="form-control" 
+                           placeholder=" " value="{{ Lesson.school_name }}" required />
+                    <label for="id_school_name" class="floating-label">School Name</label>
+                </div>
+                
+                <!-- Class Size Field -->
+                <div class="form-group floating-label-group">
+                    <input type="number" id="id_class_size" name="class_size" class="form-control" 
+                           placeholder=" " min="1"  value="{{ Lesson.class_size }}" required />
+                    <label for="id_class_size" class="floating-label">Class Size</label>
+                </div>
+                
+                <!-- Lesson Date Field -->
+                <div class="form-group floating-label-group">
+                    <input type="date" id="id_lesson_date" name="lesson_date" class="form-control" 
+                           placeholder=" "  value="{{ Lesson.lesson_date|date:'Y-m-d' }}" required />
+                    <label for="id_lesson_date" class="floating-label">Lesson Date</label>
+                </div>
+                
+                <!-- Lesson Time Field -->
+                <div class="form-group floating-label-group">
+                    <input type="time" id="id_lesson_time" name="lesson_time" class="form-control" 
+                           placeholder=" "  value="{{ Lesson.lesson_time|time:'H:i' }}" required />
+                    <label for="id_lesson_time" class="floating-label">Lesson Time</label>
+                </div>
+                
+                <!-- Location Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_location" name="location" class="form-control" 
+                           placeholder=" "  value="{{ Lesson.location }}" required />
+                    <label for="id_location" class="floating-label">Location</label>
+                </div>
+                
+                <!-- Message Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_message" name="message" class="form-control" 
+                              placeholder=" " rows="5">{{ Lesson.message }}</textarea>
+                    <label for="id_message" class="floating-label">Message</label>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Save Lesson Appointment</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

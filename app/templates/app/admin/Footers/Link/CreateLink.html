@@ -1,0 +1,36 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'CreatesocialMedia' %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+
+                <!-- Platform Selection - Exactly as you specified -->
+                <div class="form-group">
+                    <label for="id_platform" class="form-label">Social Platform</label>
+                    <select name="platform" id="id_platform" class="form-control" required>
+                        <option value="facebook">Facebook</option>
+                        <option value="twitter">Twitter</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="youtube">YouTube</option>
+                    </select>
+                </div>
+
+                <!-- URL Field with Floating Label -->
+                <div class="form-group floating-label-group">
+                    <input type="url" id="id_url" name="url" class="form-control" placeholder=" " required>
+                    <label for="id_url" class="floating-label">Profile URL</label>
+                    
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Add Social Link</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

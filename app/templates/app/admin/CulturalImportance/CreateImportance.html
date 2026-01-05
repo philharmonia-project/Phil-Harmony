@@ -1,0 +1,35 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'CreateImportance' %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Icon Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_icon" name="icon" class="form-control" placeholder=" " value="fa-music" />
+                    <label for="id_icon" class="floating-label">Font Awesome Icon (e.g. fa-music)</label>
+                </div>
+                
+                <!-- Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_title" name="title" class="form-control" placeholder=" " required />
+                    <label for="id_title" class="floating-label">Title</label>
+                </div>
+                
+                <!-- Description Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_description" name="description" class="form-control" placeholder=" " required></textarea>
+                    <label for="id_description" class="floating-label">Description</label>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Add New Cultural Importance</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

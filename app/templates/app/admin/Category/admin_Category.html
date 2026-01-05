@@ -1,0 +1,406 @@
+{% load static %}
+<style>
+       .create-Category {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Category span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Category::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Category:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Category:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Category:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Category:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Category:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Category {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Category::before {
+            content: '+ Caterogy';
+            font-size: 1.1rem;
+        }
+        
+        .create-Category span {
+            display: none;
+        }
+        
+        .create-Category::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Category {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Category:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+{% load static %}
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Category btn-style" id="create-service-btn">
+                <span>Category</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Category" placeholder="Search for Instrument Categories...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <!-- Category Management Section -->
+    <div id="users-section">
+        {% if categorys %}
+           
+                <!-- Categories List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for category in categorys %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instruments-image">
+                                <i class="fas fa-{{ category.icon }} fa-3x"></i>
+                            </div>
+                            <div class="instrument-title">
+                                <h3>{{ category.name }}</h3>
+                                <p>Instrument Category</p>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">{{ category.description|truncatewords:12 }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Category" href="" data-Category-id="{{ category.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Category"></i>
+                                </a>
+                                <a class="action-link delete-Category" href="" data-Category-id2="{{ category.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Category"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+           
+                <!-- Categories Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Icon</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Category1">
+                            {% for category in categorys %}
+                            <tr>
+                                <td><i class="fas fa-{{ category.icon }}"></i></td>
+                                <td>{{ category.name }}</td>
+                                <td>{{ category.description|truncatewords:10 }}</td>
+                                <td>
+                                    <a class="action-link edit-Category" href="" data-Category-id="{{ category.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Category"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Category" href="" data-Category-id2="{{ category.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Category"></i>
+                                    </a>
+                                    <!-- |
+                                    <a class="action-link View-Category" href="">
+                                        <i class="fa-solid fa-eye" title="View Category"></i>
+                                    </a> -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            
+        {% else %}
+        <p class="text-center">No Instrument Categories found. Start by adding a new Category!</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal Dialogs -->
+<div id="Create-Category-Modal" class="Create-Category-Modal">
+    <div class="Create-Category-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Category-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Edit-Category-Modal" class="Edit-Category-Modal">
+    <div class="Edit-Category-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Category-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Delete-Category-Modal" class="Delete-Category-Modal">
+    <div class="Delete-Category-modal-content">
+        <div id="Delete-Category-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Modal transitions */
+    .Create-Category-Modal,
+    .Edit-Category-Modal,
+    .Delete-Category-Modal {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        opacity: 0;
+        transform: translateY(-20px);
+        pointer-events: none;
+    }
+    
+    .Create-Category-Modal.show,
+    .Edit-Category-Modal.show,
+    .Delete-Category-Modal.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+    
+    .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Cache modal elements and implement shared functionality
+    const modals = {
+        create: {
+            element: document.getElementById("Create-Category-Modal"),
+            container: document.getElementById("Create-Category-modal-form-container"),
+            closeBtn: document.querySelector("#Create-Category-Modal .close-btn1"),
+            cache: null,
+            url: () => "/admin_category/create/"
+        },
+        edit: {
+            element: document.getElementById("Edit-Category-Modal"),
+            container: document.getElementById("Edit-Category-modal-form-container"),
+            closeBtn: document.querySelector("#Edit-Category-Modal .close-btn1"),
+            cache: {},
+            url: (id) => `/admin_category/${id}/edit/`
+        },
+        delete: {
+            element: document.getElementById("Delete-Category-Modal"),
+            container: document.getElementById("Delete-Category-modal-form-container"),
+            closeBtn: document.querySelector("#Delete-Category-Modal .close-btn1"),
+            cache: {},
+            url: (id) => `/admin_category/${id}/delete/`
+        }
+    };
+
+    // Preload Create Modal content
+    fetch(modals.create.url())
+        .then(response => response.text())
+        .then(data => {
+            modals.create.cache = data;
+        })
+        .catch(error => console.error("Error preloading create modal:", error));
+
+    // Generic modal handler
+    function setupModal(modalConfig, triggerSelector, getIdFromTrigger) {
+        const triggers = document.querySelectorAll(triggerSelector);
+        
+        triggers.forEach(trigger => {
+            trigger.addEventListener("click", async (e) => {
+                e.preventDefault();
+                const id = getIdFromTrigger(trigger);
+                
+                // Show loading state
+                modalConfig.container.innerHTML = '<div class="loading-spinner"></div>';
+                modalConfig.element.classList.add("show");
+                
+                // Check cache first
+                const cacheKey = id || 'create';
+                if (modalConfig.cache && (id ? modalConfig.cache[id] : modalConfig.cache)) {
+                    modalConfig.container.innerHTML = id ? modalConfig.cache[id] : modalConfig.cache;
+                    return;
+                }
+                
+                try {
+                    const response = await fetch(modalConfig.url(id));
+                    const html = await response.text();
+                    modalConfig.container.innerHTML = html;
+                    
+                    // Cache the response
+                    if (id) {
+                        modalConfig.cache[id] = html;
+                    } else {
+                        modalConfig.cache = html;
+                    }
+                } catch (error) {
+                    modalConfig.container.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                }
+            });
+        });
+        
+        // Close modal handler
+        if (modalConfig.closeBtn) {
+            modalConfig.closeBtn.addEventListener("click", () => {
+                modalConfig.element.classList.remove("show");
+            });
+        }
+    }
+
+    // Initialize all modals
+    setupModal(
+        modals.create,
+        ".create-Category",
+        () => null // No ID needed for create
+    );
+    
+    setupModal(
+        modals.edit,
+        ".edit-Category",
+        (trigger) => trigger.getAttribute("data-Category-id")
+    );
+    
+    setupModal(
+        modals.delete,
+        ".delete-Category",
+        (trigger) => trigger.getAttribute("data-Category-id2")
+    );
+
+    
+    // Close modals when clicking outside
+    window.addEventListener("click", (e) => {
+        if (e.target.classList.contains("Create-Category-Modal") || 
+            e.target.classList.contains("Edit-Category-Modal") || 
+            e.target.classList.contains("Delete-Category-Modal")) {
+            e.target.classList.remove("show");
+        }
+    });
+});
+
+ 
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputCategory = document.querySelector(".Category"); // Input field
+    const CategoryTableRows = document.querySelectorAll(".Category1 tr"); // Desktop table rows
+    const PrinciplesCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputCategory.addEventListener("input", () => {
+        const query = searchInputCategory.value.toLowerCase().trim();
+
+        // Search in desktop table
+        CategoryTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        PrinciplesCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

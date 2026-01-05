@@ -1,0 +1,49 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'CreateTribe' %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                            
+            <!-- Name Field -->
+            <div class="form-group floating-label-group">
+                <select id="id_name" name="name" class="form-control" required>
+                    <option value="Ilocos Region">Ilocos Region (Region I)</option>
+                    <option value="Cagayan Valley">Cagayan Valley (Region II)</option>
+                    <option value="Central Luzon">Central Luzon (Region III)</option>
+                    <option value="CALABARZON">CALABARZON (Region IV-A)</option>
+                    <option value="MIMAROPA">MIMAROPA (Region IV-B)</option>
+                    <option value="Bicol Region">Bicol Region (Region V)</option>
+                    <option value="Western Visayas">Western Visayas (Region VI)</option>
+                    <option value="Central Visayas">Central Visayas (Region VII)</option>
+                    <option value="Eastern Visayas">Eastern Visayas (Region VIII)</option>
+                    <option value="Zamboanga Peninsula">Zamboanga Peninsula (Region IX)</option>
+                    <option value="Northern Mindanao">Northern Mindanao (Region X)</option>
+                    <option value="Davao Region">Davao Region (Region XI)</option>
+                    <option value="SOCCSKSARGEN">SOCCSKSARGEN (Region XII)</option>
+                    <option value="Caraga">Caraga (Region XIII)</option>
+                    <option value="Cordillera Administrative Region">Cordillera Administrative Region (CAR)</option>
+                    <option value="Bangsamoro">Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)</option>
+                </select>
+                <label for="id_name" class="floating-label">Region</label>
+            </div>
+
+                
+               
+                
+                <!-- Description Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_description" name="description" class="form-control" placeholder=" " required></textarea>
+                    <label for="id_description" class="floating-label">Description</label>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Add New Region</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,75 @@
+{% load static %}
+
+<div id="Instrument8">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'CreatePrincipleCard' %}" class="admin-form8">
+        {% csrf_token %}
+        
+        <div class="form-sections-container8">
+            <!-- Principle Selection Section -->
+            <div class="form-section8">
+                <h3 class="section-title8">Principle Details</h3>
+                <div class="form-group8">
+                    <label for="id_guiding_principles" class="form-label8">Guiding Principle</label>
+                    <select name="guiding_principles" id="id_guiding_principles" class="form-control8">
+                        {% for principle in principles %}
+                        <option value="{{ principle.pk }}" {% if principle.pk == card.principle.pk %}selected{% endif %}>
+                            {{ principle.title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group8">
+                    <label for="id_card_type" class="form-label8">Card Type</label>
+                    <select name="card_type" id="id_card_type" class="form-control8">
+                        <option value="Mission">Mission</option>
+                        <option value="Vision">Vision</option>
+                        <option value="Objective">Objective</option>
+                        <option value="Advocacy">Advocacy</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Style Section -->
+            <div class="form-section8">
+                <h3 class="section-title8">Card Styling</h3>
+                <div class="form-group8">
+                    <label for="id_icon" class="form-label8">Icon (Use Font-awesome)</label>
+                    <input type="text" id="id_icon" name="icon" class="form-control8">
+                </div>
+                
+                <div class="form-group8">
+                    <label for="id_principle" class="form-label8">Accent Color (Hex)</label>
+                    <input type="text" id="id_principle" name="accent_color" class="form-control8" value="#000000" required>
+                </div>
+            </div>
+            
+            <!-- Content Section -->
+            <div class="form-section8">
+                <h3 class="section-title8">Card Content</h3>
+            <div class="form-group8">
+                <label class="form-label8">
+                    <i class="fa-solid fa-circle-info" style="color: #007bff;" title="Important Notice"></i>
+                    Please choose <strong>only one</strong>: either a <em>description</em> or <em>bullet points</em>. Do not use both.
+                </label>
+            </div>
+
+                
+                <div class="form-group8">
+                    <label for="id_description" class="form-label8">Description</label>
+                    <textarea id="id_description" name="description" class="form-control8"></textarea>
+                </div>
+                
+                <div class="form-group8">
+                    <label for="id_region" class="form-label8">Bullet Points (One per line)</label>
+                    <textarea id="id_region" name="bullet_points" class="form-control8"></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center;">
+            <button type="submit" class="btn-primary8">Save Card</button>
+        </div>
+        <div id="error-message-container8" style="color: red; display: none; text-align: center;"></div>
+    </form>
+</div>

@@ -1,0 +1,72 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" action="{% url 'Lesson_Status' Lesson.pk %}" class="admin-form" id="statusForm">
+        <div class="form-layout">
+            <div class="form-right-section">
+                {% csrf_token %}
+                <h3>Update Lesson Status</h3>
+                <p><strong>Event:</strong> {{ Lesson.school_name }}</p>
+                <p><strong>Current Status:</strong> {{ Lesson.status }}</p>
+                
+                <div class="form-group">
+                    <label for="id_status">Select New Status:</label>
+                    <select id="id_status" name="status" class="form-control" required onchange="toggleDeclineReason()">
+                        <option value="Pending" {% if Lesson.status == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="Accepted" {% if Lesson.status == 'Accepted' %}selected{% endif %}>Accepted</option>
+                        <option value="Declined" {% if Lesson.status == 'Declined' %}selected{% endif %}>Declined</option>
+                        <option value="Completed" {% if Lesson.status == 'Completed' %}selected{% endif %}>Completed</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="declineReasonGroup" style="display: none;">
+                    <label for="id_decline_reason">Reason for Decline (Required):</label>
+                    <textarea 
+                        id="id_decline_reason" 
+                        name="decline_reason" 
+                        class="form-control" 
+                        rows="3" 
+                        placeholder="Please provide a reason for declining this appointment..."
+                    >{{ Lesson.decline_reason|default:'' }}</textarea>
+                    <small class="text-muted">This message will be visible to the user.</small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" onclick="return validateForm()">Update Status</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- 
+<script>
+    function toggleDeclineReason() {
+        var statusSelect = document.getElementById('id_status');
+        var declineReasonGroup = document.getElementById('declineReasonGroup');
+        
+        if (statusSelect.value === 'Declined') {
+            declineReasonGroup.style.display = 'block';
+            document.getElementById('id_decline_reason').required = true;
+        } else {
+            declineReasonGroup.style.display = 'none';
+            document.getElementById('id_decline_reason').required = false;
+        }
+    }
+    
+    function validateForm() {
+        var statusSelect = document.getElementById('id_status');
+        var declineReason = document.getElementById('id_decline_reason');
+        
+        if (statusSelect.value === 'Declined') {
+            if (!declineReason.value.trim()) {
+                alert('Please provide a reason for declining the appointment.');
+                declineReason.focus();
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleDeclineReason();
+    });
+</script> -->

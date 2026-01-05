@@ -1,0 +1,360 @@
+<style>
+       .create-Significance {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Significance span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Significance::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Significance:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Significance:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Significance:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Significance:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Significance:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Significance {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Significance::before {
+            content: '+ Significance';
+            font-size: 1.1rem;
+        }
+        
+        .create-Significance span {
+            display: none;
+        }
+        
+        .create-Significance::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Significance {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Significance:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Significance btn-style" id="create-cultural-significance-btn">
+                <span>Cultural Significance</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Significance" placeholder="Search for Cultural Significance records...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <!-- Cultural Significance Management Section -->
+    <div id="user-section">
+        {% if Significance %}
+           
+                <!-- Cultural Significance List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for significance in Significance %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instruments-image">
+                             
+                            </div>
+                            <div class="instrument-title">
+                                <h3>{{ significance.instrument.name }}</h3>
+                                <p>Cultural Significance</p>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">{{ significance.description|truncatewords:12 }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Significance" href="" data-cultural-significance-id="{{ significance.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Cultural Significance"></i>
+                                </a>
+                                <a class="action-link delete-Significance" href="" data-cultural-significance-id2="{{ significance.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Cultural Significance"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+           
+                <!-- Cultural Significance Table - Desktop Only -->
+                <div id="cultural-significance-table" class="table-section">
+                    <table id="cultural-significance-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Instrument</th>
+                                <th>Description</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Significance1">
+                            {% for significance in Significance %}
+                            <tr>
+                                <td>{{ significance.instrument.name }}</td>
+                                <td>{{ significance.description|truncatewords:10 }}</td>
+                                <td>{{ significance.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a class="action-link edit-Significance" href="" data-Significance-id="{{ significance.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Cultural Significance"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Significance" href="" data-Significance-id2="{{ significance.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Cultural Significance"></i>
+                                    </a>
+                                    <!-- |
+                                    <a class="action-link View-Significance" href="">
+                                        <i class="fa-solid fa-eye" title="View Cultural Significance"></i>
+                                    </a> -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            
+        {% else %}
+        <p class="text-center">No Cultural Significance records found. Start by adding a new record!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<!-- Modal Dialogs -->
+<div id="Edit-Significance-Modal" class="Edit-Significance-Modal">
+    <div class="Edit-Significance-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Significance-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Delete-Significance-Modal" class="Delete-Significance-Modal">
+    <div class="Delete-Significance-modal-content">
+        <div id="Delete-Significance-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Create-Significance-Modal" class="Create-Significance-Modal">
+    <div class="Create-Significance-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Significance-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+
+<script>
+// create Significance
+document.addEventListener("DOMContentLoaded", () => {
+    const addSignificancemodal = document.getElementById("Create-Significance-Modal");
+    const closeBtn = addSignificancemodal.querySelector(".close-btn1");
+    const addSignificancemodalFormContainer = document.getElementById("Create-Significance-modal-form-container");
+    const addSignificanceLinks = document.querySelectorAll(".create-Significance");
+
+    // Handle clicking on the edit link
+    addSignificanceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Significance/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addSignificancemodalFormContainer.innerHTML = data;
+                    addSignificancemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addSignificancemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addSignificancemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Instrument
+document.addEventListener("DOMContentLoaded", () => {
+    const delSignificancemodal = document.getElementById("Delete-Significance-Modal");
+    const closeBtn = delSignificancemodal.querySelector(".close-btn1");
+    const delSignificancemodalFormContainer = document.getElementById("Delete-Significance-modal-form-container");
+    const delSignificanceLinks = document.querySelectorAll(".delete-Significance");
+
+    // Handle clicking on the edit link
+    delSignificanceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const SignificanceId = link.getAttribute("data-Significance-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Significance/${SignificanceId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delSignificancemodalFormContainer.innerHTML = data;
+                    delSignificancemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delSignificancemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delSignificancemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Significance
+document.addEventListener("DOMContentLoaded", () => {
+    const updateSignificancemodal = document.getElementById("Edit-Significance-Modal");
+    const closeBtn = updateSignificancemodal.querySelector(".close-btn1");
+    const SignificancemodalFormContainer = document.getElementById("Edit-Significance-modal-form-container");
+    const editSignificanceLinks = document.querySelectorAll(".edit-Significance");
+
+    // Handle clicking on the edit link
+    editSignificanceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const SignificanceId = link.getAttribute("data-Significance-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Significance/${SignificanceId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    SignificancemodalFormContainer.innerHTML = data;
+                    updateSignificancemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    SignificancemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateSignificancemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputSignificance = document.querySelector(".Significance"); // Input field
+    const SignificanceTableRows = document.querySelectorAll(".Significance1 tr"); // Desktop table rows
+    const SignificanceCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputSignificance.addEventListener("input", () => {
+        const query = searchInputSignificance.value.toLowerCase().trim();
+
+        // Search in desktop table
+        SignificanceTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        SignificanceCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

@@ -1,0 +1,1314 @@
+{% extends 'app/login/FrontPage.html' %}
+{% load static %}
+{% block content %}
+    <style>        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/static/images/ABOUT.jpg');
+            background-size: cover;
+            background-position: cover;
+            color: white;
+            text-align: center;
+            padding-top: 80px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .hero-content a {
+            text-decoration: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Instruments Gallery */
+        .gallery {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .instruments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .instrument-card {
+            background-color: var(--light-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .instrument-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .instrument-image-container {
+            height: 300px;
+            background-color: #f0f0f0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .instrument-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .view-details-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(140, 35, 24, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .view-details-btn:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        .instrument-info {
+            padding: 20px;
+        }
+        
+        .instrument-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .instrument-info p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .sound-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .sound-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .sound-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .sound-btn.playing {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .sound-name {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Pagination Controls */
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .pagination-btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pagination-btn:hover:not(:disabled) {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .pagination-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .page-indicator {
+            font-weight: 600;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            overflow: hidden;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+        }
+        
+        .modal-image-container {
+            flex: 2;
+            height: 100%;
+            position: relative;
+        }
+        
+        .modal-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #f0f0f0;
+        }
+        
+        /* 3D Model Viewer Styles */
+        .model-viewer-container {
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0;
+        }
+        
+        model-viewer {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .modal-sound-panel {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .sound-panel-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        
+        .sound-sample {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .sound-sample h4 {
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .modal-sound-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            border: none;
+            border-radius: 30px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .modal-sound-btn:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .modal-sound-btn.playing {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            background-color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+        
+        .modal-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+        
+        .modal-info.collapsed {
+            transform: translateY(100%);
+        }
+        
+        .modal-info.hidden {
+            display: none;
+        }
+        
+        .modal-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        /* Info Toggle Button */
+        .info-toggle-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .info-toggle-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateX(-50%) scale(1.1);
+        }
+        
+        /* View Toggle Buttons */
+        .view-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .view-toggle-btn {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .view-toggle-btn:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .view-toggle-btn.active {
+            background-color: var(--primary-color);
+        }
+        
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background-color: var(--light-color);
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .modal-content {
+                flex-direction: column;
+                height: 90vh;
+                width: 95%;
+            }
+            
+            .modal-image-container {
+                flex: 1;
+                min-height: 50%;
+            }
+            
+            .modal-sound-panel {
+                flex: 1;
+                overflow-y: auto;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                margin-top: 30px;
+            }
+            
+            .pagination-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .instruments-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-info h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ----------------------------------------------------
+   UNIVERSAL RESPONSIVE FIXES (320px - 4K screens)
+---------------------------------------------------- */
+
+/* Container spacing fix */
+@media (max-width: 480px) {
+  .container {
+    width: 95%;
+    padding: 0 10px;
+  }
+}
+
+/* HERO (Phones & Tablets) */
+@media (max-width: 768px) {
+  .hero {
+    height: 60vh;
+    padding-top: 60px;
+  }
+
+  .hero-content {
+    padding: 0 15px;
+  }
+
+  .hero h1 {
+    font-size: 2.3rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+}
+
+/* HERO for extra small phones (iPhone SE, 320px width) */
+@media (max-width: 360px) {
+  .hero {
+    height: 55vh;
+  }
+
+  .hero h1 {
+    font-size: 1.9rem;
+  }
+
+  .hero p {
+    font-size: 0.85rem;
+  }
+}
+
+/* GALLERY - Better scaling on narrow screens */
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .instruments-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .instrument-card {
+    border-radius: 8px;
+  }
+
+  .instrument-image-container {
+    height: 250px;
+  }
+}
+
+/* Very small screens (single column + smaller images) */
+@media (max-width: 360px) {
+  .instrument-image-container {
+    height: 200px;
+  }
+
+  .instrument-info h3 {
+    font-size: 1.2rem;
+  }
+}
+
+/* ABOUT SECTION (phones) */
+@media (max-width: 768px) {
+  .about {
+    padding: 60px 0;
+  }
+
+  .about-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .about-text h2 {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+}
+
+/* -----------------------------------------------
+   MODAL RESPONSIVENESS
+------------------------------------------------ */
+
+/* Medium screens (tablets) */
+@media (max-width: 992px) {
+  .modal-content {
+    width: 95%;
+    height: 85vh;
+    flex-direction: column;
+  }
+
+  .modal-image-container {
+    height: 50%;
+  }
+
+  .modal-sound-panel {
+    height: 50%;
+    padding: 20px;
+  }
+}
+
+/* Phones (full stacked modal) */
+@media (max-width: 768px) {
+  .modal-content {
+    height: 90vh;
+  }
+
+  .modal-image-container {
+    height: 40%;
+  }
+
+  .modal-sound-panel {
+    height: 60%;
+    padding: 15px;
+  }
+
+  .sound-panel-title {
+    font-size: 1.3rem;
+  }
+
+  .close-modal {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+}
+
+/* Small phones (320–360px) */
+@media (max-width: 360px) {
+  .modal-content {
+    width: 97%;
+  }
+
+  .modal-sound-btn {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  .modal-info h3 {
+    font-size: 1.2rem;
+  }
+
+  .info-toggle-btn {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* -----------------------------------------------
+   PAGINATION FIX
+------------------------------------------------ */
+@media (max-width: 480px) {
+  .pagination-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pagination-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+}
+
+    </style>
+
+    <!-- Import the 3D model viewer -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>{{ 3dContent.hero_title }}</h1>
+                <p>{{ 3dContent.hero_description }}</p>
+                <a href="#gallery" class="btn">View Gallery</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instruments Gallery -->
+    <section class="gallery" id="gallery">
+        <div class="container">
+            <h2 class="section-title">Instrument Gallery</h2>
+            <div class="instruments-grid">
+                {% for instrument in Instruments %}
+                <div class="instrument-card" data-instrument-index="{{ forloop.counter0 }}">
+                    <div class="instrument-image-container">
+                        {% if instrument.image %}
+                            <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}">
+                        {% else %}
+                            <img src="{% static 'images/placeholder.jpg' %}" alt="{{ instrument.name }}">
+                        {% endif %}
+                        <button class="view-details-btn" data-toggle="modal" data-target="#loginInfoModal" >
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                    <div class="instrument-info">
+                        <h3>{{ instrument.name }}</h3>
+                        <p>{{ instrument.description|truncatewords:30 }}</p>
+                        <div class="sound-controls">
+                            <button class="sound-btn" data-toggle="modal" data-target="#loginInfoModal">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <span class="sound-name">
+                                {% if instrument.sound_set.all %}
+                                    {{ instrument.sound_set.first.title }}
+                                {% else %}
+                                    No Sample
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No instruments available.</p>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination Controls -->
+            <div class="pagination-controls">
+                <button class="pagination-btn" id="prev-btn">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <span class="page-indicator" id="page-indicator">Page 1</span>
+                <button class="pagination-btn" id="next-btn">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+<!-- Enhanced Info Modal (Visual Design Only) -->
+<div id="loginInfoModal" class="custom-modal" aria-hidden="true">
+  <div class="custom-modal-content" role="alertdialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="close-modal" aria-label="Close dialog">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 4L4 12" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/>
+        <path d="M4 4L12 12" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="modal-graphic">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 15V17M6 21H18C19.1046 21 20 20.1046 20 19V13C20 11.8954 19.1046 11 18 11H6C4.89543 11 4 11.8954 4 13V19C4 20.1046 4.89543 21 6 21Z" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+        <path d="M16 11V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V11" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h3 id="modalTitle" class="modal-title">Access Restricted</h3>
+    <p class="modal-message">Please log in to view full instrument details and features.</p>
+    <div class="modal-decoration">
+      <div class="decoration-line"></div>
+      <div class="decoration-dot"></div>
+      <div class="decoration-line"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+.custom-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-modal.show {
+  opacity: 1;
+}
+
+.custom-modal-content {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  max-width: 380px;
+  margin: 15vh auto;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-30px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.custom-modal.show .custom-modal-content {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.close-modal {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #F3F4F6;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.close-modal:hover {
+  background: #E5E7EB;
+}
+
+.modal-graphic {
+  margin: 0 auto 1.5rem;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #EEF2FF;
+  border-radius: 50%;
+}
+
+.modal-title {
+  color: #1F2937;
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.modal-message {
+  color: #6B7280;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.modal-decoration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1.5rem;
+}
+
+.decoration-line {
+  height: 1px;
+  width: 40px;
+  background: linear-gradient(90deg, transparent, #E5E7EB, transparent);
+}
+
+.decoration-dot {
+  width: 6px;
+  height: 6px;
+  background: #4F46E5;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 480px) {
+  .custom-modal-content {
+    width: 90%;
+    margin: 10vh auto;
+    padding: 2rem 1.5rem;
+  }
+}
+</style>
+
+<script>
+document.querySelectorAll('[data-target="#loginInfoModal"]').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    showModal();
+  });
+});
+
+document.querySelectorAll('.close-modal').forEach(btn => {
+  btn.addEventListener('click', function() {
+    hideModal();
+  });
+});
+
+window.addEventListener('click', function(e) {
+  if (e.target === document.getElementById('loginInfoModal')) {
+    hideModal();
+  }
+});
+
+document.addEventListener('keydown', function(e) {
+  const modal = document.getElementById('loginInfoModal');
+  if (e.key === 'Escape' && modal.style.display === 'block') {
+    hideModal();
+  }
+});
+
+function showModal() {
+  const modal = document.getElementById('loginInfoModal');
+  modal.style.display = 'block';
+  modal.setAttribute('aria-hidden', 'false');
+  void modal.offsetWidth; // Trigger reflow
+  modal.classList.add('show');
+}
+
+function hideModal() {
+  const modal = document.getElementById('loginInfoModal');
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden', 'true');
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 300);
+}
+</script>
+
+    <!-- Modal for each instrument -->
+    {% for instrument in Instruments %}
+    <div class="modal" id="modal-{{ instrument.id }}">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            
+            <!-- View Toggle Buttons -->
+            <div class="view-toggle">
+                <button class="view-toggle-btn active" onclick="switchView('image-{{ instrument.id }}', '3d-{{ instrument.id }}', this)">
+                    <i class="fas fa-image"></i> Image
+                </button>
+                {% if instrument.three_d %}
+                <button class="view-toggle-btn" onclick="switchView('3d-{{ instrument.id }}', 'image-{{ instrument.id }}', this)">
+                    <i class="fas fa-cube"></i> 3D Model
+                </button>
+                {% endif %}
+            </div>
+
+            <div class="modal-image-container">
+                <!-- Image View -->
+                <img id="image-{{ instrument.id }}" src="{% if instrument.image %}{{ instrument.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" alt="{{ instrument.name }}">
+
+                <!-- 3D Model Viewer -->
+                {% if instrument.three_d %}
+                <div class="model-viewer-container" id="3d-{{ instrument.id }}" style="display: none;">
+                    <model-viewer 
+                        src="{{ instrument.three_d.file.url }}"
+                        alt="3D model of {{ instrument.name }}"
+                        camera-controls
+                        auto-rotate
+                        shadow-intensity="1">
+                    </model-viewer>
+                </div>
+                {% endif %}
+
+                <!-- Info Toggle Button -->
+                <button class="info-toggle-btn" onclick="toggleInfo('modal-info-{{ instrument.id }}', this)">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+
+                <!-- Modal Info Section -->
+                <div class="modal-info" id="modal-info-{{ instrument.id }}">
+                    <h3>{{ instrument.name }}</h3>
+                    <p>{{ instrument.description }}</p>
+                </div>
+            </div>
+
+            <div class="modal-sound-panel">
+                <h3 class="sound-panel-title">Sound Samples</h3>
+                
+                {% if instrument.sound_set.all %}
+                    {% for sound in instrument.sound_set.all %}
+                    <div class="sound-sample">
+                        <h4>{{ sound.title }}</h4>
+                        <button class="modal-sound-btn" onclick="playSound(this, '{{ sound.sound_sample.url }}')">
+                            <span>Play Sample</span><i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No sound samples available for this instrument.</p>
+                {% endif %}
+                
+                <!-- Additional Information -->
+                <div style="margin-top: 30px;">
+                    <h3 class="sound-panel-title">Additional Information</h3>
+                    
+                    {% if instrument.region %}
+                    <div class="sound-sample">
+                        <h4>Region</h4>
+                        <p>{{ instrument.region.name }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if instrument.province %}
+                    <div class="sound-sample">
+                        <h4>Province</h4>
+                        <p>{{ instrument.province }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if instrument.category %}
+                    <div class="sound-sample">
+                        <h4>Category</h4>
+                        <p>{{ instrument.category.name }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if instrument.cultural_significance %}
+                    <div class="sound-sample">
+                        <h4>Cultural Significance</h4>
+                        <p>{{ instrument.cultural_significance.description }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if instrument.funfact %}
+                    <div class="sound-sample">
+                        <h4>Fun Fact</h4>
+                        <p>{{ instrument.funfact.description }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- About Section -->
+            <section class="about" id="about">
+                <div class="container">
+                    <div class="about-content">
+                        <div class="about-text">
+                            <h2>{{ 3dContent.about_title }}</h2>
+                            <p>{{ 3dContent.about_content|linebreaks }}</p>
+                        </div>
+                        <div class="about-image">
+                            <img src="{{ 3dContent.about_image.url }}" alt="About Philippine Instruments">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+    <script>
+        // Pagination functionality
+        const instrumentsPerPage = 6;
+        let currentPage = 1;
+        let totalPages = 1;
+        
+        // Initialize pagination
+        document.addEventListener('DOMContentLoaded', function() {
+            const instrumentCards = document.querySelectorAll('.instrument-card');
+            totalPages = Math.ceil(instrumentCards.length / instrumentsPerPage);
+            
+            // Show first page initially
+            showPage(1);
+            updatePaginationControls();
+            
+            // Add event listeners to pagination buttons
+            document.getElementById('prev-btn').addEventListener('click', goToPrevPage);
+            document.getElementById('next-btn').addEventListener('click', goToNextPage);
+        });
+        
+        // Show specific page
+        function showPage(pageNumber) {
+            const instrumentCards = document.querySelectorAll('.instrument-card');
+            const startIndex = (pageNumber - 1) * instrumentsPerPage;
+            const endIndex = startIndex + instrumentsPerPage;
+            
+            // Hide all instruments
+            instrumentCards.forEach(card => {
+                card.style.display = 'none';
+            });
+            
+            // Show instruments for current page
+            for (let i = startIndex; i < endIndex && i < instrumentCards.length; i++) {
+                instrumentCards[i].style.display = 'block';
+            }
+            
+            currentPage = pageNumber;
+            updatePaginationControls();
+        }
+        
+        // Go to previous page
+        function goToPrevPage() {
+            if (currentPage > 1) {
+                showPage(currentPage - 1);
+                // Scroll to top of gallery
+                document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Go to next page
+        function goToNextPage() {
+            if (currentPage < totalPages) {
+                showPage(currentPage + 1);
+                // Scroll to top of gallery
+                document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Update pagination controls
+        function updatePaginationControls() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const pageIndicator = document.getElementById('page-indicator');
+            
+            // Update button states
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+            
+            // Update page indicator
+            pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+        }
+
+        // Simple JavaScript for modal and view switching
+        let currentAudio = null;
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = "block";
+                document.body.style.overflow = "hidden";
+                
+                // Reset any playing audio
+                if (currentAudio) {
+                    currentAudio.pause();
+                    currentAudio.currentTime = 0;
+                    const playingBtns = document.querySelectorAll('.modal-sound-btn.playing');
+                    playingBtns.forEach(btn => {
+                        btn.classList.remove('playing');
+                        btn.innerHTML = '<span>Play Sample</span><i class="fas fa-play"></i>';
+                    });
+                    currentAudio = null;
+                }
+            }
+        }
+        
+        function closeModal() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.style.display = "none";
+            });
+            
+            // Stop any playing audio
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                currentAudio = null;
+            }
+            
+            document.body.style.overflow = "auto";
+        }
+        
+        function switchView(showId, hideId, clickedBtn) {
+            const showElement = document.getElementById(showId);
+            const hideElement = document.getElementById(hideId);
+            const buttons = clickedBtn.parentElement.querySelectorAll('.view-toggle-btn');
+            
+            if (showElement && hideElement) {
+                showElement.style.display = 'block';
+                hideElement.style.display = 'none';
+                
+                // Update button states
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                clickedBtn.classList.add('active');
+            }
+        }
+        
+        // Toggle modal info section - MODIFIED to completely hide/show
+        function toggleInfo(infoId, button) {
+            const infoElement = document.getElementById(infoId);
+            const icon = button.querySelector('i');
+            
+            if (infoElement.classList.contains('hidden')) {
+                // Show info
+                infoElement.classList.remove('hidden');
+                infoElement.classList.remove('collapsed');
+                icon.className = 'fa-solid fa-chevron-down';
+            } else {
+                // Hide info completely
+                infoElement.classList.add('hidden');
+                icon.className = 'fa-solid fa-chevron-up';
+            }
+        }
+        
+        function playSound(button, soundUrl) {
+            // Stop current audio if playing
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                const playingBtns = document.querySelectorAll('.modal-sound-btn.playing');
+                playingBtns.forEach(btn => {
+                    btn.classList.remove('playing');
+                    btn.innerHTML = '<span>Play Sample</span><i class="fas fa-play"></i>';
+                });
+            }
+            
+            // Create new audio element if needed
+            if (!currentAudio || currentAudio.src !== soundUrl) {
+                currentAudio = new Audio(soundUrl);
+                
+                currentAudio.onended = function() {
+                    button.classList.remove('playing');
+                    button.innerHTML = '<span>Play Sample</span><i class="fas fa-play"></i>';
+                    currentAudio = null;
+                };
+            }
+            
+            if (currentAudio.paused) {
+                currentAudio.play();
+                button.classList.add('playing');
+                button.innerHTML = '<span>Playing</span><i class="fas fa-pause"></i>';
+            } else {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                button.classList.remove('playing');
+                button.innerHTML = '<span>Play Sample</span><i class="fas fa-play"></i>';
+                currentAudio = null;
+            }
+        }
+        
+        // Close modal when clicking outside content
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                closeModal();
+            }
+        }
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,798 @@
+{% load static %}
+<style>
+       .create-Principle {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Principle span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Principle::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Principle:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Principle:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Principle:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Principle:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Principle:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Principle {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Principle::before {
+            content: '+ Principle';
+            font-size: 1.1rem;
+        }
+        
+        .create-Principle span {
+            display: none;
+        }
+        
+        .create-Principle::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Principle {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Principle:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Principle btn-style" id="create-guiding-btn">
+                <span>Guiding Principle</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Principle" placeholder="Search for Guiding Principles...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if Principles %}
+        <!-- Mobile Cards View -->
+        <div id="services-list" class="list-section mobile-cards">
+            {% for principle in Principles %}
+            <div class="instrument-card">
+                <div class="card-header">
+                    <div class="instruments-image">
+                        {% if principle.image %}
+                        <img src="{{ principle.image.url }}" alt="{{ principle.title }}">
+                        {% else %}
+                        <span>No image available</span>
+                        {% endif %}
+                    </div>
+                    <div class="instrument-title">
+                        <h3>{{ principle.title }}</h3>
+                        <p>Guiding Principle</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="instrument-detail">
+                        <span class="detail-label">Description:</span>
+                        <span class="detail-value">{{ principle.description|truncatewords:12 }}</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="instrument-actions">
+                        <a class="action-link edit-Principle" 
+                           href="" 
+                           data-Principle-id="{{ principle.pk }}">
+                            <i class="fa-solid fa-pen" title="Edit Principle"></i>
+                        </a>
+                        <a class="action-link delete-Principle" 
+                           href="" 
+                           data-Principle-id2="{{ principle.pk }}">
+                            <i class="fa-solid fa-trash" title="Delete Principle"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Desktop Table View -->
+        <div id="services-table" class="table-section">
+            <table id="user-table" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-tbody" class="Principle1">
+                    {% for principle in Principles %}
+                    <tr>
+                        <td>
+                        {% if principle.image %}
+                        <img src="{{ principle.image.url }}" alt="{{ principle.title }}" class="img-fluid rounded">
+                        {% else %}
+                        <span>No image available</span>
+                        {% endif %}
+                        </td>
+                        <td>{{ principle.title }}</td>
+                        <td>{{ principle.description|truncatewords:10 }}</td>
+                        <td>
+                            <a class="action-link edit-Principle" href="" data-Principle-id="{{ principle.pk }}">
+                                <i class="fa-solid fa-pen" title="Edit Principle"></i>
+                            </a>
+                            |
+                            <a class="action-link delete-Principle" href="" data-Principle-id2="{{ principle.pk }}">
+                                <i class="fa-solid fa-trash" title="Delete Principle"></i>
+                            </a>
+                            <!-- |
+                            <a class="action-link View-Principle" href="">
+                                <i class="fa-solid fa-eye" title="View Principle"></i>
+                            </a> -->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">No Guiding Principles found. Start by adding one!</p>
+        {% endif %}
+    </div>
+</div>
+
+<!--UPDATE Principle-->
+<div id="Edit-Principle-Modal" class="Edit-Principle-Modal">
+    <div class="Edit-Principle-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Principle-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE Principle-->
+<div id="Delete-Principle-Modal" class="Delete-Principle-Modal">
+    <div class="Delete-Principle-modal-content">
+
+        <div id="Delete-Principle-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Principle-->
+ <div id="Create-Principle-Modal" class="Create-Principle-Modal">
+    <div class="Create-Principle-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Principle-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<style>
+       .create-PrincipleCard {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-PrincipleCard span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-PrincipleCard::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-PrincipleCard:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-PrincipleCard:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-PrincipleCard:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-PrincipleCard:active {
+        transform: scale(0.98);
+    }
+    
+    .create-PrincipleCard:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-PrincipleCard {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-PrincipleCard::before {
+            content: '+ Card';
+            font-size: 1.1rem;
+        }
+        
+        .create-PrincipleCard span {
+            display: none;
+        }
+        
+        .create-PrincipleCard::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-PrincipleCard {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-PrincipleCard:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+
+
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-PrincipleCard btn-style" id="create-principlecard-btn">
+                <span>Principle Card</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="PrincipleCard" placeholder="Search for Principle Cards...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if PrincipleCards %}
+        <!-- Mobile Cards View -->
+        <div id="services-list" class="list-section mobile-cards">
+            {% for card in PrincipleCards %}
+            <div class="instrument-card">
+                <div class="card-header">
+                    <div class="instrument-title">
+                        <h3>{{ card.card_type }}</h3>
+                        <p>Principle Card</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="instrument-detail">
+                        <span class="detail-label">Description:</span>
+                        <span class="detail-value">{{ card.description|truncatewords:12 }}</span>
+                    </div>
+                    {% if card.get_bullet_list %}
+                    <div class="instrument-detail">
+                        <span class="detail-label">Details:</span>
+                        <ul class="detail-value">
+                            {% for bullet in card.get_bullet_list %}
+                            <li style="margin-left: 10px;">{{ bullet }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    {% if card.icon %}
+                    <div class="instrument-icon" style="margin-top: 10px;">
+                        <i class="fa-solid {{ card.icon }} principle-card-icon" style="--icon-color: {{ card.accent_color }}"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <div class="instrument-actions">
+                        <a class="action-link edit-PrincipleCard" href="" data-PrincipleCard-id="{{ card.pk }}">
+                            <i class="fa-solid fa-pen" title="Edit Principle Card"></i>
+                        </a>
+                        <a class="action-link delete-PrincipleCard" href="" data-PrincipleCard-id2="{{ card.pk }}">
+                            <i class="fa-solid fa-trash" title="Delete Principle Card"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Desktop Table View -->
+        <div id="services-table" class="table-section">
+            <table id="user-table" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Card Type</th>
+                        <th>Description & Details</th>
+                        <th>Icon</th>
+                        <th>Table Color</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-tbody" class="PrincipleCard1">
+                    {% for card in PrincipleCards %}
+                    <tr>
+                        <td>{{ card.card_type }}</td>
+                        <td>
+                            <div>{{ card.description|truncatewords:10 }}</div>
+                            {% if card.get_bullet_list %}
+                                <ul class="custom-bullet-list">
+                                    {% for bullet in card.get_bullet_list %}
+                                        <li>{{ bullet }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </td>
+                        
+                        <td>
+                        {% if card.icon %}
+                        <i class="fa-solid {{ card.icon }} principle-card-icon" style="--icon-color: {{ card.accent_color }}"></i>
+                        {% else %}
+                        N/A
+                        {% endif %}
+                        </td>
+                        <td>
+                            {{ card.accent_color }}
+                        </td>
+                        <td>
+                            <a class="action-link edit-PrincipleCard" href="" data-PrincipleCard-id="{{ card.pk }}">
+                                <i class="fa-solid fa-pen" title="Edit Principle Card"></i>
+                            </a>
+                            |
+                            <a class="action-link delete-PrincipleCard" href="" data-PrincipleCard-id2="{{ card.pk }}">
+                                <i class="fa-solid fa-trash" title="Delete Principle Card"></i>
+                            </a>
+                            <!-- |
+                            <a class="action-link View-PrincipleCard" href="">
+                                <i class="fa-solid fa-eye" title="View Principle Card"></i>
+                            </a> -->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">No Principle Cards found. Start by adding one!</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.principle-card-icon {
+  color: var(--icon-color);
+  font-size: 20px;
+}
+</style>
+
+<!--UPDATE PrincipleCard-->
+<div id="Edit-PrincipleCard-Modal" class="Edit-PrincipleCard-Modal">
+    <div class="Edit-PrincipleCard-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-PrincipleCard-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE PrincipleCard-->
+<div id="Delete-PrincipleCard-Modal" class="Delete-PrincipleCard-Modal">
+    <div class="Delete-PrincipleCard-modal-content">
+
+        <div id="Delete-PrincipleCard-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE PrincipleCard-->
+ <div id="Create-PrincipleCard-Modal" class="Create-PrincipleCard-Modal">
+    <div class="Create-PrincipleCard-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-PrincipleCard-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<style>
+.custom-bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.custom-bullet-list li {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* center the text horizontally */
+    margin-bottom: 4px;
+}
+
+.custom-bullet-list li::before {
+    content: "•";
+    font-size: 18px;
+    color: var(--text-color);
+    display: inline-block;
+    width: 20px;
+    margin-right: 8px;
+    text-align: right;
+}
+
+</style>
+<script>
+// create PrincipleCard
+document.addEventListener("DOMContentLoaded", () => {
+    const addPrinciplemodal = document.getElementById("Create-Principle-Modal");
+    const closeBtn = addPrinciplemodal.querySelector(".close-btn1");
+    const addPrinciplemodalFormContainer = document.getElementById("Create-Principle-modal-form-container");
+    const addPrincipleLinks = document.querySelectorAll(".create-Principle");
+
+    // Handle clicking on the edit link
+    addPrincipleLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_principle/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addPrinciplemodalFormContainer.innerHTML = data;
+                    addPrinciplemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addPrinciplemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addPrinciplemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Instrument
+document.addEventListener("DOMContentLoaded", () => {
+    const delPrinciplemodal = document.getElementById("Delete-Principle-Modal");
+    const closeBtn = delPrinciplemodal.querySelector(".close-btn1");
+    const delPrinciplemodalFormContainer = document.getElementById("Delete-Principle-modal-form-container");
+    const delPrincipleLinks = document.querySelectorAll(".delete-Principle");
+
+    // Handle clicking on the edit link
+    delPrincipleLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const PrincipleId = link.getAttribute("data-Principle-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_principle/${PrincipleId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delPrinciplemodalFormContainer.innerHTML = data;
+                    delPrinciplemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delPrinciplemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delPrinciplemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Principle
+document.addEventListener("DOMContentLoaded", () => {
+    const updatePrinciplemodal = document.getElementById("Edit-Principle-Modal");
+    const closeBtn = updatePrinciplemodal.querySelector(".close-btn1");
+    const PrinciplemodalFormContainer = document.getElementById("Edit-Principle-modal-form-container");
+    const editPrincipleLinks = document.querySelectorAll(".edit-Principle");
+
+    // Handle clicking on the edit link
+    editPrincipleLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const PrincipleId = link.getAttribute("data-Principle-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_principle/${PrincipleId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    PrinciplemodalFormContainer.innerHTML = data;
+                    updatePrinciplemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    PrinciplemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updatePrinciplemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputPrinciple = document.querySelector(".Principle"); // Input field
+    const PrincipleTableRows = document.querySelectorAll(".Principle1 tr"); // Desktop table rows
+    const PrincipleCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputPrinciple.addEventListener("input", () => {
+        const query = searchInputPrinciple.value.toLowerCase().trim();
+
+        // Search in desktop table
+        PrincipleTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        PrincipleCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+
+
+// PRINCIPLE CARD// PRINCIPLE CARD// PRINCIPLE CARD// PRINCIPLE CARD// PRINCIPLE CARD// PRINCIPLE CARD// PRINCIPLE CARD
+// PRINCIPLE CARD// PRINCIPLE CARD// PRINCIPLE CARD// PRINCIPLE CARD// PRINCIPLE CARD// PRINCIPLE CARD// PRINCIPLE CARD
+document.addEventListener("DOMContentLoaded", () => {
+    const addPrincipleCardmodal = document.getElementById("Create-PrincipleCard-Modal");
+    const closeBtn = addPrincipleCardmodal.querySelector(".close-btn1");
+    const addPrincipleCardmodalFormContainer = document.getElementById("Create-PrincipleCard-modal-form-container");
+    const addPrincipleCardLinks = document.querySelectorAll(".create-PrincipleCard");
+
+    // Handle clicking on the edit link
+    addPrincipleCardLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_principlecard/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addPrincipleCardmodalFormContainer.innerHTML = data;
+                    addPrincipleCardmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addPrincipleCardmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addPrincipleCardmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Principle Card
+document.addEventListener("DOMContentLoaded", () => {
+    const delPrincipleCardmodal = document.getElementById("Delete-PrincipleCard-Modal");
+    const closeBtn = delPrincipleCardmodal.querySelector(".close-btn1");
+    const delPrincipleCardmodalFormContainer = document.getElementById("Delete-PrincipleCard-modal-form-container");
+    const delPrincipleCardLinks = document.querySelectorAll(".delete-PrincipleCard");
+
+    // Handle clicking on the edit link
+    delPrincipleCardLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const PrincipleCardId = link.getAttribute("data-PrincipleCard-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_principlecard/${PrincipleCardId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delPrincipleCardmodalFormContainer.innerHTML = data;
+                    delPrincipleCardmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delPrincipleCardmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delPrincipleCardmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Principle Card
+document.addEventListener("DOMContentLoaded", () => {
+    const updatePrincipleCardmodal = document.getElementById("Edit-PrincipleCard-Modal");
+    const closeBtn = updatePrincipleCardmodal.querySelector(".close-btn1");
+    const PrincipleCardmodalFormContainer = document.getElementById("Edit-PrincipleCard-modal-form-container");
+    const editPrincipleCardLinks = document.querySelectorAll(".edit-PrincipleCard");
+
+    // Handle clicking on the edit link
+    editPrincipleCardLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const PrincipleCardId = link.getAttribute("data-PrincipleCard-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_principlecard/${PrincipleCardId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    PrincipleCardmodalFormContainer.innerHTML = data;
+                    updatePrincipleCardmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    PrincipleCardmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updatePrincipleCardmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputPrincipleCard = document.querySelector(".PrincipleCard"); // Input field
+    const PrincipleCardTableRows = document.querySelectorAll(".PrincipleCard1 tr"); // Desktop table rows
+    const PrinciplesCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputPrincipleCard.addEventListener("input", () => {
+        const query = searchInputPrincipleCard.value.toLowerCase().trim();
+
+        // Search in desktop table
+        PrincipleCardTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        PrinciplesCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

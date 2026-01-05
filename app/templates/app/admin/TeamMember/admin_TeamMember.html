@@ -1,0 +1,753 @@
+{% load static %}
+<style>
+       .create-Member {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Member span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Member::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Member:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Member:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Member:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Member:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Member:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Member {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Member::before {
+            content: '+ Member';
+            font-size: 1.1rem;
+        }
+        
+        .create-Member span {
+            display: none;
+        }
+        
+        .create-Member::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Member {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Member:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Member btn-style" id="create-service-btn">
+                <span>Team Member</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Member" placeholder="Search for Team Members...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if Members %}
+            
+                <!-- Team Member List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for member in Members %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instruments-image">
+                            {% if member.image %}
+                                <img src="{{ member.image.url }}" alt="{{ member.name }}" loading="lazy" class="team-member-image">
+                            {% else %}
+                                <span class="no-image">No image available</span>
+                            {% endif %}
+                            </div>
+                            <div class="instrument-title">
+                                <h3>{{ member.name }}</h3>
+                                <p>{{ member.title }}</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">{{ member.back_description|truncatewords:12 }}</span>
+                            </div>
+                           
+                            <div class="social-links">
+                                <a href="{{ link.url }}" target="_blank"><i class="{{ link.icon_class }}"></i></a>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Member" href="" data-Member-id="{{ member.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Member"></i>
+                                </a>
+                                <a class="action-link delete-Member" href="" data-Member-id2="{{ member.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Member"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <!-- Team Member Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Member1">
+                            {% for member in Members %}
+                            <tr>
+                                <td>
+                                    {% if member.image %}
+                                        <img src="{{ member.image.url }}" alt="{{ member.name }}" loading="lazy" class="team-member-thumbnail">
+                                    {% else %}
+                                        <span class="no-image">No image</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ member.name }}</td>
+                                <td>{{ member.title }}</td>
+                                <td>{{ member.back_description|truncatewords:10 }}</td>
+                                <td>
+                                    <a class="action-link edit-Member" href="" data-Member-id="{{ member.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Member"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Member" href="" data-Member-id2="{{ member.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Member"></i>
+                                    </a>
+                                    <!-- |
+                                    <a class="action-link View-Member" href="">
+                                        <i class="fa-solid fa-eye" title="View Member"></i>
+                                    </a> -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+        {% else %}
+        <p class="text-center">No Team Members found. Start by adding a new one!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+
+<!--UPDATE Member-->
+<div id="Edit-Member-Modal" class="Edit-Member-Modal">
+    <div class="Edit-Member-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Member-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE Member-->
+<div id="Delete-Member-Modal" class="Delete-Member-Modal">
+    <div class="Delete-Member-modal-content">
+
+        <div id="Delete-Member-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Member-->
+ <div id="Create-Member-Modal" class="Create-Member-Modal">
+    <div class="Create-Member-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Member-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<style>
+       .create-Link {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Link span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Link::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Link:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Link:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Link:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Link:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Link:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Link {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Link::before {
+            content: '+ Link';
+            font-size: 1.1rem;
+        }
+        
+        .create-Link span {
+            display: none;
+        }
+        
+        .create-Link::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Link {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Link:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Link btn-style" id="create-social-link-btn">
+                <span>Social Link</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Link" placeholder="Search for Social Links...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if SocialLinks %}
+            
+                <!-- Social Links List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for link in SocialLinks %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>{{ link.member.name }}</h3>
+                                <p>{{ link.get_platform_display }}</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">URL:</span>
+                                <span class="detail-value">{{ link.url }}</span>
+                            </div>
+                            <div class="instrument-detail">
+                                <span class="detail-label">Icon Class:</span>
+                                <span class="detail-value">{{ link.icon_class }}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Link" href="" data-Link-id="{{ link.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Social Link"></i>
+                                </a>
+                                <a class="action-link delete-Link" href="" data-Link-id2="{{ link.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Social Link"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+           
+                <!-- Social Links Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Platform</th>
+                                <th>URL</th>
+                                <th>Icon Class</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Link1">
+                            {% for link in SocialLinks %}
+                            <tr>
+                                <td>{{ link.member.name }}</td>
+                                <td>{{ link.get_platform_display }}</td>
+                                <td>{{ link.url }}</td>
+                                <td>{{ link.icon_class }}</td>
+                                <td>
+                                    <a class="action-link edit-Link" href="" data-Link-id="{{ link.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Social Link"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Link" href="" data-Link-id2="{{ link.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Social Link"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+           
+        {% else %}
+        <p class="text-center">No social links found. Start by adding a new link!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<!--UPDATE Link-->
+<div id="Edit-Link-Modal" class="Edit-Link-Modal">
+    <div class="Edit-Link-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Link-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE Link-->
+<div id="Delete-Link-Modal" class="Delete-Link-Modal">
+    <div class="Delete-Link-modal-content">
+
+        <div id="Delete-Link-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Link-->
+ <div id="Create-Link-Modal" class="Create-Link-Modal">
+    <div class="Create-Link-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Link-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    // create Member
+document.addEventListener("DOMContentLoaded", () => {
+    const addMembermodal = document.getElementById("Create-Member-Modal");
+    const closeBtn = addMembermodal.querySelector(".close-btn1");
+    const addMembermodalFormContainer = document.getElementById("Create-Member-modal-form-container");
+    const addMemberLinks = document.querySelectorAll(".create-Member");
+
+    // Handle clicking on the edit link
+    addMemberLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Member/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addMembermodalFormContainer.innerHTML = data;
+                    addMembermodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addMembermodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addMembermodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Member
+document.addEventListener("DOMContentLoaded", () => {
+    const delMembermodal = document.getElementById("Delete-Member-Modal");
+    const closeBtn = delMembermodal.querySelector(".close-btn1");
+    const delMembermodalFormContainer = document.getElementById("Delete-Member-modal-form-container");
+    const delMemberLinks = document.querySelectorAll(".delete-Member");
+
+    // Handle clicking on the edit link
+    delMemberLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const MemberId = link.getAttribute("data-Member-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Member/${MemberId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delMembermodalFormContainer.innerHTML = data;
+                    delMembermodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delMembermodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delMembermodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Member
+document.addEventListener("DOMContentLoaded", () => {
+    const updateMembermodal = document.getElementById("Edit-Member-Modal");
+    const closeBtn = updateMembermodal.querySelector(".close-btn1");
+    const MembermodalFormContainer = document.getElementById("Edit-Member-modal-form-container");
+    const editMemberLinks = document.querySelectorAll(".edit-Member");
+
+    // Handle clicking on the edit link
+    editMemberLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const MemberId = link.getAttribute("data-Member-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Member/${MemberId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    MembermodalFormContainer.innerHTML = data;
+                    updateMembermodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    MembermodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateMembermodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputMember = document.querySelector(".Member"); // Input field
+    const MemberTableRows = document.querySelectorAll(".Member1 tr"); // Desktop table rows
+    const MemberCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputMember.addEventListener("input", () => {
+        const query = searchInputMember.value.toLowerCase().trim();
+
+        // Search in desktop table
+        MemberTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        MemberCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+
+
+
+
+
+
+
+   // create Link
+document.addEventListener("DOMContentLoaded", () => {
+    const addLinkmodal = document.getElementById("Create-Link-Modal");
+    const closeBtn = addLinkmodal.querySelector(".close-btn1");
+    const addLinkmodalFormContainer = document.getElementById("Create-Link-modal-form-container");
+    const addLinkLinks = document.querySelectorAll(".create-Link");
+
+    // Handle clicking on the edit link
+    addLinkLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Link/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addLinkmodalFormContainer.innerHTML = data;
+                    addLinkmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addLinkmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addLinkmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Link
+document.addEventListener("DOMContentLoaded", () => {
+    const delLinkmodal = document.getElementById("Delete-Link-Modal");
+    const closeBtn = delLinkmodal.querySelector(".close-btn1");
+    const delLinkmodalFormContainer = document.getElementById("Delete-Link-modal-form-container");
+    const delLinkLinks = document.querySelectorAll(".delete-Link");
+
+    // Handle clicking on the edit link
+    delLinkLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const LinkId = link.getAttribute("data-Link-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Link/${LinkId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delLinkmodalFormContainer.innerHTML = data;
+                    delLinkmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delLinkmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delLinkmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Link
+document.addEventListener("DOMContentLoaded", () => {
+    const updateLinkmodal = document.getElementById("Edit-Link-Modal");
+    const closeBtn = updateLinkmodal.querySelector(".close-btn1");
+    const LinkmodalFormContainer = document.getElementById("Edit-Link-modal-form-container");
+    const editLinkLinks = document.querySelectorAll(".edit-Link");
+
+    // Handle clicking on the edit link
+    editLinkLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const LinkId = link.getAttribute("data-Link-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Link/${LinkId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    LinkmodalFormContainer.innerHTML = data;
+                    updateLinkmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    LinkmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateLinkmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputLink = document.querySelector(".Link"); // Input field
+    const LinkTableRows = document.querySelectorAll(".Link1 tr"); // Desktop table rows
+    const LinkCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputLink.addEventListener("input", () => {
+        const query = searchInputLink.value.toLowerCase().trim();
+
+        // Search in desktop table
+        LinkTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        LinkCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>
+

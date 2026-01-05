@@ -1,0 +1,1844 @@
+{% extends 'app/login/FrontPage.html' %}
+{% load static %}
+{% block content %}
+
+
+<!-- <style>
+  .loader-container5 {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #f5e6c8 0%, #e6c9a8 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  .loader-container5.fade-out5 {
+      opacity: 0;
+      transform: translateY(-20px);
+      pointer-events: none;
+  }
+
+  .logo-container5 {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin-bottom: 30px;
+  }
+
+  .logo-loader5 {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      animation: kulintangPulse5 3s ease-in-out infinite;
+  }
+
+  @keyframes kulintangPulse5 {
+      0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 10px rgba(218, 165, 32, 0.7)); }
+      25% { transform: scale(1.05) rotate(1deg); filter: drop-shadow(0 0 15px rgba(184, 134, 11, 0.8)); }
+      50% { transform: scale(1.1) rotate(-1deg); filter: drop-shadow(0 0 20px rgba(139, 69, 19, 0.9)); }
+      75% { transform: scale(1.05) rotate(1deg); filter: drop-shadow(0 0 15px rgba(160, 82, 45, 0.8)); }
+      100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 10px rgba(218, 165, 32, 0.7)); }
+  }
+
+  @keyframes rondallaStrum5 {
+      0% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(-5px) rotate(2deg); }
+      50% { transform: translateY(0px) rotate(-2deg); }
+      75% { transform: translateY(5px) rotate(2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+  }
+
+  .progress-container5 {
+      width: 300px;
+      height: 8px;
+      background: rgba(139, 69, 19, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 20px;
+      border: 1px solid #8B4513;
+  }
+
+  .progress-bar5 {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #DAA520, #8B4513);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+      position: relative;
+      overflow: hidden;
+  }
+
+  .progress-bar5::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+      animation: bambooShine5 2s infinite linear;
+  }
+
+  @keyframes bambooShine5 {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+  }
+
+  .loader-text5 {
+      font-family: 'Montserrat', sans-serif;
+      color: #5C3317;
+      font-size: 22px;
+      margin-top: 30px;
+      position: relative;
+      text-align: center;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+  }
+
+  .loader-text5::after {
+      content: '...';
+      position: absolute;
+      animation: ellipsis5 1.5s infinite;
+  }
+
+  @keyframes ellipsis5 {
+      0% { content: '.'; }
+      33% { content: '..'; }
+      66% { content: '...'; }
+  }
+
+  .particles5 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+  }
+
+  .particle5 {
+      position: absolute;
+      background: transparent;
+      border-radius: 50%;
+      animation: float5 linear infinite;
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.7;
+  }
+
+  .particle5.banig5 {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0,0 L20,0 L20,20 L0,20 Z" fill="none" stroke="%235C3317" stroke-width="1" stroke-dasharray="2,2"/></svg>');
+  }
+
+  .particle5.sarimanok5 {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10,0 Q15,5 10,10 Q5,5 10,0 Z" fill="%23DAA520"/></svg>');
+  }
+
+  .particle5.leaf5 {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10,0 Q15,10 10,20 Q5,10 10,0 Z" fill="%23228B22"/></svg>');
+  }
+
+  @keyframes float5 {
+      to { transform: translateY(-100vh) rotate(360deg); }
+  }
+
+  .instrument-icons5 {
+      position: absolute;
+      width: 100%;
+      height: 100px;
+      bottom: 50px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+  }
+
+  .instrument-icon5 {
+      width: 60px;
+      height: 60px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: instrumentAppear5 0.5s forwards;
+  }
+
+  @keyframes instrumentAppear5 {
+      to { opacity: 0.8; transform: translateY(0); }
+  }
+
+  .content5 {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1) 0.3s;
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+  }
+
+  .content-loaded5 {
+      opacity: 1;
+      transform: translateY(0);
+  }
+</style>
+
+<div class="loader-container5" id="loader5">
+  <div class="particles5" id="particles5"></div>
+
+  <div class="logo-container5">
+      <img src="{% static 'images/phil.png' %}" alt="Kulintang Instrument" class="logo-loader5" id="logo5">
+  </div>
+
+  <div class="loader-text5">Welcome to Philharmonia</div>
+
+  <div class="progress-container5">
+      <div class="progress-bar5" id="progress5"></div>
+  </div>
+
+  <div class="instrument-icons5" id="instruments5"></div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const loader = document.getElementById('loader5');
+      const progressBar = document.getElementById('progress5');
+      const logo = document.getElementById('logo5');
+      const particlesContainer = document.getElementById('particles5');
+      const instrumentsContainer = document.getElementById('instruments5');
+
+      const filipinoInstruments = [
+          { name: 'Kulintang', icon: '🎵' },
+          { name: 'Rondalla', icon: '🎸' },
+          { name: 'Angklung', icon: '🎶' },
+          { name: 'Kudyapi', icon: '🪕' },
+          { name: 'Gabbang', icon: '🎼' }
+      ];
+
+      function createParticles() {
+          const particleCount = 40;
+          const particleTypes = ['banig5', 'sarimanok5', 'leaf5'];
+
+          for (let i = 0; i < particleCount; i++) {
+              const particle = document.createElement('div');
+              const type = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+              particle.classList.add('particle5', type);
+
+              const size = Math.random() * 30 + 10;
+              const posX = Math.random() * 100;
+              const duration = Math.random() * 20 + 10;
+              const delay = Math.random() * 10;
+              const opacity = Math.random() * 0.5 + 0.3;
+              const rotation = Math.random() * 360;
+
+              particle.style.width = `${size}px`;
+              particle.style.height = `${size}px`;
+              particle.style.left = `${posX}%`;
+              particle.style.bottom = `-${size}px`;
+              particle.style.animationDuration = `${duration}s`;
+              particle.style.animationDelay = `${delay}s`;
+              particle.style.opacity = opacity;
+              particle.style.transform = `rotate(${rotation}deg)`;
+
+              particlesContainer.appendChild(particle);
+          }
+      }
+
+      function showInstruments() {
+          filipinoInstruments.forEach((instrument, index) => {
+              setTimeout(() => {
+                  const icon = document.createElement('div');
+                  icon.className = 'instrument-icon5';
+                  icon.style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" font-size="60" text-anchor="middle" dominant-baseline="middle" fill="%235C3317">${instrument.icon}</text></svg>')`;
+                  icon.style.animationDelay = `${index * 0.3}s`;
+                  instrumentsContainer.appendChild(icon);
+              }, index * 500);
+          });
+      }
+
+      function animateProgressBar(duration) {
+          const startTime = performance.now();
+
+          function updateProgress(now) {
+              const elapsed = now - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              progressBar.style.width = `${progress * 100}%`;
+
+              if (progress < 1) {
+                  requestAnimationFrame(updateProgress);
+              }
+          }
+
+          requestAnimationFrame(updateProgress);
+      }
+
+      function completeLoading() {
+          loader.classList.add('fade-out5');
+          setTimeout(() => {
+              loader.style.display = 'none';
+          }, 800);
+      }
+
+      const instrumentAnimations = ['kulintangPulse5', 'rondallaStrum5'];
+      const randomAnim = instrumentAnimations[Math.floor(Math.random() * instrumentAnimations.length)];
+      logo.style.animationName = randomAnim;
+
+      createParticles();
+      showInstruments();
+      animateProgressBar(5000); // 5 seconds
+
+      setTimeout(completeLoading, 5000);
+  });
+</script> -->
+
+
+
+
+
+<div class="music-container">
+  <div class="custom-shape-divider-bottom-1745659549">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+        <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+        <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+    </svg>
+</div>
+  <div class="text-content">
+    <div class="tagline">
+      <span class="icons"><i class="fas fa-{{ taglines.icon }}"></i></span>
+      <h3>{{ taglines.title }}</h3>
+  </div>
+    <h1>{{ homepages.main_heading }} <span class="highlight">{{ homepages.highlight_word }}</span></h1>
+    <p>{{ homepages.description|safe }}</p>
+  <div class="btn-group">
+      <button class="btn btn-primary" id="exploreBtn">
+        <span>EXPLORE INSTRUMENTS</span>
+        <i class="fas fa-chevron-right"></i>
+      </button>
+      <button class="btn btn-outline" id="exploreBtnInstructor">
+        <span>WATCH PERFORMANCE</span>
+        <i class="fas fa-play"></i>
+      </button>
+    </div>
+    
+    <!-- Instrument Icons Section -->
+    <div class="instrument-icons1">
+      {% for instrument in Instruments|slice:":5"  %}
+      <div class="icon-tooltip" data-tooltip="{{ instrument.name }}" data-instrument-id="{{ instrument.id }}">
+        <div class="icon-circle1">
+          {% if instrument.image %}
+          <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}">
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="image-container">
+    <div class="image-slider">
+      <div class="slider-track">
+        {% for instrument in Instruments|slice:":5"  %}
+        <div class="slide" data-instrument-id="{{ instrument.id }}">
+          {% if instrument.image %}
+          <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}">
+          {% endif %}
+          <div class="slide-caption">{{ instrument.name }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="slider-controls">
+      <!-- <button class="slider-btn prev-btn"><i class="fas fa-chevron-left"></i></button> -->
+      <div class="slider-dots"></div>
+      <!-- <button class="slider-btn next-btn"><i class="fas fa-chevron-right"></i></button> -->
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Explore Instruments button
+    const exploreBtn = document.getElementById('exploreBtn');
+    // Instructor button
+    const exploreInstructorBtn = document.getElementById('exploreBtnInstructor');
+
+    // Scroll to Instruments section
+    if (exploreBtn) {
+      exploreBtn.addEventListener('click', function () {
+        document.querySelector('.ins-body1')?.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+
+    // Scroll to Instructor section
+    if (exploreInstructorBtn) {
+      exploreInstructorBtn.addEventListener('click', function () {
+        document.querySelector('.instructor-section')?.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+  });
+</script>
+
+
+<!-- <button popovertarget="my-popover" class="popover-button">Open</button>
+<div popover id="my-popover" class="styled-popover">
+  <h1>{{ instrument.name }}</h1>
+  <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolore harum ad inventore adipisci. Laborum tempore aperiam laboriosam labore velit quidem. Voluptatem quis similique expedita eligendi, dicta obcaecati! Reiciendis, ipsa inventore!</p>
+  <button popovertarget="my-popover" class="close-button">
+    Close
+  </button>
+</div>
+<style>
+  .styled-popover {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centering */
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 400px;
+  background-color: #f9fafb; /* Light Gray */
+  color: #111827; /* Slate-900 */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 999; /* Ensure it appears on top */
+}
+
+.styled-popover h1 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  color: #1e3a8a; /* Indigo-900 */
+}
+
+.styled-popover p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.popover-button,
+.close-button {
+  padding: 0.5rem 1rem;
+  background-color: #4f46e5; /* Indigo */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.popover-button:hover,
+.close-button:hover {
+  background-color: #3730a3; /* Darker Indigo */
+}
+
+/* Optional: Smooth entry animation */
+.styled-popover:popover-open {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+</style> -->
+
+<!-- MISSION VISSION CARD --><!-- MISSION VISSION CARD -->
+<section class="mv-container" id="Principles">
+  <div class="mv-layout">
+    <div class="mv-left-column">
+      <div class="mv-intro" data-scroll>
+        <h2>{{ guiding_principle.title }}</h2>
+        <p>{{ guiding_principle.description }}</p>
+      </div>
+      <div class="mv-image" data-scroll>
+        {% if guiding_principle.image %}
+          <img src="{{ guiding_principle.image.url }}" alt="Music education">
+        {% else %}
+          <img src="{% static 'images/phil.png' %}" alt="Music education">
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="mv-cards">
+      {% for card in guiding_principle.cards.all %}
+      <div class="mv-card" style="--accent: {{ card.accent_color }}" data-scroll data-scroll-delay="0.{{ forloop.counter0 }}">
+        <div class="mv-card-header">
+          <div class="mv-icon">
+            <i class="fa-solid {{ card.icon }}"></i>
+          </div>
+          <h3>{{ card.card_type }}</h3>
+        </div>
+
+        {% if card.get_bullet_list %}
+          <ul>
+            {% for bullet in card.get_bullet_list %}
+              <li>{{ bullet }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>{{ card.description }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- MISSION VISSION CARD --><!-- MISSION VISSION CARD --><!-- MISSION VISSION CARD -->
+
+
+<!-- /* INSTRUCTOR SECTION DESIGN */ --><!-- /* INSTRUCTOR SECTION DESIGN */ --><!-- /* INSTRUCTOR SECTION DESIGN */ -->
+<div class="instructor-section">
+  <div class="custom-shape-divider-top-1745662341">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+        <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+        <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+    </svg>
+</div>
+
+<div class="instructor-section-buttom">
+  <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+      <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+      <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+  </svg>
+</div>
+
+{% for discover_section in section %}
+<div class="header">
+  <h1>{{ discover_section.title }}</h1><br>
+  <p>{{ discover_section.description }}</p>
+</div>
+
+<div class="main-content-wrapper">
+  <div class="content-section">
+    <div class="content-row">
+      <div class="image-description">
+        <div class="image-description-container">
+          {% if discover_section.image %}
+          <img src="{{ discover_section.image.url }}" alt="..." />
+        {% else %}
+          <img src="{% static 'images/phil.png' %}" alt="..." />
+        {% endif %}
+        </div>
+        <div class="description">
+          <h2>{{ discover_section.mastering_title }}</h2>
+          <p>{{ discover_section.mastering_paragraph1 }}</p>
+          <p>{{ discover_section.mastering_paragraph2 }}</p>
+        </div>
+      </div>
+
+      <div class="video-section"><br>
+        <h2>Experience the Music</h2>
+        
+        {% if discover_section.video1 %}
+          <div class="video-container">
+            <video controls width="100%" loading="lazy">
+              <source src="{{ discover_section.video1.url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        {% endif %}
+
+        <p>{{ discover_section.video_description }}</p><br>
+
+        {% if discover_section.video2 %}
+          <div class="video-container">
+            <video controls width="100%" loading="lazy">
+              <source src="{{ discover_section.video2.url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+</div>
+<!-- /* INSTRUCTOR SECTION DESIGN */ --><!-- /* INSTRUCTOR SECTION DESIGN */ --><!-- /* INSTRUCTOR SECTION DESIGN */ -->
+
+
+<!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ --><!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ -->
+<div class="ins-body1" id="Instrument">
+  <!-- New heading section -->
+  <div class="instruments-intro">
+    <h2>Philippine Traditional Instruments</h2>
+    <p class="intro-text">Explore the rich musical heritage of the Philippines. Learn about each instrument's history, unique sound, and cultural significance by clicking "View Details" below.</p>
+  </div>
+<!-- Category Tabs -->
+<div class="category-header1">
+  <div class="category-tabs1">
+    <button class="category-btn1 active" data-category="all">
+      All Instruments
+    </button>
+    {% for category in categorys %}
+    <button class="category-btn1" data-category="{{ category.id }}">
+      {{ category.name }}
+    </button>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Instrument Cards Container -->
+<div class="cards-container-wrapper">
+  <div class="carousel-controls1">
+    <button class="carousel-btn1" onclick="prevInstrument()">❮</button>
+    <button class="carousel-btn1" onclick="nextInstrument()">❯</button>
+  </div>
+
+  <div class="instrument-cards-container1" id="instrumentCarousel">
+    {% for instrument in Instruments %}
+    <div class="instrument-card1" data-category="{{ instrument.category.id }}" data-index="{{ forloop.counter0 }}">
+      <!-- Region Badge -->
+      <div class="region-badge">
+        {{ instrument.region }}
+      </div>
+      
+      <div class="instrument-img-container1">
+        {% if instrument.image %}
+        <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}">
+        {% else %}
+        <img src="{% static 'images/default_instrument.jpg' %}" alt="{{ instrument.name }}">
+        {% endif %}
+      </div>
+      
+      <div class="instrument-info1">
+        <h3>{{ instrument.name }}</h3>
+        <!-- Province Information -->
+        <div class="province-info">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>{{ instrument.province }}</span>
+        </div>
+        <p>{{ instrument.description|truncatewords:10 }}</p>
+        <a class="detail-btn" href="#" data-toggle="modal" data-target="#loginInfoModal">VIEW DETAILS</a>
+
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  
+  <div class="no-results1">
+    <i class="fas fa-inbox"></i>
+    <h3>No instruments found in this category</h3>
+    <p>Try selecting a different category</p>
+  </div>
+</div>
+</div>
+<!-- Enhanced Info Modal (Visual Design Only) -->
+<div id="loginInfoModal" class="custom-modal" aria-hidden="true">
+  <div class="custom-modal-content" role="alertdialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="close-modal" aria-label="Close dialog">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 4L4 12" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/>
+        <path d="M4 4L12 12" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="modal-graphic">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 15V17M6 21H18C19.1046 21 20 20.1046 20 19V13C20 11.8954 19.1046 11 18 11H6C4.89543 11 4 11.8954 4 13V19C4 20.1046 4.89543 21 6 21Z" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+        <path d="M16 11V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V11" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h3 id="modalTitle" class="modal-title">Access Restricted</h3>
+    <p class="modal-message">Please log in to view full instrument details and features.</p>
+    <div class="modal-decoration">
+      <div class="decoration-line"></div>
+      <div class="decoration-dot"></div>
+      <div class="decoration-line"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+.custom-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-modal.show {
+  opacity: 1;
+}
+
+.custom-modal-content {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  max-width: 380px;
+  margin: 15vh auto;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-30px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.custom-modal.show .custom-modal-content {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.close-modal {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #F3F4F6;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.close-modal:hover {
+  background: #E5E7EB;
+}
+
+.modal-graphic {
+  margin: 0 auto 1.5rem;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #EEF2FF;
+  border-radius: 50%;
+}
+
+.modal-title {
+  color: #1F2937;
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.modal-message {
+  color: #6B7280;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.modal-decoration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1.5rem;
+}
+
+.decoration-line {
+  height: 1px;
+  width: 40px;
+  background: linear-gradient(90deg, transparent, #E5E7EB, transparent);
+}
+
+.decoration-dot {
+  width: 6px;
+  height: 6px;
+  background: #4F46E5;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 480px) {
+  .custom-modal-content {
+    width: 90%;
+    margin: 10vh auto;
+    padding: 2rem 1.5rem;
+  }
+}
+</style>
+
+<script>
+document.querySelectorAll('[data-target="#loginInfoModal"]').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    showModal();
+  });
+});
+
+document.querySelectorAll('.close-modal').forEach(btn => {
+  btn.addEventListener('click', function() {
+    hideModal();
+  });
+});
+
+window.addEventListener('click', function(e) {
+  if (e.target === document.getElementById('loginInfoModal')) {
+    hideModal();
+  }
+});
+
+document.addEventListener('keydown', function(e) {
+  const modal = document.getElementById('loginInfoModal');
+  if (e.key === 'Escape' && modal.style.display === 'block') {
+    hideModal();
+  }
+});
+
+function showModal() {
+  const modal = document.getElementById('loginInfoModal');
+  modal.style.display = 'block';
+  modal.setAttribute('aria-hidden', 'false');
+  void modal.offsetWidth; // Trigger reflow
+  modal.classList.add('show');
+}
+
+function hideModal() {
+  const modal = document.getElementById('loginInfoModal');
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden', 'true');
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 300);
+}
+</script>
+
+<!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ --><!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ -->
+
+
+<!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT -->
+<div class="featured-instrument-view-section" id="MostVIew">
+  <h3 class="section-view-title">
+    <i class="fas fa-crown view-title-icon"></i>
+    Featured Instrument
+  </h3>
+  
+  <!-- Featured Instrument Card (Top 1 Most Viewed) -->
+  <div class="featured-view-card">
+    <div class="featured-view-image">
+      {% if popular_instruments.0.image %}
+        <img src="{{ popular_instruments.0.image.url }}" alt="{{ popular_instruments.0.name }}" loading="lazy">
+      {% else %}
+        <img src="{% static 'images/default_instrument.jpg' %}" alt="{{ popular_instruments.0.name }}" loading="lazy">
+      {% endif %}
+    </div>
+    <div class="featured-view-content">
+      <div class="featured-view-badge">#1 Most Viewed</div>
+      <h4 class="featured-view-name">{{ popular_instruments.0.name }}</h4>
+      <p class="featured-view-description">{{ popular_instruments.0.short_description|default:"The most popular traditional instrument on our platform with rich cultural significance." }}</p>
+      
+      <div class="featured-view-meta">
+        <span class="view-count">
+          <i class="fas fa-eye"></i> {{ popular_instruments.0.views }} views
+        </span>
+        <span class="view-origin">
+          <i class="fas fa-map-marker-alt"></i> {{ popular_instruments.0.region|default:"Philippines" }}
+        </span>
+      </div>
+      
+      <div class="featured-view-actions">
+        {% with popular_instruments.0.sound_set.first as sound_sample %}
+          {% if sound_sample %}
+            <button class="audio-view-btn" onclick="toggleSound('{{ sound_sample.sound_sample.url }}', this, 'featured')">
+              <i class="fas fa-volume-up"></i> Hear It
+            </button>
+          {% else %}
+            <button class="audio-view-btn" disabled>
+              <i class="fas fa-volume-mute"></i> No Sample
+            </button>
+          {% endif %}
+        {% endwith %}
+        
+
+      </div>
+    </div>
+  </div>
+  
+  <!-- Other Popular Instruments List (Starting from #2) -->
+  <div class="popular-view-list-section">
+    <h4 class="popular-view-list-title">
+      <i class="fas fa-fire"></i> Other Most Viewed Instruments
+    </h4>
+    <div class="popular-view-instruments">
+      {% for instrument in popular_instruments %}
+        {% if forloop.counter > 1 %}
+          <div class="popular-view-item">
+            <div class="popular-view-image">
+              {% if instrument.image %}
+                <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}" loading="lazy">
+              {% else %}
+                <img src="{% static 'images/default_instrument.jpg' %}" alt="{{ instrument.name }}" loading="lazy">
+              {% endif %}
+            </div>
+            <div class="popular-view-info">
+              <h5>{{ instrument.name }}</h5>
+              <span class="view-count">
+                <i class="fas fa-eye"></i> {{ instrument.views }} views
+              </span>
+              
+              {% with instrument.sound_set.first as sound_sample %}
+                {% if sound_sample %}
+                  <button class="small-audio-view-btn" onclick="toggleSound('{{ sound_sample.sound_sample.url }}', this, 'list')">
+                    <i class="fas fa-volume-up"></i> Play
+                  </button>
+                {% else %}
+                  <button class="small-audio-view-btn" disabled>
+                    <i class="fas fa-volume-mute"></i> No Sample
+                  </button>
+                {% endif %}
+              {% endwith %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<audio id="instrument-view-audio"></audio>
+
+<script>
+let currentViewAudio = document.getElementById('instrument-view-audio');
+let currentlyPlayingView = null;
+
+function toggleSound(soundUrl, buttonElement, buttonType) {
+  // If clicking the currently playing button
+  if (currentlyPlayingView === buttonElement) {
+    if (!currentViewAudio.paused) {
+      currentViewAudio.pause();
+      updateViewButtonState(buttonElement, buttonType, false);
+      currentlyPlayingView = null;
+      return;
+    }
+  }
+  
+  // If a different sound is already playing
+  if (currentlyPlayingView && currentlyPlayingView !== buttonElement) {
+    currentViewAudio.pause();
+    updateViewButtonState(currentlyPlayingView, 
+                     currentlyPlayingView.classList.contains('audio-view-btn') ? 'featured' : 'list', 
+                     false);
+  }
+  
+  // Play new sound or resume paused sound
+  if (currentViewAudio.src !== soundUrl) {
+    currentViewAudio.src = soundUrl;
+    currentViewAudio.load();
+  }
+  
+  currentViewAudio.play()
+    .then(() => {
+      currentlyPlayingView = buttonElement;
+      updateViewButtonState(buttonElement, buttonType, true);
+    })
+    .catch(error => {
+      console.error("Audio playback failed:", error);
+      updateViewButtonState(buttonElement, buttonType, false);
+    });
+  
+  // Handle when audio ends naturally
+  currentViewAudio.onended = function() {
+    updateViewButtonState(buttonElement, buttonType, false);
+    currentlyPlayingView = null;
+  };
+}
+
+function updateViewButtonState(button, type, isPlaying) {
+  if (type === 'featured') {
+    if (isPlaying) {
+      button.innerHTML = '<i class="fas fa-pause"></i> Playing...';
+      button.classList.add('playing');
+    } else {
+      button.innerHTML = '<i class="fas fa-volume-up"></i> Hear It';
+      button.classList.remove('playing');
+    }
+  } else {
+    if (isPlaying) {
+      button.innerHTML = '<i class="fas fa-pause"></i> Playing';
+      button.classList.add('playing');
+    } else {
+      button.innerHTML = '<i class="fas fa-volume-up"></i> Play';
+      button.classList.remove('playing');
+    }
+  }
+}
+</script>
+<!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT -->
+
+
+
+<!-- Map Container -->
+<div class="map-container" id="Map">
+  <!-- Animated Header Section -->
+  <div class="map-header">
+    <h2 class="title-animate">Explore the Philippine Map</h2>
+    <p class="subtitle">Discover traditional instruments from different regions by clicking on the map below.</p>
+  </div>
+  
+  
+  <!-- Main Content Area -->
+  <div class="map-content">
+    <!-- Interactive Map Visualization -->
+    <div id="chartdiv" class="map-visualization">
+      <div class="loading-animation">
+        <div class="loader"></div>
+        <p>Loading cultural map...</p>
+      </div>
+    </div>
+
+    <!-- Instrument Details Panel -->
+    <div id="instrument-details" class="instrument-panel">
+      <div class="panel-header">
+        <div class="region-header">
+          <h3 id="province-name">Select a Region</h3>
+          <div class="cultural-tag" id="cultural-group">Cultural Group: <span>---</span></div>
+        </div>
+        <p id="province-description" class="panel-description">Click on a region to discover its traditional musical heritage</p>
+        <div class="divider"></div>
+      </div>
+            
+      <!-- Instrument Grid -->
+      <div class="section-title">Regional Instruments</div>
+      <div id="instrument-list" class="instrument-grid"></div>
+      
+      <!-- Empty State -->
+      <div class="no-instruments">
+        <div class="empty-state">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#ddd" viewBox="0 0 16 16">
+            <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
+            <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
+            <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
+            <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
+          </svg>
+          <h4>Discover Musical Heritage</h4>
+          <p>Select a region to view its traditional instruments</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Cultural Context Footer -->
+  <div class="cultural-footer">
+    <p>The Philippines has over <strong>180 ethnolinguistic groups</strong> with distinct musical traditions. This map showcases instruments from major cultural groups including <span class="cultural-tag">Luzon</span>, <span class="cultural-tag">Visayas</span>, <span class="cultural-tag">Mindanao</span>, and indigenous communities.</p>
+  </div>
+</div>
+<!-- MAP  --><!-- MAP  --><!-- MAP  --><!-- MAP  --><!-- MAP  -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  -->
+<!-- <div class="carousel-wrapper">
+  <div class="carousel-container">
+    <div class="instrument-carousel">
+      {% for instrument in Instruments %}
+      <div class="instrument-card4" data-category="{{ instrument.category.id }}">
+        <div class="instrument-img-container4">
+          {% if instrument.image %}
+          <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}">
+          {% endif %}
+        </div>
+        <div class="instrument-info4">
+          <h3>{{ instrument.name }}</h3>
+        </div>
+      </div>
+      {% endfor %}
+      <*!-- Clone first few items for seamless looping --*>
+      {% for instrument in Instruments|slice:":3" %}
+      <div class="instrument-card4 cloned" data-category="{{ instrument.category.id }}">
+        <div class="instrument-img-container4">
+          {% if instrument.image %}
+          <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}">
+          {% endif %}
+        </div>
+        <div class="instrument-info4">
+          <h3>{{ instrument.name }}</h3>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-btn prev">❮</button>
+    <button class="carousel-btn next">❯</button>
+  </div>
+</div> -->
+
+<!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  -->
+
+
+<div class="testimonials-section">
+  <div class="custom-shape-divider-top-1745662341">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+        <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+        <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+    </svg>
+</div>
+  <div class="testimonials-header">
+    <h2>Student Experiences</h2>
+    <p>Hear what our students say about their journey with traditional music</p>
+  </div>
+  
+  <div class="testimonials-slider-wrapper">
+    <div class="testimonials-container">
+      {% for testimonial in testimonials %}
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          <p>{{ testimonial.message }}</p>
+          <div class="quote-icon right">"</div>
+          
+          <!-- Rating stars - now left-aligned -->
+          <div class="testimonial-rating">
+            {% for i in "12345" %}
+              {% if forloop.counter <= testimonial.rating %}
+                <span class="star filled">★</span>
+              {% else %}
+                <span class="star">★</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="testimonial-author">
+          {% if testimonial.user.profile_picture %}
+            <img src="{{ testimonial.user.profile_picture.url }}" alt="{{ testimonial.user.get_full_name }}" loading="lazy">
+          {% else %}
+            <img  src="{% static 'images/phil.png' %}" alt="{{ testimonial.user.get_full_name }}" loading="lazy">
+          {% endif %}
+          <div>
+            <h4>{{ testimonial.user.get_full_name|default:testimonial.user.username }}</h4>
+            <p>
+              {% if testimonial.role %}{{ testimonial.role }}{% endif %}
+              {% if testimonial.duration %}for {{ testimonial.duration }}{% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="no-testimonials">
+        <p>No approved testimonials yet.</p>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <!-- Slider navigation - only show if there are testimonials -->
+    {% if testimonials %}
+    <div class="slider-nav">
+      <button class="slider-prev" aria-label="Previous testimonials">❮</button>
+      <div class="slider-dots"></div>
+      <button class="slider-next" aria-label="Next testimonials">❯</button>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  /* Add this CSS to your existing styles */
+  .testimonials-section {
+    margin-top: 80px;
+    padding: 60px 0;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f9f5f0 0%, #ffffff 100%);
+    border-radius: 20px;
+    z-index: 2;
+  }
+
+  .testimonials-section::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+    opacity: 0.08;
+    z-index: -1;
+  }
+
+  .testimonials-section::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+    opacity: 0.05;
+    z-index: -1;
+  }
+
+  .testimonials-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .testimonials-header h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary);
+    font-size: 2.2em;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+  }
+
+  .testimonials-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--primary));
+    border-radius: 2px;
+  }
+
+  .testimonials-header p {
+    font-size: 1em;
+    color: var(--secondary);
+    max-width: 650px;
+    margin: 0 auto;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .testimonial-card {
+    flex: 0 0 auto;
+    width: calc(33.333% - 20px);
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(139, 69, 19, 0.1);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    margin: 0 10px;
+    border: 1px solid rgba(139, 69, 19, 0.05);
+    scroll-snap-align: center; /* Added for centering */
+  }
+
+  .testimonial-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(139, 69, 19, 0.2);
+  }
+
+  .testimonial-content {
+    position: relative;
+    margin-bottom: 25px;
+  }
+
+  .quote-icon {
+    position: absolute;
+    font-family: 'Playfair Display', serif;
+    font-size: 5em;
+    color: var(--primary-light);
+    opacity: 0.2;
+    line-height: 1;
+    z-index: 0;
+  }
+
+  .quote-icon.right {
+    top: -15px;
+    right: -10px;
+    left: auto;
+  }
+
+  .testimonial-content p {
+    font-size: 0.95em;
+    line-height: 1.7;
+    color: var(--text-light);
+    position: relative;
+    z-index: 1;
+    padding: 0 10px;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(139, 69, 19, 0.1);
+  }
+
+  .testimonial-author img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-light);
+    box-shadow: 0 3px 10px rgba(139, 69, 19, 0.1);
+  }
+
+  .testimonial-author h4 {
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary);
+    font-size: 1em;
+    margin-bottom: 3px;
+  }
+
+  .testimonial-author p {
+    font-size: 0.8em;
+    color: var(--secondary);
+    font-weight: 300;
+  }
+
+  /* Slider specific CSS */
+  .testimonials-slider-wrapper {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .testimonials-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory; /* Added for snapping */
+    scroll-behavior: smooth;
+    gap: 30px;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    scrollbar-width: none;
+  }
+
+  .testimonials-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slider-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 0 40px;
+  }
+
+  .slider-prev,
+  .slider-next {
+    background: var(--primary);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .slider-prev:hover,
+  .slider-next:hover {
+    background: var(--accent);
+    transform: scale(1.1);
+  }
+
+  .slider-prev:disabled,
+  .slider-next:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .slider-dots {
+    display: flex;
+    gap: 10px;
+  }
+
+  .slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .slider-dot.active {
+    background: var(--primary);
+    transform: scale(1.2);
+  }
+
+  /* Rating stars - now left-aligned */
+  .testimonial-rating {
+    margin-top: 15px;
+    font-size: 1.2em;
+    display: flex;
+    justify-content: flex-start; /* Changed from center to flex-start */
+  }
+  
+  .testimonial-rating .star {
+    color: #ddd;
+    margin: 0 2px;
+  }
+  
+  .testimonial-rating .star.filled {
+    color: var(--accent);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 992px) {
+    .testimonial-card {
+      width: calc(50% - 15px);
+      min-width: calc(50% - 15px); /* Added for better snapping */
+    }
+  }
+
+  @media (max-width: 768px) {
+    .testimonials-section {
+      padding: 40px 20px;
+      margin-top: 60px;
+    }
+    
+    .testimonials-slider-wrapper {
+      padding: 0 20px;
+    }
+    
+    .testimonials-header h2 {
+      font-size: 1.8em;
+    }
+    
+    .testimonial-card {
+      width: 80%; /* Changed to 80% for better centering */
+      min-width: 80%;
+      padding: 25px;
+      margin: 0 auto; /* Center the card */
+    }
+    
+    .slider-nav {
+      padding: 0 20px;
+    }
+  }
+
+  .no-testimonials {
+    text-align: center;
+    padding: 40px;
+    font-style: italic;
+    color: var(--secondary);
+    width: 100%;
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.querySelector('.testimonials-container');
+  const cards = document.querySelectorAll('.testimonial-card');
+  const prevBtn = document.querySelector('.slider-prev');
+  const nextBtn = document.querySelector('.slider-next');
+  const dotsContainer = document.querySelector('.slider-dots');
+  
+  // Only initialize if we have testimonials and navigation
+  if (cards.length > 0 && prevBtn && nextBtn && dotsContainer) {
+    // Create dots
+    const totalSlides = Math.ceil(cards.length / getVisibleCards());
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.classList.add('slider-dot');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => {
+        goToSlide(i);
+      });
+      dotsContainer.appendChild(dot);
+    }
+
+    const dots = document.querySelectorAll('.slider-dot');
+    let currentIndex = 0;
+    let cardWidth = cards[0].offsetWidth + 30;
+    let visibleCards = getVisibleCards();
+
+    function getVisibleCards() {
+      if (window.innerWidth >= 992) return 3;
+      if (window.innerWidth >= 768) return 2;
+      return 1;
+    }
+
+    function updateSlider() {
+      visibleCards = getVisibleCards();
+      cardWidth = cards[0].offsetWidth + 30;
+      if (prevBtn) prevBtn.disabled = currentIndex === 0;
+      if (nextBtn) nextBtn.disabled = currentIndex >= Math.ceil(cards.length / visibleCards) - 1;
+      updateDots();
+    }
+
+    function goToSlide(index) {
+      currentIndex = index;
+      container.scrollTo({
+        left: index * (cardWidth * visibleCards + 30), // Added gap calculation
+        behavior: 'smooth'
+      });
+      updateSlider();
+    }
+
+    function updateDots() {
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentIndex);
+      });
+    }
+
+    function nextSlide() {
+      if (currentIndex < Math.ceil(cards.length / visibleCards) - 1) {
+        currentIndex++;
+        goToSlide(currentIndex);
+      }
+    }
+
+    function prevSlide() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        goToSlide(currentIndex);
+      }
+    }
+
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    window.addEventListener('resize', function() {
+      updateSlider();
+      goToSlide(currentIndex);
+    });
+
+    updateSlider();
+  }
+});
+</script>
+
+
+
+<footer class="footer7">
+  <div class="footer-container7">
+    <div class="footer-section7 brand7">
+      <h2><span class="logo7">✦ Philharmonia</span></h2>
+      <p>{{ homepages.description|safe }}</p>
+    </div>
+  
+<div class="footer-section7 office7">
+  <h3><i class="fas fa-building"></i> Office</h3>
+  <div class="contact-item7">
+    <i class="fas fa-map-marker-alt"></i>
+    <p>{{ contact.location_address|linebreaksbr }}</p>
+  </div>
+  <div class="contact-item7">
+    <i class="fas fa-envelope"></i>
+    <p>{{ contact.primary_email }}</p>
+  </div>
+  <div class="contact-item7">
+    <i class="fas fa-phone-alt"></i>
+    <p>{{ contact.landline_phone }}</p>
+  </div>
+</div>
+    
+    <div class="footer-section7 links7">
+      <h3><i class="fas fa-link"></i> Quick Links</h3>
+      <ul>
+        <li><a href="{% url 'frontpage' %}"><i class="fas fa-chevron-right"></i> Home</a></li>
+        <li><a href="{% url 'video' %}"><i class="fas fa-chevron-right"></i> Instrument Tutorials</a></li>
+        <!-- <li><a href="{% url '3dModel' %}"><i class="fas fa-chevron-right"></i> 3D Model</a></li> -->
+        <li><a href="{% url 'about' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+        <li><a href="{% url 'contact' %}"><i class="fas fa-chevron-right"></i> Contacts</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section7 newsletter7">
+      <h3><i class="fas fa-share-alt"></i> {{ footer_settings.follow_us_title }}</h3>
+      <p>{{ footer_settings.follow_us_description }}</p>
+      <div class="social-icons7">
+        {% for link in social_links %}
+          {% if link.is_active %}
+            <a href="{{ link.url }}" aria-label="{{ link.get_platform_display }}">
+              <i class="{{ link.icon_class }}"></i>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-bottom7">
+    <div class="footer-bottom-container7">
+      <p>© 2025 Philharmonia Musical Heritage. All Rights Reserved.</p>
+      <div class="instrument-icons7">
+        {% for instrument in Instruments|slice:":6"  %}
+        {% if instrument.image %}
+          <img src="{{ instrument.image.url }}" title="{{ instrument.name }}" alt="{{ instrument.name }}">
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+/* FontAwesome for icons */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+
+.footer7 {
+  background-color: var(--darks);
+  color: var(--light);
+  padding: 60px 0 0;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+.footer-container7 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.footer-section7 {
+  margin-bottom: 40px;
+}
+
+.footer-section7 h3 {
+  color: var(--lighter);
+  font-size: 1.3rem;
+  margin-bottom: 25px;
+  position: relative;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.footer-section7 h3 i {
+  margin-right: 10px;
+  color: var(--primary);
+}
+
+.footer-section7 h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 2px;
+  background-color: var(--primary);
+}
+
+.footer-section7 p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.logo7 {
+  font-size: 2rem;
+  color: var(--primary);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Office Section */
+.contact-item7 {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.contact-item7 i {
+  color: var(--primary);
+  margin-right: 15px;
+  margin-top: 5px;
+  font-size: 1.1rem;
+}
+
+.contact-item7 p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+}
+
+/* Links Section */
+.footer-section7.links7 ul {
+  padding-left: 0;
+}
+
+.footer-section7.links7 ul li {
+  margin-bottom: 12px;
+  list-style: none;
+}
+
+.footer-section7.links7 ul li a {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+}
+
+.footer-section7.links7 ul li a i {
+  margin-right: 10px;
+  font-size: 0.8rem;
+  color: var(--primary);
+}
+
+.footer-section7.links7 ul li a:hover {
+  color: var(--primary);
+  padding-left: 5px;
+}
+
+/* Social Icons */
+.social-icons7 {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.social-icons7 a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--light);
+  transition: var(--transition);
+  font-size: 1.1rem;
+}
+
+.social-icons7 a:hover {
+  background-color: var(--primary);
+  color: var(--light);
+  transform: translateY(-3px);
+}
+
+/* Footer Bottom */
+.footer-bottom7 {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 25px 0;
+  margin-top: 50px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom-container7 {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer-bottom7 p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.instrument-icons7 {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.instrument-icons7 img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  transition: var(--transition);
+ 
+}
+
+.instrument-icons7 img:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .footer-container7 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer7 {
+    padding: 50px 0 0;
+  }
+  
+  .footer-container7 {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 0 20px;
+  }
+  
+  .footer-section7 {
+    margin-bottom: 30px;
+  }
+  
+  .footer-bottom-container7 {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .instrument-icons7 img {
+    width: 24px;
+    height: 24px;
+  }
+}
+</style>
+
+<!-- MAP Scripts -->
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/maps.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/geodata/philippinesLow.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+
+
+{% endblock content %}

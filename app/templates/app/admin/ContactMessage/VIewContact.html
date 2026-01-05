@@ -1,0 +1,43 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'ViewContact' message.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Name Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_name" name="name" class="form-control" placeholder=" " value="{{ message.name }}" readonly />
+                    <label for="id_name" class="floating-label">Name</label>
+                </div>
+
+                <!-- email Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_email" name="email" class="form-control" placeholder=" " value="{{ message.email }}" readonly />
+                    <label for="id_email" class="floating-label">Email</label>
+                </div>
+
+                <!-- subject Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_subject" name="subject" class="form-control" placeholder=" " value="{{ message.subject }}" readonly />
+                    <label for="id_subject" class="floating-label">Purpose</label>
+                </div>
+
+                <!-- message Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_message" name="message" class="form-control" placeholder=" " readonly>{{ message.message }}</textarea>
+                    <label for="id_message" class="floating-label">Message</label>
+                </div>
+
+                <!-- submitted_at Field - CORRECTED -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_submitted_at" name="submitted_at" class="form-control" placeholder=" " value="{{ message.submitted_at|date:'M d, Y' }}" readonly />
+                    <label for="id_submitted_at" class="floating-label">Date Submitted</label>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

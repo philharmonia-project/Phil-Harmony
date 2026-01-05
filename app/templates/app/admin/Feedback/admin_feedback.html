@@ -1,0 +1,510 @@
+{% load static %}
+<div id="dashboard-container" class="container main main-content">
+  <!-- Chat Management Section -->
+<div id="forum-chat-management-section">
+    <div class="forum-section-header">
+        <h2>Chat Management</h2>
+        <p>Manage instrument forum conversations</p>
+    </div>
+
+    <div class="forum-chat-layout">
+        <!-- Instrument Forums List - Left Sidebar -->
+        <div class="forum-forums-sidebar">
+            <h3>Instrument Forums</h3>
+            <div class="forum-forums-list">
+                {% for forum in instrument_forums %}
+                <div class="forum-forum-item {% if selected_forum.id == forum.id %}forum-active{% endif %}">
+                    <div class="forum-forum-info">
+                        <a href="{% url 'admin_main' %}?forum_id={{ forum.id }}" class="forum-forum-link">
+                            <h4>{{ forum.instrument.name }}</h4>
+                            <span class="forum-forum-meta">
+                                {{ forum.messages.count }} message{{ forum.messages.count|pluralize }}
+                                {% if not forum.is_active %}
+                                <span class="forum-inactive-badge">Inactive</span>
+                                {% endif %}
+                            </span>
+                        </a>
+                    </div>
+                    <div class="forum-forum-actions">
+                        <a href="{% url 'toggle_forum_status' forum.id %}?next={{ request.get_full_path|urlencode }}" class="forum-btn-toggle-forum" title="Toggle Forum Status">
+                            {% if forum.is_active %}
+                            <i class="fa-solid fa-pause"></i>
+                            {% else %}
+                            <i class="fa-solid fa-play"></i>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="forum-no-forums">
+                    <p>No instrument forums found.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Messages Panel - Right Side -->
+        <div class="forum-messages-panel">
+            {% if selected_forum %}
+            <div class="forum-messages-header">
+                <h3>Messages in {{ selected_forum.instrument.name }} Forum</h3>
+                <div class="forum-messages-actions">
+                    <a href="#forum-delete-all-modal" class="forum-btn-danger forum-delete-all-btn">
+                        <i class="fa-solid fa-trash"></i> Delete All Messages
+                    </a>
+                </div>
+            </div>
+
+            <div class="forum-messages-container">
+                {% if messages %}
+                <div class="forum-messages-list">
+                    {% for message in messages %}
+                    <div class="forum-message-item">
+                        <div class="forum-message-content-wrapper">
+                            <div class="forum-message-author">
+                                {{ message.author.get_full_name|default:message.author.username }} 
+                                (@{{ message.author.username }})
+                            </div>
+                            <div class="forum-message-content">{{ message.content }}</div>
+                            <div class="forum-message-meta">{{ message.created_at|date:"M d, Y g:i A" }}</div>
+                        </div>
+                        <div class="forum-message-actions">
+                            <a href="#forum-delete-message-modal-{{ message.id }}" class="forum-btn-delete-message">
+                                <i class="fa-solid fa-trash" title="Delete Message"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="forum-no-messages">
+                    <p>No messages in this forum.</p>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="forum-messages-header">
+                <h3>Select an Instrument Forum</h3>
+            </div>
+            <div class="forum-messages-container">
+                <div class="forum-no-selection">
+                    <p>Please select an instrument forum to view messages</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Delete Message Modals -->
+{% for message in messages %}
+<div id="forum-delete-message-modal-{{ message.id }}" class="forum-modal">
+    <div class="forum-modal-content">
+        <div class="forum-modal-header">
+            <h3>Delete Message</h3>
+            <a href="#" class="forum-close-btn"></a>
+        </div>
+        <div class="forum-modal-body">
+            <p>Are you sure you want to delete this message? This action cannot be undone.</p>
+            <div class="forum-message-preview">
+                <strong>Author:</strong> {{ message.author.get_full_name|default:message.author.username }}<br>
+                <strong>Content:</strong> {{ message.content|truncatewords:20 }}
+            </div>
+        </div>
+        <div class="forum-modal-footer">
+            <form method="POST" action="{% url 'delete_message' message.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" class="forum-btn-danger">Delete Message</button>
+                <a href="#" class="forum-btn-secondary forum-close-modal">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Delete All Messages Modal -->
+{% if selected_forum %}
+<div id="forum-delete-all-modal" class="forum-modal">
+    <div class="forum-modal-content">
+        <div class="forum-modal-header">
+            <h3>Delete All Messages</h3>
+            <a href="#" class="forum-close-btn"></a>
+        </div>
+        <div class="forum-modal-body">
+            <p>Are you sure you want to delete all messages in this forum? This action cannot be undone.</p><br>
+            <p><strong>Forum:</strong> {{ selected_forum.instrument.name }}</p>
+            <p><strong>Total messages:</strong> {{ messages|length }}</p>
+        </div>
+        <div class="forum-modal-footer">
+            <form method="POST" action="{% url 'delete_all_forum_messages' selected_forum.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" class="forum-btn-danger">Delete All Messages</button>
+                <a href="#" class="forum-btn-secondary forum-close-modal">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+    /* Updated CSS with renamed classes */
+    .forum-chat-layout {
+        display: flex;
+        gap: 20px;
+        height: 60vh;
+    }
+
+    .forum-forums-sidebar {
+        flex: 0 0 300px;
+        background: var(--bg-colorD);
+        border-radius: 8px;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .forum-forums-sidebar h3 {
+        margin-top: 0;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--title-color);
+    }
+
+    .forum-forum-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        margin-bottom: 10px;
+        background: var(--bg-color);
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+    }
+
+    .forum-forum-item.forum-active {
+        background: var(--text-color1);
+        color: white;
+    }
+
+    .forum-forum-item.forum-active .forum-forum-link {
+        color: white;
+    }
+
+    .forum-forum-link {
+        text-decoration: none;
+        color: inherit;
+        flex: 1;
+    }
+
+    .forum-forum-link:hover {
+        text-decoration: none;
+    }
+
+    .forum-forum-info h4 {
+        margin: 0 0 5px 0;
+        font-size: 16px;
+    }
+
+    .forum-forum-meta {
+        font-size: 12px;
+        color: #6c757d;
+    }
+
+    .forum-forum-item.forum-active .forum-forum-meta {
+        color: rgba(255,255,255,0.8);
+    }
+
+    .forum-inactive-badge {
+        background: var(--text-colorR);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 10px;
+        margin-left: 5px;
+    }
+
+    .forum-btn-toggle-forum {
+        background: none;
+        border: none;
+        color: #6c757d;
+        font-size: 14px;
+        text-decoration: none;
+        padding: 5px;
+    }
+
+    .forum-forum-item.forum-active .forum-btn-toggle-forum {
+        color: white;
+    }
+
+    .forum-messages-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-colorD);
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .forum-messages-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: var(--bg-colorD);
+        border-bottom: 1px solid var(--text-color1);
+    }
+
+    .forum-messages-header h3 {
+        margin: 0;
+    }
+
+    .forum-messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+    }
+
+    .forum-no-selection, .forum-no-messages {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        color: var(--title-color);
+    }
+
+    .forum-messages-list {
+        height: 100%;
+    }
+
+    .forum-message-item {
+        display: flex;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        background: var(--bg-color);
+        position: relative;
+    }
+
+    .forum-message-author {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .forum-message-content {
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+    .forum-message-meta {
+        font-size: 12px;
+        color: var(--title-color);
+    }
+
+    .forum-message-actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .forum-btn-delete-message {
+        color: #dc3545;
+        text-decoration: none;
+        font-size: 14px;
+        padding: 5px;
+    }
+
+    .forum-btn-delete-message:hover {
+        color: #bd2130;
+    }
+
+    /* Modal Styles */
+    .forum-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--shadow-color);
+        z-index: 1000;
+    }
+
+    .forum-modal.show {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .forum-modal-content {
+        background: var(--bg-color);
+        border-radius: 8px;
+        width: 500px;
+        max-width: 90%;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .forum-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--text-color1);
+    }
+
+    .forum-modal-header h3 {
+        margin: 0;
+    }
+
+    .forum-modal-body {
+        padding: 20px;
+    }
+
+    .forum-message-preview {
+        margin-top: 15px;
+        padding: 10px;
+        background: var(--bg-color);
+        border-radius: 4px;
+    }
+
+    .forum-modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 15px 20px;
+        border-top: 1px solid var(--text-color1);
+    }
+
+    /* Button Styles */
+    .forum-btn-danger {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .forum-btn-danger:hover {
+        background: #c82333;
+        color: white;
+        text-decoration: none;
+    }
+
+    .forum-btn-secondary {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .forum-btn-secondary:hover {
+        background: #5a6268;
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Scrollbar Styling */
+    .forum-forums-sidebar::-webkit-scrollbar,
+    .forum-messages-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .forum-forums-sidebar::-webkit-scrollbar-track,
+    .forum-messages-container::-webkit-scrollbar-track {
+        background: var(--bg-color);
+        border-radius: 4px;
+    }
+
+    .forum-forums-sidebar::-webkit-scrollbar-thumb {
+        background: var(--title-color);
+        border-radius: 4px;
+    }
+
+    /* .forum-forums-sidebar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+    } */
+
+    .forum-messages-container::-webkit-scrollbar-thumb {
+        background: var(--title-color);
+        border-radius: 4px;
+    }
+
+    /* .forum-messages-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.4);
+    } */
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .forum-chat-layout {
+            flex-direction: column;
+            height: auto;
+        }
+
+        .forum-forums-sidebar {
+            flex: none;
+            max-height: 300px;
+        }
+    }
+</style>
+
+<script>
+    // Updated JavaScript with renamed classes and IDs
+    document.addEventListener("DOMContentLoaded", () => {
+        // Handle delete message modals
+        const deleteMessageLinks = document.querySelectorAll(".forum-btn-delete-message");
+        const deleteAllBtn = document.querySelector(".forum-delete-all-btn");
+        
+        // Delete Message Modals
+        deleteMessageLinks.forEach((link) => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                const modalId = link.getAttribute("href");
+                const modal = document.querySelector(modalId);
+                if (modal) {
+                    modal.classList.add("show");
+                }
+            });
+        });
+
+        // Delete All Messages Modal
+        if (deleteAllBtn) {
+            deleteAllBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const modal = document.querySelector("#forum-delete-all-modal");
+                if (modal) {
+                    modal.classList.add("show");
+                }
+            });
+        }
+
+        // Close modals
+        const closeButtons = document.querySelectorAll(".forum-close-btn, .forum-close-modal");
+        closeButtons.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const modal = btn.closest(".forum-modal");
+                if (modal) {
+                    modal.classList.remove("show");
+                }
+            });
+        });
+
+        // Close modal when clicking outside
+        const modals = document.querySelectorAll(".forum-modal");
+        modals.forEach((modal) => {
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove("show");
+                }
+            });
+        });
+    });
+</script>

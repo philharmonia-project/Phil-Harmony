@@ -1,0 +1,29 @@
+{% load static %}
+
+<div id="delete-form" class="delete-container1">
+    <form method="POST" action="{% url 'UserDeletePerformance' Performance.pk %}" class="admin-form1">
+        {% csrf_token %}
+
+        <div class="delete-card1">
+
+            <!-- Delete Confirmation -->
+            <div class="delete-content1">
+                <h1 class="delete-title1">Are you sure you want to delete "<span>{{ Performance.event_name }}</span>" appointment?</h1>
+                <p class="delete-warning1">This action cannot be undone. All related data will be permanently removed.</p>
+
+
+                <div class="form-group1">
+                    <label for="id_message1" class="floating-label1">Message</label>
+                    <textarea id="id_message1" name="message" class="form-control1" readonly>{{ Performance.message }}</textarea>
+                </div>
+
+                <!-- Buttons: Delete & Cancel -->
+                <div class="button-group1">
+                    <button type="submit" class="btn-danger1">Delete</button>
+                    <a href="{% url 'admin_main' %}" class="btn-secondary1">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

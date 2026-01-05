@@ -1,0 +1,1456 @@
+{% extends 'app/user/user_main.html' %}
+{% load r2_media %}
+{% load static %}
+{% block content %}
+
+<style>
+  :root {
+    --gold: #FFD700;
+    --gold-dark: #D4AF37;
+    --white: #FFFFFF;
+    --black: #121212;
+    --overlay: rgba(0, 0, 0, 0.6);
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+  }
+
+  body::-webkit-scrollbar {
+    width: 0px; /* Hide vertical scroll bar */
+    height: 0px; /* Hide horizontal scroll bar */
+}
+
+  
+  .front {
+    height: 80vh;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  /* Improved video styling with fallback */
+  .bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: brightness(60%) contrast(110%);
+    transition: filter 0.5s ease;
+  }
+  
+  /* Enhanced overlay text with responsive design */
+  .text-overlay {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 10%;
+    color: var(--white);
+    background: linear-gradient(90deg, var(--overlay) 0%, transparent 100%);
+  }
+  
+  .content-wrapper {
+    max-width: 600px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .text-overlay h1 {
+    font-size: clamp(3rem, 8vw, 5rem);
+    line-height: 1.1;
+    color: var(--gold);
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 1.5rem;
+  }
+  
+  .text-overlay p {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    text-shadow: 1px 1px 2px var(--black);
+    font-weight: 300;
+  }
+  
+  /* Improved button styles */
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .read-btn {
+    padding: 1rem 2rem;
+    background-color: var(--gold);
+    color: var(--black);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .read-btn:hover {
+    background-color: var(--gold-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+  }
+  
+  .sound-btn {
+    padding: 1rem 1.5rem;
+    background-color: transparent;
+    color: var(--white);
+    border: 2px solid var(--white);
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .sound-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Ripple effect */
+  .ripple {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+  }
+  
+  @keyframes ripple {
+    to {
+      transform: scale(2.5);
+      opacity: 0;
+    }
+  }
+  
+  /* Pulse animation for CTA */
+  .pulse1 {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+    }
+  }
+  
+  /* Cultural pattern decoration  */
+  .cultural-pattern {
+    position: absolute;
+    right: -100px;
+    bottom: -100px;
+    width: 300px;
+    height: 300px;
+    background-image: url('/static/images/phil.png');
+    background-size: contain;
+    opacity: 0.2;
+    z-index: 1;
+  }
+ 
+  
+  /* Loading animation */
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+  }
+  
+  .loading-overlay.loaded {
+    opacity: 0;
+  }
+  
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255, 215, 0, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--gold);
+    animation: spin 1s ease-in-out infinite;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .text-overlay {
+      padding: 0 5%;
+      background: var(--overlay);
+      justify-content: center;
+      text-align: center;
+    }
+    
+    .content-wrapper {
+      max-width: 100%;
+    }
+    
+    .button-group {
+      justify-content: center;
+    }
+    
+    .cultural-pattern {
+      display: none;
+    }
+  }
+  
+  /* Animation classes */
+  .fade-in {
+    animation: fadeIn 0.5s ease-in forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  }
+  
+/* Fix scaling for the front hero section */
+@media (max-width: 480px) {
+  .front {
+    height: 90vh;
+  }
+
+  .text-overlay {
+    padding: 0 4%;
+    text-align: center;
+    background: rgba(0,0,0,0.55);
+  }
+
+  .text-overlay h1 {
+    font-size: 2.2rem !important;
+  }
+
+  .text-overlay p {
+    font-size: 0.9rem !important;
+    line-height: 1.5;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .read-btn,
+  .sound-btn {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 0.8rem 1.2rem;
+    justify-content: center;
+  }
+
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+    flex-direction: row;
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: 20px;
+    transform: translateX(-50%);
+  }
+
+  .social-icons a {
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Fix extremely small phones (320px - 360px) */
+@media (max-width: 360px) {
+
+  .text-overlay h1 {
+    font-size: 1.9rem !important;
+  }
+
+  .text-overlay p {
+    font-size: 0.8rem !important;
+  }
+
+  .read-btn,
+  .sound-btn {
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .FrontLmodal-content {
+    width: 95% !important;
+    padding: 10px;
+  }
+
+  .FrontLmodal-content .FrontLleft-section h2 {
+    font-size: 1.1rem !important;
+    margin-bottom: 15px;
+  }
+
+  .FrontLmodal-content .FrontLright-section {
+    padding: 15px !important;
+  }
+
+  .FrontLlogin-input-group input,
+  .FrontLinput-group input {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  .FrontLmodal-content .FrontLright-section button {
+    width: 100%;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+  }
+
+  .FrontLclose {
+    width: 26px;
+    height: 26px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Better responsiveness for tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .text-overlay {
+    padding-left: 8%;
+  }
+
+  .text-overlay h1 {
+    font-size: 3.2rem;
+  }
+
+  .text-overlay p {
+    font-size: 1.05rem;
+  }
+
+  .FrontLmodal-content {
+    max-width: 700px;
+  }
+}
+
+/* Fix modal center alignment for all screens */
+@media (max-width: 768px) {
+  .FrontLmodal {
+    padding-top: 40px;
+  }
+
+  .FrontLmodal-content {
+    margin: auto;
+  }
+}
+
+/* Ensure modal never breaks layout */
+.FrontLmodal-content {
+  max-width: 95%;
+  width: 750px;
+}
+</style>
+<div class="front">
+    <!-- Video with poster -->
+      <video class="bg-video" autoplay muted loop id="bgVideo"
+            poster="{% static 'images/contact.JPG' %}">
+          <source src="{{ MEDIA_URL }}images/videos/front.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+      </video>
+
+
+  
+    <!-- Overlay with enhanced cultural and educational tone -->
+    <div class="text-overlay">
+        <div class="content-wrapper">
+        <h1 data-aos="fade-right" data-aos-duration="800">PHILHARMONIA</h1>
+        <p data-aos="fade-right" data-aos-duration="800" data-aos-delay="200">
+            Dive into the rhythm of Filipino culture. Watch, listen, and learn the art of traditional instruments through inspiring video lessons and storytelling passed through generations.
+        </p>
+        <div class="button-group" data-aos="fade-right" data-aos-duration="800" data-aos-delay="400">
+            <button class="read-btn pulse" id="exploreBtn" >Start Learning</button>
+            <button class="sound-btn" onclick="toggleSound()" id="soundBtn">
+            <span class="sound-icon">🔇</span> <span class="sound-text">Unmute</span>
+            </button>
+        </div>
+        </div>
+    </div>
+  
+      
+      <!-- Decorative cultural pattern -->
+      <div class="cultural-pattern" aria-hidden="true"></div>
+    </div>
+
+</div>
+
+<!-- Loading animation -->
+<div class="loading-overlay">
+  <div class="loading-spinner"></div>
+</div>
+
+
+<script>
+  const video = document.getElementById('bgVideo');
+  const soundBtn = document.getElementById('soundBtn');
+  const soundIcon = soundBtn.querySelector('.sound-icon');
+  const soundText = soundBtn.querySelector('.sound-text');
+
+  function toggleSound() {
+    video.muted = !video.muted;
+    soundIcon.textContent = video.muted ? '🔇' : '🔊';
+    soundText.textContent = video.muted ? 'Unmute' : 'Mute';
+    
+    // Add ripple effect
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple');
+    soundBtn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+  }
+
+  // Loading animation
+  window.addEventListener('load', () => {
+    document.querySelector('.loading-overlay').classList.add('loaded');
+    setTimeout(() => {
+      document.querySelector('.loading-overlay').style.display = 'none';
+    }, 500);
+
+          // Extra UI: Explore button scroll (unchanged)
+  const exploreBtn = document.getElementById('exploreBtn');
+  if (exploreBtn) {
+    exploreBtn.addEventListener('click', function () {
+      document.querySelector('.performance-container')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+  });
+</script>
+
+<!-- AOS animation library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+    once: true,
+    easing: 'ease-out-quart'
+  });
+</script>
+
+
+
+<!-- VIDEO --><!-- VIDEO --><!-- VIDEO --><!-- VIDEO --><!-- VIDEO --><!-- VIDEO -->
+<div class="performance-container">
+    <!-- Side Navigation Bar -->
+    <div class="sidenavbar">
+      <div class="sidenav-header">
+        <h3><i class="fas fa-music"></i> Performance Menu</h3>
+      </div>
+
+      <div class="sidenav-menu-container">
+        <!-- Add the navigation buttons around the menu -->
+        <button class="nav-button prev-button" title="Previous"><i class="fas fa-chevron-left"></i></button>
+        
+        <ul class="sidenav-menu">
+          <li class="active"><a href="#featured"><i class="fas fa-star"></i> Featured</a></li>
+          {% for category in categories %}
+          <li><a href="#{{ category.name|lower }}"><i class="fas fa-{{ category.icon }}"></i> {{ category.name }}</a></li>
+          {% endfor %}
+          <li><a href="#saved"><i class="fas fa-bookmark"></i> Saved</a></li>
+        </ul>
+        
+        <button class="nav-button next-button" title="Next"><i class="fas fa-chevron-right"></i></button>
+      </div>
+      <div class="sidenav-footer">
+        <p>© 2025 Philharmonia</p>
+      </div>
+    </div>
+  
+    <!-- Main Content Area -->
+    <div class="performance-gallery">
+      <div class="section-header">
+        <h2><i class="fas fa-theater-masks"></i> Master the Sound of Tradition</h2>
+        <p>Step into the rhythm of heritage explore immersive video guides and learn to play traditional Filipino instruments from the masters.</p>
+      </div>
+      
+      <div class="video-gallery">
+        {% for video in featured_videos %}
+        <!-- Performance Card -->
+        <div class="video-card" data-video-id="{{ video.id }}" data-categories="featured {{ video.instrument.category.name|lower }}">
+          <div class="video-wrapper">
+            <video class="video" poster="{{ video.instrument.image.url }}">
+              <source src="{{ video.video_file.url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="video-overlay">
+              <div class="play-button">
+                <i class="fas fa-play"></i>
+              </div>
+              <div class="video-controls">
+                <button class="control-btn" title="Fullscreen"><i class="fas fa-expand"></i></button>
+                <button class="control-btn" title="Volume"><i class="fas fa-volume-up"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="video-info">
+            <div class="performance-meta">
+              <span class="views"><i class="fas fa-eye"></i> {{ video.views }} views</span>
+              <span class="date"><i class="far fa-calendar-alt"></i> {{ video.uploaded_at|timesince }} ago</span>
+            </div>
+            <h3 class="video-title">{{ video.title }}</h3>
+            <p class="video-description">{{ video.description|truncatewords:15 }}</p>
+            <div class="action-buttons">
+              <a href="{% url 'detail' video.instrument.pk %}"  class="watch-btn"><i class="fas fa-play-circle"></i> Learn More</a>
+              <button class="save-btn"><i class="far fa-bookmark"></i> Save</button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+    <style>
+        :root {
+            --primary1: #ff6b00;
+            --primary-light1: #ff8b33;
+            --secondary1: #00a8e8;
+            --secondary-light1: #33b9ed;
+            --dark1: #121212;
+            --darker1: #0a0a0a;
+            --dark-light1: #1e1e1e;
+            --light1: #f8f9fa;
+            --lighter1: #ffffff;
+            --accent1: #ffc107;
+            --accent-light1: #ffd54f;
+            --text1: rgba(255, 255, 255, 0.9);
+            --text-light1: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Layout Structure */
+        .performance-container {
+            display: flex;
+            height: 100vh;
+            background: var(--darker1);
+            overflow: hidden;
+        }
+
+        /* Side Navigation Styles */
+        .sidenavbar {
+            width: 250px;
+            background: var(--dark1);
+            color: var(--lighter1);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--dark-light1);
+            overflow: hidden;
+        }
+
+        .sidenav-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--dark-light1);
+            margin-bottom: 20px;
+        }
+
+        .sidenav-header h3 {
+            color: var(--primary1);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidenav-header i {
+            margin-right: 10px;
+        }
+
+        /* Menu container and navigation buttons */
+        .sidenav-menu-container {
+            position: relative;
+            flex: 1;
+            overflow-y: auto;
+            max-height: calc(100vh - 120px);
+        }
+
+        .sidenav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            height: 100%;
+        }
+
+        /* Navigation buttons */
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(30, 30, 30, 0.8);
+            color: var(--text-light1);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .prev-button {
+            left: 10px;
+        }
+
+        .next-button {
+            right: 10px;
+        }
+
+        .nav-button:hover {
+            background: var(--accent1);
+            color: #000;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-button:disabled:hover {
+            background: rgba(30, 30, 30, 0.8);
+            color: var(--text-light1);
+        }
+
+        /* Hide scrollbar but keep functionality */
+        .sidenav-menu {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .sidenav-menu::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sidenav-menu li {
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .sidenav-menu li:hover {
+            background: rgba(255, 193, 7, 0.1);
+        }
+
+        .sidenav-menu li.active {
+            background: rgba(255, 193, 7, 0.2);
+            border-left: 3px solid var(--accent1);
+        }
+
+        .sidenav-menu a {
+            color: var(--text-light1);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidenav-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidenav-footer {
+            padding: 20px;
+            font-size: 0.8rem;
+            color: var(--text-light1);
+            text-align: center;
+            border-top: 1px solid var(--dark-light1);
+        }
+
+        /* Main Content Styles */
+        .performance-gallery {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            top: 0;
+            background: var(--darker1);
+            z-index: 10;
+            padding: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary1);
+            font-weight: 600;
+        }
+
+        .section-header h2 i {
+            margin-right: 15px;
+        }
+
+        .section-header p {
+            color: var(--text-light1);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .video-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            padding-bottom: 20px;
+        }
+
+        .video-card {
+            background: var(--dark-light1);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #000;
+        }
+
+        .video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .video-card:hover .video-overlay {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .play-button {
+            width: 70px;
+            height: 70px;
+            background: var(--accent1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-button i {
+            color: #000;
+            font-size: 24px;
+            margin-left: 5px;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            background: var(--accent-light1);
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--lighter1);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 193, 7, 0.9);
+            color: #000;
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .performance-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: var(--text-light1);
+        }
+
+        .performance-meta i {
+            margin-right: 5px;
+        }
+
+        .video-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text1);
+        }
+
+        .video-description {
+            color: var(--text-light1);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .watch-btn {
+            flex: 1;
+            background: linear-gradient(135deg, var(--accent1), var(--accent-light1));
+            color: #000;
+            padding: 10px 15px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .watch-btn i {
+            margin-right: 8px;
+        }
+
+        .watch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+        }
+
+        .save-btn {
+            background: transparent;
+            color: var(--text-light1);
+            border: 1px solid var(--dark-light1);
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn.saved {
+            color: var(--accent1);
+            border-color: var(--accent1);
+        }
+
+        .save-btn.saved i {
+            font-weight: 900;
+        }
+
+        .save-btn:hover {
+            color: var(--accent1);
+            border-color: var(--accent1);
+        }
+
+        /* Save feedback styles */
+        .save-feedback {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent1);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .save-feedback.show {
+            opacity: 1;
+        }
+
+        /* Empty state styles */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-light1);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--dark-light1);
+        }
+
+        .empty-state h3 {
+            color: var(--text1);
+            margin-bottom: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .performance-container {
+                flex-direction: column;
+            }
+            
+            .sidenavbar {
+                width: 100%;
+                padding: 10px 0;
+                max-height: none;
+            }
+            
+            .sidenav-menu {
+                display: flex;
+                overflow-x: auto;
+                scroll-behavior: smooth;
+                padding: 0 30px;
+            }
+            
+            .sidenav-menu li {
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                flex: 0 0 auto;
+            }
+            
+            .sidenav-menu li.active {
+                border-left: none;
+                border-bottom: 3px solid var(--accent1);
+            }
+            
+            /* Show and style navigation buttons on mobile */
+            .nav-button {
+                display: flex;
+                width: 40px;
+                height: 40px;
+                background: var(--dark-light1);
+            }
+            
+            .prev-button {
+                left: 5px;
+            }
+            
+            .next-button {
+                right: 5px;
+            }
+            
+            .performance-gallery {
+                padding: 20px;
+                height: auto;
+            }
+            
+            .section-header {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .video-gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Track currently playing video
+            let currentlyPlaying = null;
+            
+            // Initialize saved videos from local storage
+            let savedVideos = JSON.parse(localStorage.getItem('savedVideos')) || [];
+            
+            // Set up Intersection Observer to pause videos when not visible
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    if (!entry.isIntersecting && !video.paused) {
+                        video.pause();
+                        const overlay = video.closest('.video-wrapper').querySelector('.video-overlay');
+                        overlay.style.opacity = '1';
+                        overlay.style.pointerEvents = 'auto';
+                        overlay.querySelector('.play-button i').className = 'fas fa-play';
+                        
+                        if (currentlyPlaying === video) {
+                            currentlyPlaying = null;
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.5 // Trigger when 50% of the video is visible
+            });
+            
+            // Observe all videos
+            document.querySelectorAll('.video').forEach(video => {
+                videoObserver.observe(video);
+            });
+            
+            // Play/Pause button functionality
+            document.querySelectorAll('.play-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const videoWrapper = this.closest('.video-wrapper');
+                    const video = videoWrapper.querySelector('.video');
+                    const overlay = videoWrapper.querySelector('.video-overlay');
+                    const playButtonIcon = this.querySelector('i');
+                    const videoCard = videoWrapper.closest('.video-card');
+                    const videoId = videoCard.dataset.videoId;
+                    
+                    // Pause any currently playing video
+                    if (currentlyPlaying && currentlyPlaying !== video) {
+                        currentlyPlaying.pause();
+                        const otherOverlay = currentlyPlaying.closest('.video-wrapper').querySelector('.video-overlay');
+                        otherOverlay.style.opacity = '1';
+                        otherOverlay.style.pointerEvents = 'auto';
+                        otherOverlay.querySelector('.play-button i').className = 'fas fa-play';
+                    }
+                    
+                    // Toggle play/pause
+                    if (video.paused) {
+                        video.play();
+                        playButtonIcon.className = 'fas fa-pause';
+                        currentlyPlaying = video;
+                        overlay.style.opacity = '0';
+                        overlay.style.pointerEvents = 'none';
+                        
+                        // COUNT VIEW WHEN VIDEO STARTS PLAYING
+                        // Simulate view count increment (replace with actual fetch call)
+                        const viewsElement = videoCard.querySelector('.views');
+                        if (viewsElement) {
+                            const currentViews = parseInt(viewsElement.textContent.replace(/\D/g, ''));
+                            viewsElement.innerHTML = `<i class="fas fa-eye"></i> ${currentViews + 1} views`;
+                        }
+                        
+                    } else {
+                        video.pause();
+                        playButtonIcon.className = 'fas fa-play';
+                        currentlyPlaying = null;
+                        overlay.style.opacity = '1';
+                        overlay.style.pointerEvents = 'auto';
+                    }
+                });
+            });
+            
+            // Click on video to pause
+            document.querySelectorAll('.video').forEach(video => {
+                video.addEventListener('click', function() {
+                    if (!this.paused) {
+                        this.pause();
+                        const overlay = this.closest('.video-wrapper').querySelector('.video-overlay');
+                        overlay.style.opacity = '1';
+                        overlay.style.pointerEvents = 'auto';
+                        overlay.querySelector('.play-button i').className = 'fas fa-play';
+                        currentlyPlaying = null;
+                    }
+                });
+            });
+            
+            // Fullscreen button functionality
+            document.querySelectorAll('.control-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    if (this.querySelector('.fa-expand')) {
+                        const videoWrapper = this.closest('.video-wrapper');
+                        const video = videoWrapper.querySelector('.video');
+                        
+                        if (video.requestFullscreen) {
+                            video.requestFullscreen();
+                        } else if (video.webkitRequestFullscreen) {
+                            video.webkitRequestFullscreen();
+                        } else if (video.msRequestFullscreen) {
+                            video.msRequestFullscreen();
+                        }
+                    } else if (this.querySelector('.fa-volume-up, .fa-volume-mute')) {
+                        // Toggle mute
+                        const video = this.closest('.video-wrapper').querySelector('.video');
+                        video.muted = !video.muted;
+                        this.querySelector('i').className = video.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+                    }
+                });
+            });
+            
+            // Handle fullscreen changes
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+            
+            function handleFullscreenChange() {
+                const fullscreenElement = document.fullscreenElement || 
+                                         document.webkitFullscreenElement || 
+                                         document.mozFullScreenElement || 
+                                         document.msFullscreenElement;
+                
+                // If a video entered fullscreen, pause other videos
+                if (fullscreenElement && fullscreenElement.tagName === 'VIDEO') {
+                    // Pause any currently playing video that's not the fullscreen one
+                    if (currentlyPlaying && currentlyPlaying !== fullscreenElement) {
+                        currentlyPlaying.pause();
+                        const otherOverlay = currentlyPlaying.closest('.video-wrapper').querySelector('.video-overlay');
+                        otherOverlay.style.opacity = '1';
+                        otherOverlay.style.pointerEvents = 'auto';
+                        otherOverlay.querySelector('.play-button i').className = 'fas fa-play';
+                    }
+                    
+                    // Set the fullscreen video as currently playing
+                    currentlyPlaying = fullscreenElement;
+                }
+                
+                // If exiting fullscreen, update the play button
+                if (!fullscreenElement && currentlyPlaying) {
+                    const overlay = currentlyPlaying.closest('.video-wrapper').querySelector('.video-overlay');
+                    if (overlay && !currentlyPlaying.paused) {
+                        overlay.querySelector('.play-button i').className = 'fas fa-pause';
+                    }
+                }
+            }
+            
+            // Video ended event to show overlay again
+            document.querySelectorAll('.video').forEach(video => {
+                video.addEventListener('ended', function() {
+                    const overlay = this.closest('.video-wrapper').querySelector('.video-overlay');
+                    overlay.style.opacity = '1';
+                    overlay.style.pointerEvents = 'auto';
+                    overlay.querySelector('.play-button i').className = 'fas fa-play';
+                    currentlyPlaying = null;
+                });
+                
+                // Pause event to handle when user manually pauses
+                video.addEventListener('pause', function() {
+                    if (currentlyPlaying === this) {
+                        const overlay = this.closest('.video-wrapper').querySelector('.video-overlay');
+                        overlay.style.opacity = '1';
+                        overlay.style.pointerEvents = 'auto';
+                        overlay.querySelector('.play-button i').className = 'fas fa-play';
+                        currentlyPlaying = null;
+                    }
+                });
+            });
+            
+            // Save button functionality
+            document.querySelectorAll('.save-btn').forEach(button => {
+                const videoCard = button.closest('.video-card');
+                const videoId = videoCard.dataset.videoId;
+                
+                // Set initial saved state
+                if (savedVideos.includes(videoId)) {
+                    button.innerHTML = '<i class="fas fa-bookmark"></i> Saved';
+                    button.classList.add('saved');
+                }
+                
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const videoId = this.closest('.video-card').dataset.videoId;
+                    const index = savedVideos.indexOf(videoId);
+                    
+                    if (index === -1) {
+                        // Save video
+                        savedVideos.push(videoId);
+                        this.innerHTML = '<i class="fas fa-bookmark"></i> Saved';
+                        this.classList.add('saved');
+                        
+                        // Show feedback
+                        showSaveFeedback('Video saved!');
+                    } else {
+                        // Unsave video
+                        savedVideos.splice(index, 1);
+                        this.innerHTML = '<i class="far fa-bookmark"></i> Save';
+                        this.classList.remove('saved');
+                        
+                        // Show feedback
+                        showSaveFeedback('Video removed!');
+                        
+                        // If we're on the saved page, hide the video
+                        const currentTab = document.querySelector('.sidenav-menu li.active a').getAttribute('href');
+                        if (currentTab === '#saved') {
+                            this.closest('.video-card').style.display = 'none';
+                            
+                            // Check if there are no more saved videos
+                            const remainingSavedVideos = document.querySelectorAll('.video-card[style="display: block;"]').length;
+                            if (remainingSavedVideos === 0) {
+                                document.querySelector('.section-header').innerHTML = `
+                                    <h2><i class="fas fa-bookmark"></i> No Saved Performances</h2>
+                                    <p>Save performances by clicking the "Save" button on videos</p>
+                                `;
+                            }
+                        }
+                    }
+                    
+                    // Update local storage
+                    localStorage.setItem('savedVideos', JSON.stringify(savedVideos));
+                });
+            });
+            
+            // Side navigation click handlers
+            document.querySelectorAll('.sidenav-menu a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('href').substring(1);
+                    
+                    // Update active state
+                    document.querySelectorAll('.sidenav-menu li').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    this.closest('li').classList.add('active');
+                    
+                    // Handle different menu items
+                    if (target === 'saved') {
+                        showSavedVideos();
+                    } else if (target === 'featured') {
+                        showAllVideos('Featured Performances', 'Experience the magic of traditional music through these captivating performances');
+                    } else {
+                        // For instrument categories
+                        showCategoryVideos(target);
+                    }
+                });
+            });
+            
+            // Function to show only saved videos
+            function showSavedVideos() {
+                const videoCards = document.querySelectorAll('.video-card');
+                let hasSavedVideos = false;
+                
+                videoCards.forEach(card => {
+                    const videoId = card.dataset.videoId;
+                    if (savedVideos.includes(videoId)) {
+                        card.style.display = 'block';
+                        hasSavedVideos = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Update section header
+                const sectionHeader = document.querySelector('.section-header');
+                if (hasSavedVideos) {
+                    sectionHeader.innerHTML = `
+                        <h2><i class="fas fa-bookmark"></i> Saved Performances</h2>
+                        <p>Your collection of saved performances</p>
+                    `;
+                } else {
+                    sectionHeader.innerHTML = `
+                        <h2><i class="fas fa-bookmark"></i> No Saved Performances</h2>
+                        <p>Save performances by clicking the "Save" button on videos</p>
+                    `;
+                }
+            }
+            
+            // Function to show all videos
+            function showAllVideos(title, description) {
+                document.querySelectorAll('.video-card').forEach(card => {
+                    card.style.display = 'block';
+                });
+                
+                // Update section header
+                document.querySelector('.section-header').innerHTML = `
+                    <h2><i class="fas fa-theater-masks"></i> ${title}</h2>
+                    <p>${description}</p>
+                `;
+            }
+            
+            // Function to show videos by category
+            function showCategoryVideos(category) {
+                const videoCards = document.querySelectorAll('.video-card');
+                let hasCategoryVideos = false;
+                
+                videoCards.forEach(card => {
+                    const categories = card.dataset.categories.split(' ');
+                    if (categories.includes(category)) {
+                        card.style.display = 'block';
+                        hasCategoryVideos = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Update section header
+                const sectionHeader = document.querySelector('.section-header');
+                if (hasCategoryVideos) {
+                    const categoryName = getCategoryName(category);
+                    sectionHeader.innerHTML = `
+                        <h2><i class="${getCategoryIcon(category)}"></i> ${categoryName} Performances</h2>
+                        <p>Explore our collection of ${categoryName.toLowerCase()} performances</p>
+                    `;
+                } else {
+                    const categoryName = getCategoryName(category);
+                    sectionHeader.innerHTML = `
+                        <h2><i class="${getCategoryIcon(category)}"></i> No ${categoryName} Performances</h2>
+                        <p>We currently don't have any ${categoryName.toLowerCase()} performances available</p>
+                    `;
+                }
+            }
+            
+            // Helper function to show save feedback
+            function showSaveFeedback(message) {
+                const feedback = document.createElement('div');
+                feedback.className = 'save-feedback';
+                feedback.textContent = message;
+                document.body.appendChild(feedback);
+                
+                setTimeout(() => {
+                    feedback.classList.add('show');
+                }, 10);
+                
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(feedback);
+                    }, 300);
+                }, 2000);
+            }
+            
+            // Helper function to get category name
+            function getCategoryName(category) {
+                return category.charAt(0).toUpperCase() + category.slice(1);
+            }
+            
+            // Helper function to get category icon
+            function getCategoryIcon(category) {
+                const defaultIcons = {
+                    'aerophones': 'fas fa-wind',
+                    'chordophones': 'fas fa-guitar',
+                    'idiophones': 'fas fa-drum',
+                    'membranophones': 'fas fa-drum-steelpan'
+                };
+                return defaultIcons[category] || 'fas fa-music';
+            }
+            
+            // Side navigation scroll functionality
+            const sidenavMenu = document.querySelector('.sidenav-menu');
+            const prevButton = document.querySelector('.prev-button');
+            const nextButton = document.querySelector('.next-button');
+            
+            function updateNavButtons() {
+                const scrollLeft = sidenavMenu.scrollLeft;
+                const maxScroll = sidenavMenu.scrollWidth - sidenavMenu.clientWidth;
+                
+                prevButton.disabled = scrollLeft <= 10;
+                nextButton.disabled = scrollLeft >= maxScroll - 10;
+            }
+            
+            if (prevButton && nextButton) {
+                prevButton.addEventListener('click', () => {
+                    sidenavMenu.scrollBy({
+                        left: -200,
+                        behavior: 'smooth'
+                    });
+                });
+                
+                nextButton.addEventListener('click', () => {
+                    sidenavMenu.scrollBy({
+                        left: 200,
+                        behavior: 'smooth'
+                    });
+                });
+                
+                sidenavMenu.addEventListener('scroll', updateNavButtons);
+                
+                // Initialize button states
+                updateNavButtons();
+                
+                // Hide buttons when not scrollable
+                const observer = new ResizeObserver(() => {
+                    const isScrollable = sidenavMenu.scrollWidth > sidenavMenu.clientWidth;
+                    prevButton.style.display = isScrollable ? 'flex' : 'none';
+                    nextButton.style.display = isScrollable ? 'flex' : 'none';
+                    updateNavButtons();
+                });
+                
+                observer.observe(sidenavMenu);
+            }
+        });
+    </script>
+  <!-- VIDEO --><!-- VIDEO --><!-- VIDEO --><!-- VIDEO -->
+
+
+{% endblock content %}

@@ -1,0 +1,384 @@
+{% load static %}
+<style>
+       .create-Site3DContent {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Site3DContent span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Site3DContent::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Site3DContent:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Site3DContent:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Site3DContent:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Site3DContent:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Site3DContent:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Site3DContent {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Site3DContent::before {
+            content: '+ 3D Content';
+            font-size: 1.1rem;
+        }
+        
+        .create-Site3DContent span {
+            display: none;
+        }
+        
+        .create-Site3DContent::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Site3DContent {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Site3DContent:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Site3DContent btn-style" id="create-site-content-btn">
+                <span>3D Content</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Site3DContent" placeholder="Search for Site Content...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if sitecontent %}
+        <!-- Mobile Cards View -->
+        <div id="services-list" class="list-section mobile-cards">
+            {% for content in sitecontent %}
+            <div class="instrument-card">
+                <div class="card-header">
+                    <div class="instruments-image">
+                        {% if content.about_image %}
+                        <img src="{{ content.about_image.url }}" alt="{{ content.hero_title }}">
+                        {% else %}
+                        <span>No image available</span>
+                        {% endif %}
+                    </div>
+                    <div class="instrument-title">
+                        <h3>{{ content.hero_title }}</h3>
+                        <p>Site Content</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="instrument-detail">
+                        <span class="detail-label">Hero Description:</span>
+                        <span class="detail-value">{{ content.hero_description|truncatewords:12 }}</span>
+                    </div>
+                    <div class="instrument-detail">
+                        <span class="detail-label">About Title:</span>
+                        <span class="detail-value">{{ content.about_title|truncatewords:8 }}</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="instrument-actions">
+                        <a class="action-link edit-Site3DContent" 
+                           href="" 
+                           data-Site3DContent-id="{{ content.pk }}">
+                            <i class="fa-solid fa-pen" title="Edit Site Content"></i>
+                        </a>
+                        <a class="action-link delete-Site3DContent" 
+                           href="" 
+                           data-Site3DContent-id2="{{ content.pk }}">
+                            <i class="fa-solid fa-trash" title="Delete Site Content"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Desktop Table View -->
+        <div id="services-table" class="table-section">
+            <table id="user-table" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Hero Title</th>
+                        <th>Hero Description</th>
+                        <th>About Title</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-tbody" class="Site3DContent1">
+                    {% for content in sitecontent %}
+                    <tr>
+                        <td>
+                        {% if content.about_image %}
+                        <img src="{{ content.about_image.url }}" alt="{{ content.hero_title }}" class="img-fluid rounded">
+                        {% else %}
+                        <span>No image available</span>
+                        {% endif %}
+                        </td>
+                        <td>{{ content.hero_title }}</td>
+                        <td>{{ content.hero_description|truncatewords:10 }}</td>
+                        <td>{{ content.about_title|truncatewords:8 }}</td>
+                        <td>
+                            <a class="action-link edit-Site3DContent" href="" data-Site3DContent-id="{{ content.pk }}">
+                                <i class="fa-solid fa-pen" title="Edit Site Content"></i>
+                            </a>
+                            |
+                            <a class="action-link delete-Site3DContent" href="" data-Site3DContent-id2="{{ content.pk }}">
+                                <i class="fa-solid fa-trash" title="Delete Site Content"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">No Site Content found. Start by adding one!</p>
+        {% endif %}
+    </div>
+</div>
+
+<!--UPDATE Site3DContent-->
+<div id="Edit-Site3DContent-Modal" class="Edit-Site3DContent-Modal">
+    <div class="Edit-Site3DContent-modal-content">
+        <span class="close-btn3d">&times;</span>
+        <div id="Edit-Site3DContent-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE Site3DContent-->
+<div id="Delete-Site3DContent-Modal" class="Delete-Site3DContent-Modal">
+    <div class="Delete-Site3DContent-modal-content">
+        <div id="Delete-Site3DContent-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Site3DContent-->
+<div id="Create-Site3DContent-Modal" class="Create-Site3DContent-Modal">
+    <div class="Create-Site3DContent-modal-content">
+        <span class="close-btn3d">&times;</span>
+        <div id="Create-Site3DContent-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+   // Site3DContent Modal Management
+document.addEventListener("DOMContentLoaded", () => {
+    // Cache modal elements and implement shared functionality
+    const modals = {
+        create: {
+            element: document.getElementById("Create-Site3DContent-Modal"),
+            container: document.getElementById("Create-Site3DContent-modal-form-container"),
+            closeBtn: document.querySelector("#Create-Site3DContent-Modal .close-btn3d"),
+            cache: null,
+            url: () => "/admin_3dContent/create/"
+        },
+        edit: {
+            element: document.getElementById("Edit-Site3DContent-Modal"),
+            container: document.getElementById("Edit-Site3DContent-modal-form-container"),
+            closeBtn: document.querySelector("#Edit-Site3DContent-Modal .close-btn3d"),
+            cache: {},
+            url: (id) => `/admin_3dContent/${id}/edit/`
+        },
+        delete: {
+            element: document.getElementById("Delete-Site3DContent-Modal"),
+            container: document.getElementById("Delete-Site3DContent-modal-form-container"),
+            closeBtn: document.querySelector("#Delete-Site3DContent-Modal .close-btn3d"),
+            cache: {},
+            url: (id) => `/admin_3dContent/${id}/delete/`
+        }
+    };
+
+    // Preload Create Modal content
+    fetch(modals.create.url())
+        .then(response => response.text())
+        .then(data => {
+            modals.create.cache = data;
+        })
+        .catch(error => console.error("Error preloading create modal:", error));
+
+    // Generic modal handler
+    function setupModal(modalConfig, triggerSelector, getIdFromTrigger) {
+        const triggers = document.querySelectorAll(triggerSelector);
+        
+        triggers.forEach(trigger => {
+            trigger.addEventListener("click", async (e) => {
+                e.preventDefault();
+                const id = getIdFromTrigger(trigger);
+                
+                // Show loading state
+                modalConfig.container.innerHTML = '<div class="loading-spinner"></div>';
+                modalConfig.element.classList.add("show");
+                
+                // Check cache first
+                const cacheKey = id || 'create';
+                if (modalConfig.cache && (id ? modalConfig.cache[id] : modalConfig.cache)) {
+                    modalConfig.container.innerHTML = id ? modalConfig.cache[id] : modalConfig.cache;
+                    return;
+                }
+                
+                try {
+                    const response = await fetch(modalConfig.url(id));
+                    const html = await response.text();
+                    modalConfig.container.innerHTML = html;
+                    
+                    // Cache the response
+                    if (id) {
+                        modalConfig.cache[id] = html;
+                    } else {
+                        modalConfig.cache = html;
+                    }
+                } catch (error) {
+                    modalConfig.container.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                }
+            });
+        });
+        
+        // Close modal handler
+        if (modalConfig.closeBtn) {
+            modalConfig.closeBtn.addEventListener("click", () => {
+                modalConfig.element.classList.remove("show");
+            });
+        }
+    }
+
+    // Initialize all modals
+    setupModal(
+        modals.create,
+        ".create-Site3DContent",
+        () => null // No ID needed for create
+    );
+    
+    setupModal(
+        modals.edit,
+        ".edit-Site3DContent",
+        (trigger) => trigger.getAttribute("data-Site3DContent-id")
+    );
+    
+    setupModal(
+        modals.delete,
+        ".delete-Site3DContent",
+        (trigger) => trigger.getAttribute("data-Site3DContent-id2")
+    );
+
+    
+    // Close modals when clicking outside
+    window.addEventListener("click", (e) => {
+        if (e.target.classList.contains("Create-Site3DContent-Modal") || 
+            e.target.classList.contains("Edit-Site3DContent-Modal") || 
+            e.target.classList.contains("Delete-Site3DContent-Modal")) {
+            e.target.classList.remove("show");
+        }
+    });
+});
+
+// Site3DContent Search Functionality
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputSite3DContent = document.querySelector(".Site3DContent"); // Input field
+    const Site3DContentTableRows = document.querySelectorAll(".Site3DContent1 tr"); // Desktop table rows
+    const Site3DContentCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputSite3DContent.addEventListener("input", () => {
+        const query = searchInputSite3DContent.value.toLowerCase().trim();
+
+        // Search in desktop table
+        Site3DContentTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        Site3DContentCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

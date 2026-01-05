@@ -1,0 +1,31 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'CreateFooters' %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Follow Us Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_follow_us_title" name="follow_us_title" 
+                           class="form-control" placeholder=" " required />
+                    <label for="id_follow_us_title" class="floating-label">Follow Us Title</label>
+                </div>
+                
+                <!-- Follow Us Description Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_follow_us_description" name="follow_us_description" 
+                              class="form-control" placeholder=" " required></textarea>
+                    <label for="id_follow_us_description" class="floating-label">Follow Us Description</label>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Save Footer Settings</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

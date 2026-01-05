@@ -1,0 +1,64 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateTutorial' tutorial.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Left Section: Video Preview -->
+            <div class="form-left-section">
+                
+                <!-- Video Preview Section -->
+                <div class="form-video">
+                    <label for="id_video_file" class="form-label">Video Preview</label>
+                    {% if tutorial.video_file %}
+                    <video width="100%" controls>
+                        <source src="{{ tutorial.video_file.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    {% else %}
+                    <img src="{% static 'images/video_placeholder.png' %}" class="img-fluid video-placeholder" alt="Default Video">
+                    {% endif %}
+                    <div class="file-input-wrapper">
+                        <label for="id_video_file" class="file-label">Update Uploaded Video</label>
+                        <input type="file" id="id_video_file" name="video_file" class="file-input" accept="video/mp4">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+
+                <!-- Instrument Section -->
+                <div class="form-group">
+                    <select id="id_instrument" name="instrument" class="form-control" required>
+                        {% for instrument in Instruments %}
+                        <option value="{{ instrument.pk }}" {% if instrument.pk == tutorial.instrument.pk %}selected{% endif %}>
+                            {{ instrument.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_instrument" class="floating-label">Instrument Name</label>
+                </div>
+                
+                <!-- Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_title" name="title" class="form-control" placeholder=" " value="{{ tutorial.title }}" required />
+                    <label for="id_title" class="floating-label">Video Title</label>
+                </div>
+                
+                <!-- Description Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_description" name="description" class="form-control" placeholder=" " required>{{ tutorial.description }}</textarea>
+                    <label for="id_description" class="floating-label">Description</label>
+                </div>
+                
+
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Update Video</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

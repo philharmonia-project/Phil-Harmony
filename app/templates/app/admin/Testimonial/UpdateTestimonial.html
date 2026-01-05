@@ -1,0 +1,53 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateTestimonial' testimonial.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- User Field -->
+                <div class="form-group">
+                    <select id="id_user" name="user" class="form-control" required>
+                        {% for user in Users %}
+                        <option value="{{ user.pk }}" {% if user.pk == feedback.user.pk %}selected{% endif %}>
+                            {{ user.username }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_user" class="floating-label">User Name</label>
+                </div>
+
+                <!-- Message Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_message" name="message" class="form-control" rows="4" placeholder=" " required>{{ testimonial.message }}</textarea>
+                    <label for="id_message" class="floating-label">Testimonial Message</label>
+                </div>
+                
+
+                <!-- Role Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_role" name="role" class="form-control" value="{{ testimonial.role }}" placeholder=" " />
+                    <label for="id_role" class="floating-label">Role (e.g., Beginner, Advanced)</label>
+                </div>
+
+                <!-- Rating Field -->
+                <div class="form-group star-rating-group">
+                    <label class="star-label">Rating:</label>
+                    <div class="star-rating">
+                        {% for i in "12345" %}
+                        <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" />
+                        <label for="star{{ i }}" title="{{ i }} stars">&#9733;</label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Add Testimonial</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

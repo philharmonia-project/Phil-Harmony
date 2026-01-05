@@ -1,0 +1,342 @@
+
+
+/*=============== CREATE MODAL FOR ContactPage ===============*/
+.Create-ContactPage-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+  }
+  
+  /* Show modal when triggered */
+  .Create-ContactPage-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+  }
+  
+  /* Modal Content Styling */
+  .Create-ContactPage-modal-content {
+    background: var(--body-color); /* Modal content background */
+    padding: 5px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1400px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+  }
+  
+  /* Show modal content with transition */
+  .Create-ContactPage-Modal.show .Create-ContactPage-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+  }
+
+/*=============== UPDATE MODAL FOR ContactPage ===============*/
+.Edit-ContactPage-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Edit-ContactPage-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Edit-ContactPage-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 5px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1400px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Edit-ContactPage-Modal.show .Edit-ContactPage-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+/*=============== DELETE MODAL FOR ContactPage ===============*/
+.Delete-ContactPage-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Delete-ContactPage-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Delete-ContactPage-modal-content {
+    background-color: var(--body-color1);/* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Delete-ContactPage-Modal.show .Delete-ContactPage-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+
+/*=============== DELETE MODAL FOR ContactMessage ===============*/
+.Delete-ContactMessage-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Delete-ContactMessage-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Delete-ContactMessage-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Delete-ContactMessage-Modal.show .Delete-ContactMessage-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+/*=============== UPDATE MODAL FOR ContactPage ===============*/
+.View-ContactMessage-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.View-ContactMessage-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.View-ContactMessage-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 5px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.View-ContactMessage-Modal.show .View-ContactMessage-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+
+/*=============== Enhanced Close Button ===============*/
+.close-btn1 {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #ff4500; /* Vibrant red */
+    cursor: pointer;
+    z-index: 1050;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .close-btn1:hover {
+    color: #b41727; /* Darker red on hover */
+    transform: rotate(90deg) scale(1.1); /* Slight rotation and enlarge */
+  }
+  
+
+    /* Base Styles */
+    #ContactPage2 {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .admin-form2 {
+        background-color: var(--bg-color);
+        border-radius: 12px;
+        box-shadow: 0 4px 10px hsl(228, 15%, 20%);
+        padding: 20px;
+    }
+    
+    /* Horizontal Layout */
+    .form-sections-container2 {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        padding-bottom: 20px;
+    }
+    
+    .form-section2 {
+        flex: 1;
+        min-width: 200px;
+        padding: 20px;
+        background-color: var(--bg-color);
+        border-radius: 6px;
+        border: 1px solid var(--text-color1);
+    }
+    
+    .section-title2 {
+        font-weight: 600;
+        color: var(--title-color);
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--text-color1);
+    }
+    
+    /* Form Groups */
+    .form-group2 {
+        margin-bottom: 20px;
+    }
+    
+    .form-row2 {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .form-row2 .form-group2 {
+        flex: 1;
+    }
+    
+    /* Input Fields */
+    .form-control2 {
+        width: 100%;
+        padding: 10px 12px;
+        background-color: var(--bg-color);
+        border: 1px solid var(--text-color1);
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    
+    textarea.form-control2 {
+        min-height: 80px;
+        resize: vertical;
+    }
+    
+    .form-control2:focus {
+        outline: none;
+        border-color: var(--text-color2);
+        
+    }
+    
+    /* Labels */
+    .form-label2 {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        color: var(--title-color);
+    }
+    
+    /* Submit Button */
+    .btn-primary2 {
+        background-color: var(--text-color1);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    
+    .btn-primary2:hover {
+        background-color: var(--text-color2);
+    }
+    
+    /* Small screens */
+    @media (max-width: 1200px) {
+        .form-sections-container2 {
+            flex-wrap: wrap;
+        }
+    }

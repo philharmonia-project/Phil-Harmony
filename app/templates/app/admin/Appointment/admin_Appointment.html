@@ -1,0 +1,881 @@
+{% load static %}
+ <!-- Search Section -->
+    <div id="search-section">
+        <div id="header-section">
+
+        </div>
+        <input type="text" id="search-input" class="Performance" placeholder="Search for Performance Appointments...">
+    </div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if Performances %}
+            <!-- Performance List - Mobile Cards Only -->
+            <div id="services-list" class="list-section mobile-cards">
+                {% for Performance in Performances %}
+                <div class="instrument-card">
+                    <div class="card-header">
+                        <div class="instrument-title">
+                            <h3>{{ Performance.event_name }}</h3>
+                            <p>{{ Performance.event_type }}</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="instrument-detail">
+                            <span class="detail-label">User:</span>
+                            <span class="detail-value">{{ Performance.user }}</span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">Location:</span>
+                            <span class="detail-value">{{ Performance.event_location }}</span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">Date:</span>
+                            <span class="detail-value">{{ Performance.event_date }}</span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">Time:</span>
+                            <span class="detail-value">{{ Performance.event_time }}</span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">Message:</span>
+                            <span class="detail-value">{{ Performance.message|truncatewords:12 }}</span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value">
+                                <button class="status-select status-{{ Performance.status|lower }} edit-performance-status" 
+                                        data-performance-id3="{{ Performance.pk }}">
+                                    {{ Performance.status }}
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="instrument-actions">
+                            <a class="action-link edit-Performance" href="" data-Performance-id="{{ Performance.pk }}">
+                                <i class="fa-solid fa-pen" title="Edit Performance"></i>
+                            </a>
+                            <a class="action-link delete-Performance" href="" data-Performance-id2="{{ Performance.pk }}">
+                                <i class="fa-solid fa-trash" title="Delete Performance"></i>
+                            </a>
+                        </div>
+                        <div class="instrument-date">
+                            Created: {{ Performance.created_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        
+            <!-- Performance Table - Desktop Only -->
+            <div id="services-table" class="table-section">
+                <table id="user-table" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Event Name</th>
+                            <th>Event Type</th>
+                            <th>Location</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-tbody" class="Performance1">
+                        {% for Performance in Performances %}
+                        <tr>
+                            <td>{{ Performance.user }}</td>
+                            <td>{{ Performance.event_name }}</td>
+                            <td>{{ Performance.event_type }}</td>
+                            <td>{{ Performance.event_location }}</td>
+                            <td>{{ Performance.event_date }}</td>
+                            <td>
+                                <button class="status-select status-{{ Performance.status|lower }} edit-performance-status" 
+                                        data-performance-id3="{{ Performance.pk }}">
+                                    {{ Performance.status }}
+                                </button>
+                            </td>
+                            <td>
+                                <a class="action-link edit-Performance" href="" data-Performance-id="{{ Performance.pk }}">
+                                    <i class="fa-solid fa-eye" title="Edit Performance"></i>
+                                </a>
+                                |
+                                <a class="action-link delete-Performance" href="" data-Performance-id2="{{ Performance.pk }}">
+                                    <i class="fa-solid fa-trash" title="View Appointment"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+        <p class="text-center">No Performances found. Start by creating a new Performance!</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Status Modal -->
+<div id="Performance-Status-Modal" class="Performance-Status-Modal">
+    <div class="Performance-Status-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Performance-status-modal-form-container">
+            <!-- Status form will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<style>
+/* Style for status buttons */
+.status-select {
+    padding: 4px 8px;
+    border-radius: 12px;
+    border: none;
+    font-size: 0.85em;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    min-width: 100px;
+    transition: all 0.2s ease;
+}
+
+/* Status-specific colors */
+.status-select.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-select.status-accepted {
+    background-color: #d1edff;
+    color: #004085;
+}
+
+.status-select.status-declined {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.status-select.status-completed {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Hover effects */
+.status-select:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    opacity: 0.9;
+}
+
+/* Mobile card specific styling */
+.instrument-card .status-select {
+    width: 100%;
+    max-width: 120px;
+}
+
+</style>
+    <!-- Modal Dialogs -->
+    <div id="Create-Performance-Modal" class="Create-Performance-Modal">
+        <div class="Create-Performance-modal-content">
+            <span class="close-btn1">&times;</span>
+            <div id="Create-Performance-modal-form-container">
+                <!-- Dynamic form content will load here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="Edit-Performance-Modal" class="Edit-Performance-Modal">
+        <div class="Edit-Performance-modal-content">
+            <span class="close-btn1">&times;</span>
+            <div id="Edit-Performance-modal-form-container">
+                <!-- Dynamic form content will load here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="Delete-Performance-Modal" class="Delete-Performance-Modal">
+        <div class="Delete-Performance-modal-content">
+            <div id="Delete-Performance-modal-form-container">
+                <!-- Dynamic form content will load here -->
+            </div>
+        </div>
+    </div>
+
+<script>
+      function toggleDeclineReason() {
+        var statusSelect = document.getElementById('id_status');
+        var declineReasonGroup = document.getElementById('declineReasonGroup');
+        
+        if (statusSelect.value === 'Declined') {
+            declineReasonGroup.style.display = 'block';
+            document.getElementById('id_decline_reason').required = true;
+        } else {
+            declineReasonGroup.style.display = 'none';
+            document.getElementById('id_decline_reason').required = false;
+        }
+    }
+    
+    function validateForm() {
+        var statusSelect = document.getElementById('id_status');
+        var declineReason = document.getElementById('id_decline_reason');
+        
+        if (statusSelect.value === 'Declined') {
+            if (!declineReason.value.trim()) {
+                alert('Please provide a reason for declining the appointment.');
+                declineReason.focus();
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleDeclineReason();
+    });
+
+    // create Performance
+document.addEventListener("DOMContentLoaded", () => {
+    const addPerformancemodal = document.getElementById("Create-Performance-Modal");
+    const closeBtn = addPerformancemodal.querySelector(".close-btn1");
+    const addPerformancemodalFormContainer = document.getElementById("Create-Performance-modal-form-container");
+    const addPerformanceLinks = document.querySelectorAll(".create-Performance");
+
+    // Handle clicking on the edit link
+    addPerformanceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Performance/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addPerformancemodalFormContainer.innerHTML = data;
+                    addPerformancemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addPerformancemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addPerformancemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Performance
+document.addEventListener("DOMContentLoaded", () => {
+    const delPerformancemodal = document.getElementById("Delete-Performance-Modal");
+    const closeBtn = delPerformancemodal.querySelector(".close-btn1");
+    const delPerformancemodalFormContainer = document.getElementById("Delete-Performance-modal-form-container");
+    const delPerformanceLinks = document.querySelectorAll(".delete-Performance");
+
+    // Handle clicking on the edit link
+    delPerformanceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const PerformanceId = link.getAttribute("data-Performance-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Performance/${PerformanceId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delPerformancemodalFormContainer.innerHTML = data;
+                    delPerformancemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delPerformancemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delPerformancemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Performance
+document.addEventListener("DOMContentLoaded", () => {
+    const updatePerformancemodal = document.getElementById("Edit-Performance-Modal");
+    const closeBtn = updatePerformancemodal.querySelector(".close-btn1");
+    const PerformancemodalFormContainer = document.getElementById("Edit-Performance-modal-form-container");
+    const editPerformanceLinks = document.querySelectorAll(".edit-Performance");
+
+    // Handle clicking on the edit link
+    editPerformanceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const PerformanceId = link.getAttribute("data-Performance-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Performance/${PerformanceId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    PerformancemodalFormContainer.innerHTML = data;
+                    updatePerformancemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    PerformancemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updatePerformancemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Handle status button clicks
+    const statusButtons = document.querySelectorAll(".edit-performance-status");
+    const statusModal = document.getElementById("Performance-Status-Modal");
+    const closeBtn = statusModal.querySelector(".close-btn1");
+    const statusModalFormContainer = document.getElementById("Performance-status-modal-form-container");
+
+    // Handle clicking on status buttons
+    statusButtons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+            e.preventDefault();
+            const performanceId = button.getAttribute("data-performance-id3");
+
+            // Load the status form dynamically via fetch
+            fetch(`/admin_Performance/status/${performanceId}/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    statusModalFormContainer.innerHTML = data;
+                    statusModal.classList.add("show"); // Show the modal
+                    
+                    // Add event listener to the form submission
+                    const statusForm = statusModalFormContainer.querySelector('form');
+                    if (statusForm) {
+                        statusForm.addEventListener('submit', handleStatusFormSubmit);
+                    }
+                })
+                .catch((error) => {
+                    statusModalFormContainer.innerHTML = "<h2>Error loading status form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Handle status form submission
+    function handleStatusFormSubmit(e) {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.text())
+        .then(data => {
+            // Close modal and reload page to see updated status
+            statusModal.classList.remove("show");
+            window.location.reload(); // Reload to see the updated status
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            statusModalFormContainer.innerHTML = "<h2>Error updating status</h2>";
+        });
+    }
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        statusModal.classList.remove("show");
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener("click", (e) => {
+        if (e.target === statusModal) {
+            statusModal.classList.remove("show");
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputPerformance = document.querySelector(".Performance"); // Input field
+    const PerformanceTableRows = document.querySelectorAll(".Performance1 tr"); // Desktop table rows
+    const PerformanceCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputPerformance.addEventListener("input", () => {
+        const query = searchInputPerformance.value.toLowerCase().trim();
+
+        // Search in desktop table
+        PerformanceTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        PerformanceCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <!-- Search Section -->
+    <div id="search-section">
+        <div id="header-section">
+
+        </div>
+        <input type="text" id="search-input" class="Lesson" placeholder="Search for Lesson Appointments...">
+    </div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if Lessons %}
+            <!-- Lesson List - Mobile Cards Only -->
+            <div id="services-list" class="list-section mobile-cards">
+                {% for Lesson in Lessons %}
+                <div class="instrument-card">
+                    <div class="card-header">
+                        <div class="instrument-title">
+                            <h3>{{ Lesson.school_name }}</h3>
+                            <p>{{ Lesson.class_size }}</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="instrument-detail">
+                            <span class="detail-label">User:</span>
+                            <span class="detail-value">{{ Lesson.user }}</span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">Location:</span>
+                            <span class="detail-value">{{ Lesson.location }}</span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">Date:</span>
+                            <span class="detail-value">{{ Lesson.lesson_date }}</span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">Time:</span>
+                            <span class="detail-value">{{ Lesson.lesson_time }}</span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">Message:</span>
+                            <span class="detail-value">{{ Lesson.message|truncatewords:12 }}</span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value">
+                                <button class="status-select status-{{ Lesson.status|lower }} edit-Lesson-status" 
+                                        data-Lesson-id3="{{ Lesson.pk }}">
+                                    {{ Lesson.status }}
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="instrument-actions">
+                            <a class="action-link edit-Lesson" href="" data-Lesson-id="{{ Lesson.pk }}">
+                                <i class="fa-solid fa-pen" title="Edit Lesson"></i>
+                            </a>
+                            <a class="action-link delete-Lesson" href="" data-Lesson-id2="{{ Lesson.pk }}">
+                                <i class="fa-solid fa-trash" title="Delete Lesson"></i>
+                            </a>
+                        </div>
+                        <div class="instrument-date">
+                            Created: {{ Lesson.created_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        
+            <!-- Lesson Table - Desktop Only -->
+            <div id="services-table" class="table-section">
+                <table id="user-table" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>School Name</th>
+                            <th>Class Size</th>
+                            <th>Location</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-tbody" class="Lesson1">
+                        {% for Lesson in Lessons %}
+                        <tr>
+                            <td>{{ Lesson.user }}</td>
+                            <td>{{ Lesson.school_name }}</td>
+                            <td>{{ Lesson.class_size }}</td>
+                            <td>{{ Lesson.location }}</td>
+                            <td>{{ Lesson.lesson_date }}</td>
+
+                            <td>
+                                <button class="status-select status-{{ Lesson.status|lower }} edit-Lesson-status" 
+                                        data-Lesson-id3="{{ Lesson.pk }}">
+                                    {{ Lesson.status }}
+                                </button>
+                            </td>
+                            <td>
+                                <a class="action-link edit-Lesson" href="" data-Lesson-id="{{ Lesson.pk }}">
+                                    <i class="fa-solid fa-eye" title="View Appointment"></i>
+                                </a>
+                                |
+                                <a class="action-link delete-Lesson" href="" data-Lesson-id2="{{ Lesson.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Lesson"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+        <p class="text-center">No Lessons found. Start by creating a new Lesson!</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Status Modal -->
+<div id="Lesson-Status-Modal" class="Lesson-Status-Modal">
+    <div class="Lesson-Status-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Lesson-status-modal-form-container">
+            <!-- Status form will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<style>
+/* Style for status buttons */
+.status-select {
+    padding: 4px 8px;
+    border-radius: 12px;
+    border: none;
+    font-size: 0.85em;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    min-width: 100px;
+    transition: all 0.2s ease;
+}
+
+/* Status-specific colors */
+.status-select.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-select.status-accepted {
+    background-color: #d1edff;
+    color: #004085;
+}
+
+.status-select.status-declined {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.status-select.status-completed {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Hover effects */
+.status-select:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    opacity: 0.9;
+}
+
+/* Mobile card specific styling */
+.instrument-card .status-select {
+    width: 100%;
+    max-width: 120px;
+}
+
+
+</style>
+    <!-- Modal Dialogs -->
+    <div id="Create-Lesson-Modal" class="Create-Lesson-Modal">
+        <div class="Create-Lesson-modal-content">
+            <span class="close-btn1">&times;</span>
+            <div id="Create-Lesson-modal-form-container">
+                <!-- Dynamic form content will load here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="Edit-Lesson-Modal" class="Edit-Lesson-Modal">
+        <div class="Edit-Lesson-modal-content">
+            <span class="close-btn1">&times;</span>
+            <div id="Edit-Lesson-modal-form-container">
+                <!-- Dynamic form content will load here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="Delete-Lesson-Modal" class="Delete-Lesson-Modal">
+        <div class="Delete-Lesson-modal-content">
+            <div id="Delete-Lesson-modal-form-container">
+                <!-- Dynamic form content will load here -->
+            </div>
+        </div>
+    </div>
+
+<script>
+        function toggleDeclineReason() {
+        var statusSelect = document.getElementById('id_status');
+        var declineReasonGroup = document.getElementById('declineReasonGroup');
+        
+        if (statusSelect.value === 'Declined') {
+            declineReasonGroup.style.display = 'block';
+            document.getElementById('id_decline_reason').required = true;
+        } else {
+            declineReasonGroup.style.display = 'none';
+            document.getElementById('id_decline_reason').required = false;
+        }
+    }
+    
+    function validateForm() {
+        var statusSelect = document.getElementById('id_status');
+        var declineReason = document.getElementById('id_decline_reason');
+        
+        if (statusSelect.value === 'Declined') {
+            if (!declineReason.value.trim()) {
+                alert('Please provide a reason for declining the appointment.');
+                declineReason.focus();
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleDeclineReason();
+    });
+    // create Lesson
+document.addEventListener("DOMContentLoaded", () => {
+    const addLessonmodal = document.getElementById("Create-Lesson-Modal");
+    const closeBtn = addLessonmodal.querySelector(".close-btn1");
+    const addLessonmodalFormContainer = document.getElementById("Create-Lesson-modal-form-container");
+    const addLessonLinks = document.querySelectorAll(".create-Lesson");
+
+    // Handle clicking on the edit link
+    addLessonLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Lesson/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addLessonmodalFormContainer.innerHTML = data;
+                    addLessonmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addLessonmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addLessonmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Lesson
+document.addEventListener("DOMContentLoaded", () => {
+    const delLessonmodal = document.getElementById("Delete-Lesson-Modal");
+    const closeBtn = delLessonmodal.querySelector(".close-btn1");
+    const delLessonmodalFormContainer = document.getElementById("Delete-Lesson-modal-form-container");
+    const delLessonLinks = document.querySelectorAll(".delete-Lesson");
+
+    // Handle clicking on the edit link
+    delLessonLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const LessonId = link.getAttribute("data-Lesson-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Lesson/${LessonId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delLessonmodalFormContainer.innerHTML = data;
+                    delLessonmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delLessonmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delLessonmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Lesson
+document.addEventListener("DOMContentLoaded", () => {
+    const updateLessonmodal = document.getElementById("Edit-Lesson-Modal");
+    const closeBtn = updateLessonmodal.querySelector(".close-btn1");
+    const LessonmodalFormContainer = document.getElementById("Edit-Lesson-modal-form-container");
+    const editLessonLinks = document.querySelectorAll(".edit-Lesson");
+
+    // Handle clicking on the edit link
+    editLessonLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const LessonId = link.getAttribute("data-Lesson-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Lesson/${LessonId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    LessonmodalFormContainer.innerHTML = data;
+                    updateLessonmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    LessonmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateLessonmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Handle status button clicks
+    const statusButtons = document.querySelectorAll(".edit-Lesson-status");
+    const statusModal = document.getElementById("Lesson-Status-Modal");
+    const closeBtn = statusModal.querySelector(".close-btn1");
+    const statusModalFormContainer = document.getElementById("Lesson-status-modal-form-container");
+
+    // Handle clicking on status buttons
+    statusButtons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+            e.preventDefault();
+            const LessonId = button.getAttribute("data-Lesson-id3");
+
+            // Load the status form dynamically via fetch
+            fetch(`/admin_Lesson/status/${LessonId}/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    statusModalFormContainer.innerHTML = data;
+                    statusModal.classList.add("show"); // Show the modal
+                    
+                    // Add event listener to the form submission
+                    const statusForm = statusModalFormContainer.querySelector('form');
+                    if (statusForm) {
+                        statusForm.addEventListener('submit', handleStatusFormSubmit);
+                    }
+                })
+                .catch((error) => {
+                    statusModalFormContainer.innerHTML = "<h2>Error loading status form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Handle status form submission
+    function handleStatusFormSubmit(e) {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.text())
+        .then(data => {
+            // Close modal and reload page to see updated status
+            statusModal.classList.remove("show");
+            window.location.reload(); // Reload to see the updated status
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            statusModalFormContainer.innerHTML = "<h2>Error updating status</h2>";
+        });
+    }
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        statusModal.classList.remove("show");
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener("click", (e) => {
+        if (e.target === statusModal) {
+            statusModal.classList.remove("show");
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputLesson = document.querySelector(".Lesson"); // Input field
+    const LessonTableRows = document.querySelectorAll(".Lesson1 tr"); // Desktop table rows
+    const LessonCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputLesson.addEventListener("input", () => {
+        const query = searchInputLesson.value.toLowerCase().trim();
+
+        // Search in desktop table
+        LessonTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        LessonCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

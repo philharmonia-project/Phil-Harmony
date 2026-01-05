@@ -1,0 +1,59 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UserUpdatePerformance' performance.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Event Name Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_event_name" name="event_name" class="form-control" 
+                           placeholder=" " value="{{ performances.event_name }}" required />
+                    <label for="id_event_name" class="floating-label">Event Name</label>
+                </div>
+                
+                <!-- Event Type Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_event_type" name="event_type" class="form-control" 
+                           placeholder=" " value="{{ performances.event_type }}" />
+                    <label for="id_event_type" class="floating-label">Event Type</label>
+                </div>
+                
+                <!-- Event Location Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_event_location" name="event_location" class="form-control" 
+                           placeholder=" " value="{{ performances.event_location }}" required />
+                    <label for="id_event_location" class="floating-label">Event Location</label>
+                </div>
+                
+                <!-- Event Date Field -->
+                <div class="form-group floating-label-group">
+                    <input type="date" id="id_event_date" name="event_date" class="form-control" 
+                           placeholder=" " value="{{ performances.event_date|date:'Y-m-d' }}" required />
+                    <label for="id_event_date" class="floating-label">Event Date</label>
+                </div>
+                
+                <!-- Event Time Field -->
+                <div class="form-group floating-label-group">
+                    <input type="time" id="id_event_time" name="event_time" class="form-control" 
+                           placeholder=" " value="{{ performances.event_time|time:'H:i' }}" required />
+                    <label for="id_event_time" class="floating-label">Event Time</label>
+                </div>
+                
+                <!-- Message Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_message" name="message" class="form-control" 
+                              placeholder=" " rows="5">{{ performances.message }}</textarea>
+                    <label for="id_message" class="floating-label">Message</label>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Update Performance Appointment</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

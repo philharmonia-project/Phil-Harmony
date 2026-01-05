@@ -1,0 +1,408 @@
+{% load static %}
+<style>
+       .create-Testimonial {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Testimonial span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Testimonial::before {
+        content: 'Add Testimonial';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Testimonial:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Testimonial:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Testimonial:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Testimonial:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Testimonial:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Testimonial {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Testimonial::before {
+            content: '+ Instrument';
+            font-size: 1.1rem;
+        }
+        
+        .create-Testimonial span {
+            display: none;
+        }
+        
+        .create-Testimonial::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Testimonial {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Testimonial:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+
+    </div>
+    <input type="text" id="search-input" class="Testimonial" placeholder="Search for Testimonials...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if Testimonials %}
+            
+                <!-- Testimonials List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for testimonial in Testimonials %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>{{ testimonial.user.username }}</h3>
+                                <p>{{ testimonial.rating }} Star{{ testimonial.rating|pluralize }}</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Message:</span>
+                                <span class="detail-value">{{ testimonial.message|truncatewords:20 }}</span>
+                            </div>
+                            <div class="instrument-detail">
+                                <span class="detail-label">Approved:</span>
+                                <form method="POST" action="{% url 'testimonial_approval' testimonial.pk %}" class="approval-form">
+                                    {% csrf_token %}
+                                    <input type="checkbox" name="approved" {% if testimonial.approved %}checked{% endif %}>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Testimonial" href="" data-Testimonial-id="{{ testimonial.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Testimonial"></i>
+                                </a>
+                                <a class="action-link delete-Testimonial" href="" data-Testimonial-id2="{{ testimonial.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Testimonial"></i>
+                                </a>
+                            </div>
+                            <div class="instrument-date">
+                                Added: {{ testimonial.date_submitted|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <!-- Testimonials Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Rating</th>
+                                <th>Message</th>
+                                <th>Date Submitted</th>
+                                <th>Approved</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Testimonial1">
+                            {% for testimonial in Testimonials %}
+                            <tr>
+                                <td>{{ testimonial.user.username }}</td>
+                                <td>{{ testimonial.rating }} Star{{ testimonial.rating|pluralize }}</td>
+                                <td>{{ testimonial.message|truncatewords:15 }}</td>
+                                <td>{{ testimonial.date_submitted|date:"M d, Y" }}</td>
+                                <td>
+                                    <form method="POST" action="{% url 'testimonial_approval' testimonial.pk %}" class="approval-form">
+                                        {% csrf_token %}
+                                        <input type="checkbox" name="approved" class="table-approval-checkbox" {% if testimonial.approved %}checked{% endif %}>
+                                    </form>
+                                </td>
+                                <td>
+                                    <!-- <a class="action-link edit-Testimonial" href="" data-Testimonial-id="{{ testimonial.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Testimonial"></i>
+                                    </a>
+                                    | -->
+                                    <a class="action-link delete-Testimonial" href="" data-Testimonial-id2="{{ testimonial.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Testimonial"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            
+        {% else %}
+        <p class="text-center">No testimonials found. Start by adding one!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+
+<div id="Edit-Testimonial-Modal" class="Edit-Testimonial-Modal">
+    <div class="Edit-Testimonial-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Testimonial-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Delete-Testimonial-Modal" class="Delete-Testimonial-Modal">
+    <div class="Delete-Testimonial-modal-content">
+        <div id="Delete-Testimonial-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Modal transitions */
+    .Create-Testimonial-Modal,
+    .Edit-Testimonial-Modal,
+    .Delete-Testimonial-Modal {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        opacity: 0;
+        transform: translateY(-20px);
+        pointer-events: none;
+    }
+    
+    .Create-Testimonial-Modal.show,
+    .Edit-Testimonial-Modal.show,
+    .Delete-Testimonial-Modal.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+    
+    .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Cache modal elements and implement shared functionality
+    const modals = {
+        create: {
+            element: document.getElementById("Create-Testimonial-Modal"),
+            container: document.getElementById("Create-Testimonial-modal-form-container"),
+            closeBtn: document.querySelector("#Create-Testimonial-Modal .close-btn1"),
+            cache: null,
+            url: () => "/admin_testimonial/create/"
+        },
+        edit: {
+            element: document.getElementById("Edit-Testimonial-Modal"),
+            container: document.getElementById("Edit-Testimonial-modal-form-container"),
+            closeBtn: document.querySelector("#Edit-Testimonial-Modal .close-btn1"),
+            cache: {},
+            url: (id) => `/admin_testimonial/${id}/edit/`
+        },
+        delete: {
+            element: document.getElementById("Delete-Testimonial-Modal"),
+            container: document.getElementById("Delete-Testimonial-modal-form-container"),
+            closeBtn: document.querySelector("#Delete-Testimonial-Modal .close-btn1"),
+            cache: {},
+            url: (id) => `/admin_testimonial/${id}/delete/`
+        }
+    };
+
+    // Preload Create Modal content
+    fetch(modals.create.url())
+        .then(response => response.text())
+        .then(data => {
+            modals.create.cache = data;
+        })
+        .catch(error => console.error("Error preloading create modal:", error));
+
+    // Generic modal handler
+    function setupModal(modalConfig, triggerSelector, getIdFromTrigger) {
+        const triggers = document.querySelectorAll(triggerSelector);
+        
+        triggers.forEach(trigger => {
+            trigger.addEventListener("click", async (e) => {
+                e.preventDefault();
+                const id = getIdFromTrigger(trigger);
+                
+                // Show loading state
+                modalConfig.container.innerHTML = '<div class="loading-spinner"></div>';
+                modalConfig.element.classList.add("show");
+                
+                // Check cache first
+                const cacheKey = id || 'create';
+                if (modalConfig.cache && (id ? modalConfig.cache[id] : modalConfig.cache)) {
+                    modalConfig.container.innerHTML = id ? modalConfig.cache[id] : modalConfig.cache;
+                    return;
+                }
+                
+                try {
+                    const response = await fetch(modalConfig.url(id));
+                    const html = await response.text();
+                    modalConfig.container.innerHTML = html;
+                    
+                    // Cache the response
+                    if (id) {
+                        modalConfig.cache[id] = html;
+                    } else {
+                        modalConfig.cache = html;
+                    }
+                } catch (error) {
+                    modalConfig.container.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                }
+            });
+        });
+        
+        // Close modal handler
+        if (modalConfig.closeBtn) {
+            modalConfig.closeBtn.addEventListener("click", () => {
+                modalConfig.element.classList.remove("show");
+            });
+        }
+    }
+
+    // Initialize all modals
+    setupModal(
+        modals.create,
+        ".create-Testimonial",
+        () => null // No ID needed for create
+    );
+    
+    setupModal(
+        modals.edit,
+        ".edit-Testimonial",
+        (trigger) => trigger.getAttribute("data-Testimonial-id")
+    );
+    
+    setupModal(
+        modals.delete,
+        ".delete-Testimonial",
+        (trigger) => trigger.getAttribute("data-Testimonial-id2")
+    );
+
+    // Handle approval checkbox changes
+    document.querySelectorAll('.table-approval-checkbox, .approval-form input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            this.form.submit();
+        });
+    });
+    
+    // Close modals when clicking outside
+    window.addEventListener("click", (e) => {
+        if (e.target.classList.contains("Create-Testimonial-Modal") || 
+            e.target.classList.contains("Edit-Testimonial-Modal") || 
+            e.target.classList.contains("Delete-Testimonial-Modal")) {
+            e.target.classList.remove("show");
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputTestimonial = document.querySelector(".Testimonial"); // Input field
+    const TestimonialTableRows = document.querySelectorAll(".Testimonial1 tr"); // Desktop table rows
+    const TestimonialCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputTestimonial.addEventListener("input", () => {
+        const query = searchInputTestimonial.value.toLowerCase().trim();
+
+        // Search in desktop table
+        TestimonialTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        TestimonialCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

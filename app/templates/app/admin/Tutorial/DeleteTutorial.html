@@ -1,0 +1,45 @@
+{% load static %}
+
+<div id="delete-form" class="delete-container1">
+    <form method="POST" action="{% url 'DeleteTutorial' tutorial.pk %}" class="admin-form1">
+        {% csrf_token %}
+
+        <div class="delete-card1">
+            <!-- Image Preview -->
+            <div class="image-section1">
+                {% if tutorial.video_file %}
+                <video class="smaller-video" controls>
+                    <source src="{{ tutorial.video_file.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                {% else %}
+                <img src="{% static 'images/video_placeholder.png' %}" class="img-fluid video-placeholder smaller-video" alt="Default Video">
+                {% endif %}
+            </div>
+
+            <!-- Delete Confirmation -->
+            <div class="delete-content1">
+                <h1 class="delete-title1">Are you sure you want to delete "<span>{{ tutorial.title }}</span>"?</h1>
+                <p class="delete-warning1">This action cannot be undone. All related data will be permanently removed.</p>
+
+                <!-- Instrument Details (Read-Only) -->
+                <div class="form-group1">
+                    <label for="id_name1" class="floating-label1">Tutorial Title</label>
+                    <input type="text" id="id_name1" name="name" class="form-control1" value="{{ tutorial.title }}" readonly />
+                </div>
+
+                <div class="form-group1">
+                    <label for="id_description1" class="floating-label1">Description</label>
+                    <textarea id="id_description1" name="description" class="form-control1" readonly>{{ tutorial.description }}</textarea>
+                </div>
+
+                <!-- Buttons: Delete & Cancel -->
+                <div class="button-group1">
+                    <button type="submit" class="btn-danger1">Delete</button>
+                    <a href="{% url 'admin_main' %}" class="btn-secondary1">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

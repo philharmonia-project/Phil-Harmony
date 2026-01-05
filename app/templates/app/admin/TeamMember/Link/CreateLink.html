@@ -1,0 +1,103 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'CreateLink' %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+
+                <!-- Team Member Select Field with Floating Label -->
+                <div class="form-group floating-label-group">
+                    <select id="id_member" name="member" class="form-control" required>
+                        <option value="" disabled selected hidden></option>
+                        {% for member in Member %}
+                            <option value="{{ member.id }}">{{ member.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_member" class="floating-label">Select Team Member</label>
+                </div>
+
+                <!-- Platform Selection - Simple Options -->
+                <div class="form-group">
+                    <label for="id_platform" class="form-label">Social Platform</label>
+                    <select name="platform" id="id_platform" class="form-control" required>
+                        <option value="facebook">Facebook</option>
+                        <option value="twitter">Twitter</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="github">GitHub</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="email">Email</option>
+                    </select>
+                </div>
+
+                <!-- URL Field with Floating Label -->
+                <div class="form-group floating-label-group">
+                    <input type="url" id="id_url" name="url" class="form-control" placeholder=" " required>
+                    <label for="id_url" class="floating-label">Profile URL</label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Add Social Link</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+// JavaScript for floating labels and icon preview
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize floating labels
+    const floatingInputs = document.querySelectorAll('.floating-label-group .form-control');
+    floatingInputs.forEach(input => {
+        // Set initial state
+        if (input.value) {
+            input.parentNode.querySelector('.floating-label').classList.add('active');
+        }
+        
+        // Add event listeners
+        input.addEventListener('focus', function() {
+            this.parentNode.querySelector('.floating-label').classList.add('active');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentNode.querySelector('.floating-label').classList.remove('active');
+            }
+        });
+    });
+
+    // Platform change handler for icon preview
+    const platformSelect = document.getElementById('id_platform');
+    if (platformSelect) {
+        // Set initial placeholder
+        updateIconPlaceholder(platformSelect.value);
+        
+        platformSelect.addEventListener('change', function() {
+            updateIconPlaceholder(this.value);
+        });
+    }
+    
+    function updateIconPlaceholder(platform) {
+        const iconClassMap = {
+            'facebook': 'fab fa-facebook-f',
+            'twitter': 'fab fa-twitter',
+            'linkedin': 'fab fa-linkedin-in',
+            'github': 'fab fa-github',
+            'instagram': 'fab fa-instagram',
+            'youtube': 'fab fa-youtube',
+            'email': 'fas fa-envelope',
+            'website': 'fas fa-globe'
+        };
+        
+        const defaultIcon = iconClassMap[platform] || 'fas fa-link';
+        const iconField = document.getElementById('id_icon_class');
+        if (iconField && !iconField.value) {
+            iconField.placeholder = `Default: ${defaultIcon}`;
+        }
+    }
+});
+</script>

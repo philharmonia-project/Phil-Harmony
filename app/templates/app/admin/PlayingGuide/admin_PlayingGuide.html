@@ -1,0 +1,352 @@
+<style>
+       .create-Technique {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Technique span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Technique::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Technique:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Technique:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Technique:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Technique:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Technique:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Technique {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Technique::before {
+            content: '+ Technique';
+            font-size: 1.1rem;
+        }
+        
+        .create-Technique span {
+            display: none;
+        }
+        
+        .create-Technique::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Technique {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Technique:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Technique btn-style" id="create-technique-step-btn">
+                <span>Technique Step</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Technique" placeholder="Search for Technique Steps...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if technique_steps %}
+           
+                <!-- Technique Steps List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for step in technique_steps %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>{{ step.video_tutorial.title }}</h3>
+                                <p>Step {{ step.step_number }}: {{ step.title }}</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">{{ step.description|truncatewords:12 }}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Technique" href="" data-Technique-id="{{ step.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Technique Step"></i>
+                                </a>
+                                <a class="action-link delete-Technique" href="" data-Technique-id2="{{ step.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Technique Step"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <!-- Technique Steps Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Step Number</th>
+                                <th>Video Tutorial</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Technique1">
+                            {% for step in technique_steps %}
+                            <tr>
+                                <td>{{ step.step_number }}</td>
+                                <td>{{ step.video_tutorial.title }}</td>
+                                <td>{{ step.title }}</td>
+                                <td>{{ step.description|truncatewords:12 }}</td>
+                                <td>
+                                    <a class="action-link edit-Technique" href="" data-Technique-id="{{ step.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Technique Step"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Technique" href="" data-Technique-id2="{{ step.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Technique Step"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+           
+        {% else %}
+        <p class="text-center">No technique steps found. Start by adding a new step!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<!-- Modal Dialogs -->
+<div id="Edit-Technique-Modal" class="Edit-Technique-Modal">
+    <div class="Edit-Technique-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Technique-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Delete-Technique-Modal" class="Delete-Technique-Modal">
+    <div class="Delete-Technique-modal-content">
+        <div id="Delete-Technique-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Create-Technique-Modal" class="Create-Technique-Modal">
+    <div class="Create-Technique-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Technique-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+
+<script>
+// create Technique
+document.addEventListener("DOMContentLoaded", () => {
+    const addTechniquemodal = document.getElementById("Create-Technique-Modal");
+    const closeBtn = addTechniquemodal.querySelector(".close-btn1");
+    const addTechniquemodalFormContainer = document.getElementById("Create-Technique-modal-form-container");
+    const addTechniqueLinks = document.querySelectorAll(".create-Technique");
+
+    // Handle clicking on the edit link
+    addTechniqueLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Technique/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addTechniquemodalFormContainer.innerHTML = data;
+                    addTechniquemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addTechniquemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addTechniquemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Instrument
+document.addEventListener("DOMContentLoaded", () => {
+    const delTechniquemodal = document.getElementById("Delete-Technique-Modal");
+    const closeBtn = delTechniquemodal.querySelector(".close-btn1");
+    const delTechniquemodalFormContainer = document.getElementById("Delete-Technique-modal-form-container");
+    const delTechniqueLinks = document.querySelectorAll(".delete-Technique");
+
+    // Handle clicking on the edit link
+    delTechniqueLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const TechniqueId = link.getAttribute("data-Technique-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Technique/${TechniqueId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delTechniquemodalFormContainer.innerHTML = data;
+                    delTechniquemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delTechniquemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delTechniquemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Technique
+document.addEventListener("DOMContentLoaded", () => {
+    const updateTechniquemodal = document.getElementById("Edit-Technique-Modal");
+    const closeBtn = updateTechniquemodal.querySelector(".close-btn1");
+    const TechniquemodalFormContainer = document.getElementById("Edit-Technique-modal-form-container");
+    const editTechniqueLinks = document.querySelectorAll(".edit-Technique");
+
+    // Handle clicking on the edit link
+    editTechniqueLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const TechniqueId = link.getAttribute("data-Technique-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Technique/${TechniqueId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    TechniquemodalFormContainer.innerHTML = data;
+                    updateTechniquemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    TechniquemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateTechniquemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputTechnique = document.querySelector(".Technique"); // Input field
+    const TechniqueTableRows = document.querySelectorAll(".Technique1 tr"); // Desktop table rows
+    const TechniqueCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputTechnique.addEventListener("input", () => {
+        const query = searchInputTechnique.value.toLowerCase().trim();
+
+        // Search in desktop table
+        TechniqueTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        TechniqueCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

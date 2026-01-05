@@ -1,0 +1,737 @@
+{% load static %}
+<style>
+       .create-Material {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Material span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Material::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Material:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Material:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Material:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Material:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Material:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Material {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Material::before {
+            content: '+ Material';
+            font-size: 1.1rem;
+        }
+        
+        .create-Material span {
+            display: none;
+        }
+        
+        .create-Material::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Material {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Material:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Material btns-style" id="create-service-btn">
+                <span>Material</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Material" placeholder="Search for Materials...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if Materials %}
+        <!-- Material List - Mobile Cards -->
+        <div id="services-list" class="list-section mobile-cards">
+            {% for material in Materials %}
+            <div class="instrument-card">
+                <div class="card-header">
+                    <div class="instrument-title">
+                        <h3>{{ material.name }}</h3>
+                        <p>Instrument Material</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="instrument-detail">
+                        <span class="detail-label">Description:</span>
+                        <span class="detail-value">{{ material.description|truncatewords:12 }}</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="instrument-actions">
+                        <a class="action-link edit-Material" 
+                           href="" 
+                           data-Material-id="{{ material.pk }}">
+                            <i class="fa-solid fa-pen" title="Edit Material"></i>
+                        </a>
+                        <a class="action-link delete-Material" 
+                           href="" 
+                           data-Material-id2="{{ material.pk }}">
+                            <i class="fa-solid fa-trash" title="Delete Material"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Material Table - Desktop -->
+        <div id="services-table" class="table-section">
+            <table id="user-table" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-tbody" class="Material1">
+                    {% for material in Materials %}
+                    <tr>
+                        <td>{{ material.name }}</td>
+                        <td>{{ material.description|truncatewords:10 }}</td>
+                        <td>
+                            <a class="action-link edit-Material" href="" data-Material-id="{{ material.pk }}">
+                                <i class="fa-solid fa-pen" title="Edit Material"></i>
+                            </a>
+                            |
+                            <a class="action-link delete-Material" href="" data-Material-id2="{{ material.pk }}">
+                                <i class="fa-solid fa-trash" title="Delete Material"></i>
+                            </a>
+                            <!-- |
+                            <a class="action-link view-Material" href="">
+                                <i class="fa-solid fa-eye" title="View Material"></i>
+                            </a> -->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">No Instrument Material found. Start by adding a new Material!</p>
+        {% endif %}
+    </div>
+</div>
+
+<br><br><br>
+
+<!--UPDATE Material-->
+<div id="Edit-Material-Modal" class="Edit-Material-Modal">
+    <div class="Edit-Material-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Material-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE Material-->
+<div id="Delete-Material-Modal" class="Delete-Material-Modal">
+    <div class="Delete-Material-modal-content">
+
+        <div id="Delete-Material-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Material-->
+ <div id="Create-Material-Modal" class="Create-Material-Modal">
+    <div class="Create-Material-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Material-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+       .create-InsMaterials {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-InsMaterials span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-InsMaterials::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-InsMaterials:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-InsMaterials:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-InsMaterials:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-InsMaterials:active {
+        transform: scale(0.98);
+    }
+    
+    .create-InsMaterials:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-InsMaterials {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-InsMaterials::before {
+            content: '+ Instrument Material';
+            font-size: 1.1rem;
+        }
+        
+        .create-InsMaterials span {
+            display: none;
+        }
+        
+        .create-InsMaterials::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-InsMaterials {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-InsMaterials:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-InsMaterials btns-style" id="create-service-btn">
+                <span>Instrument Material</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="InsMaterials" placeholder="Search for Instruments Material...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+
+        {% if InsMaterials %}
+        <!-- Mobile Cards -->
+        <div id="services-list" class="list-section mobile-cards">
+            {% for ins_material in InsMaterials %}
+            <div class="instrument-card">
+                <div class="card-header">
+                    <div class="instrument-title">
+                        <h3>{{ ins_material.instrument.name }}</h3>
+                        <p>Instrument Material</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="instrument-detail">
+                        <span class="detail-label">Materials:</span>
+                        <span class="detail-value">
+                            {% for mat in ins_material.materials.all %}
+                                {{ mat.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
+                    </div>
+                    <div class="instrument-detail">
+                        <span class="detail-label">Description:</span>
+                        <span class="detail-value">{{ ins_material.description|truncatewords:12 }}</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="instrument-actions">
+                        <a class="action-link edit-InsMaterials" href="#" data-InsMaterials-id="{{ ins_material.pk }}">
+                            <i class="fa-solid fa-pen" title="Edit Instrument Materials"></i>
+                        </a>
+                        <a class="action-link delete-InsMaterials" href="#" data-InsMaterials-id2="{{ ins_material.pk }}">
+                            <i class="fa-solid fa-trash" title="Delete Instrument Materials"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Desktop Table -->
+        <div id="services-table" class="table-section">
+            <table id="user-table" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Instrument</th>
+                        <th>Materials</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-tbody" class="InsMaterials1">
+                    {% for ins_material in InsMaterials %}
+                    <tr>
+                        <td>{{ ins_material.instrument.name }}</td>
+                        <td>
+                            {% for mat in ins_material.materials.all %}
+                                {{ mat.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ ins_material.description|truncatewords:10 }}</td>
+                        <td>
+                            <a class="action-link edit-InsMaterials" href="#" data-InsMaterials-id="{{ ins_material.pk }}">
+                                <i class="fa-solid fa-pen" title="Edit Instrument Materials"></i>
+                            </a>
+                            |
+                            <a class="action-link delete-InsMaterials" href="#" data-InsMaterials-id2="{{ ins_material.pk }}">
+                                <i class="fa-solid fa-trash" title="Delete Instrument Materials"></i>
+                            </a>
+                            <!-- |
+                            <a class="action-link view-InsMaterials" href="#">
+                                <i class="fa-solid fa-eye" title="View Instrument Materials"></i>
+                            </a> -->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">No Instrument Material found. Start by adding a new Material!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+
+<!--UPDATE InsMaterials-->
+<div id="Edit-InsMaterials-Modal" class="Edit-InsMaterials-Modal">
+    <div class="Edit-InsMaterials-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-InsMaterials-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE InsMaterials-->
+<div id="Delete-InsMaterials-Modal" class="Delete-InsMaterials-Modal">
+    <div class="Delete-InsMaterials-modal-content">
+
+        <div id="Delete-InsMaterials-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Material-->
+ <div id="Create-InsMaterials-Modal" class="Create-InsMaterials-Modal">
+    <div class="Create-InsMaterials-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-InsMaterials-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+// create Material
+document.addEventListener("DOMContentLoaded", () => {
+    const addMaterialmodal = document.getElementById("Create-Material-Modal");
+    const closeBtn = addMaterialmodal.querySelector(".close-btn1");
+    const addMaterialmodalFormContainer = document.getElementById("Create-Material-modal-form-container");
+    const addMaterialLinks = document.querySelectorAll(".create-Material");
+
+    // Handle clicking on the edit link
+    addMaterialLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_material/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addMaterialmodalFormContainer.innerHTML = data;
+                    addMaterialmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addMaterialmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addMaterialmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Material
+document.addEventListener("DOMContentLoaded", () => {
+    const delMaterialmodal = document.getElementById("Delete-Material-Modal");
+    const closeBtn = delMaterialmodal.querySelector(".close-btn1");
+    const delMaterialmodalFormContainer = document.getElementById("Delete-Material-modal-form-container");
+    const delMaterialLinks = document.querySelectorAll(".delete-Material");
+
+    // Handle clicking on the edit link
+    delMaterialLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const MaterialId = link.getAttribute("data-Material-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_material/${MaterialId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delMaterialmodalFormContainer.innerHTML = data;
+                    delMaterialmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delMaterialmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delMaterialmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Material
+document.addEventListener("DOMContentLoaded", () => {
+    const updateMaterialmodal = document.getElementById("Edit-Material-Modal");
+    const closeBtn = updateMaterialmodal.querySelector(".close-btn1");
+    const MaterialmodalFormContainer = document.getElementById("Edit-Material-modal-form-container");
+    const editMaterialLinks = document.querySelectorAll(".edit-Material");
+
+    // Handle clicking on the edit link
+    editMaterialLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const MaterialId = link.getAttribute("data-Material-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_material/${MaterialId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    MaterialmodalFormContainer.innerHTML = data;
+                    updateMaterialmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    MaterialmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateMaterialmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputMaterial = document.querySelector(".Material"); // Input field
+    const MaterialTableRows = document.querySelectorAll(".Material1 tr"); // Desktop table rows
+    const MaterialCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputMaterial.addEventListener("input", () => {
+        const query = searchInputMaterial.value.toLowerCase().trim();
+
+        // Search in desktop table
+        MaterialTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        MaterialCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+
+
+
+
+// INSMATERIALS// INSMATERIALS// INSMATERIALS// INSMATERIALS// INSMATERIALS// INSMATERIALS// INSMATERIALS
+// create Material
+document.addEventListener("DOMContentLoaded", () => {
+    const addInsMaterialsmodal = document.getElementById("Create-InsMaterials-Modal");
+    const closeBtn = addInsMaterialsmodal.querySelector(".close-btn1");
+    const addInsMaterialsmodalFormContainer = document.getElementById("Create-InsMaterials-modal-form-container");
+    const addInsMaterialsLinks = document.querySelectorAll(".create-InsMaterials");
+
+    // Handle clicking on the edit link
+    addInsMaterialsLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_insMaterials/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addInsMaterialsmodalFormContainer.innerHTML = data;
+                    addInsMaterialsmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addInsMaterialsmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addInsMaterialsmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Material
+document.addEventListener("DOMContentLoaded", () => {
+    const delInsMaterialsmodal = document.getElementById("Delete-InsMaterials-Modal");
+    const closeBtn = delInsMaterialsmodal.querySelector(".close-btn1");
+    const delInsMaterialsmodalFormContainer = document.getElementById("Delete-InsMaterials-modal-form-container");
+    const delInsMaterialsLinks = document.querySelectorAll(".delete-InsMaterials");
+
+    // Handle clicking on the edit link
+    delInsMaterialsLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const InsMaterialsId = link.getAttribute("data-InsMaterials-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_insMaterials/${InsMaterialsId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delInsMaterialsmodalFormContainer.innerHTML = data;
+                    delInsMaterialsmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delInsMaterialsmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delInsMaterialsmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Material
+document.addEventListener("DOMContentLoaded", () => {
+    const updateInsMaterialsmodal = document.getElementById("Edit-InsMaterials-Modal");
+    const closeBtn = updateInsMaterialsmodal.querySelector(".close-btn1");
+    const InsMaterialsmodalFormContainer = document.getElementById("Edit-InsMaterials-modal-form-container");
+    const editInsMaterialsLinks = document.querySelectorAll(".edit-InsMaterials");
+
+    // Handle clicking on the edit link
+    editInsMaterialsLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const InsMaterialsId = link.getAttribute("data-InsMaterials-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_insMaterials/${InsMaterialsId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    InsMaterialsmodalFormContainer.innerHTML = data;
+                    updateInsMaterialsmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    InsMaterialsmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateInsMaterialsmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputInsMaterials = document.querySelector(".InsMaterials"); // Input field
+    const InsMaterialsTableRows = document.querySelectorAll(".InsMaterials1 tr"); // Desktop table rows
+    const InsMaterialsCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputInsMaterials.addEventListener("input", () => {
+        const query = searchInputInsMaterials.value.toLowerCase().trim();
+
+        // Search in desktop table
+        InsMaterialsTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        InsMaterialsCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

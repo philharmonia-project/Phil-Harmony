@@ -1,0 +1,470 @@
+{% load static %}
+{% load r2_media %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philharmonia</title>
+     <!--=============== REMIXICONS ===============-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+
+    <link rel="stylesheet" href="{% static 'css/admin/admin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/category.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/tribe.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/material.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/insmaterial.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/instrument.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/feedback.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/testimonial.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/tutorial.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/instructor.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/principle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/sound.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/ContactPage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/Offering.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/Importance.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/Audience.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/Member.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/InsImage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/Technique.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/Significance.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/FunFact.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/ConstructionStep.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/Footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/HomePage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/History.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/Appointment.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/site3dcontent.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/InsLink.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/3D.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+
+    <!--=============== HEADER ===============-->
+         <header class="header" id="header">
+            <div class="header__container">
+           
+               <!-- HTML -->
+               <div class="header__logo">
+                  <div class="analog-clock">
+                     <!-- Clock numbers -->
+                     <span class="clock-number num-12">12</span>
+                     <span class="clock-number num-3">3</span>
+                     <span class="clock-number num-6">6</span>
+                     <span class="clock-number num-9">9</span>
+                     
+                     <!-- Clock hands -->
+                     <div class="hand hour-hand"></div>
+                     <div class="hand minute-hand"></div>
+                     <div class="hand second-hand"></div>
+                     
+                     <!-- Center dot -->
+                     <div class="center-dot"></div>
+                  </div>
+               </div>
+
+
+  
+   
+               <button class="header__toggle" id="header-toggle">
+                  <i class="ri-menu-line"></i>
+               </button>
+            </div>
+         </header>
+   
+        <!--=============== SIDEBAR ===============-->
+         <nav class="sidebar" id="sidebar">
+            <div class="sidebar__container">
+               <div class="sidebar__user">
+                  <div class="sidebar__img">
+                     {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-img">
+                     {% else %}
+                        <img src="{% static 'images/phil.png' %}" alt="Default Profile Picture" class="profile-img">
+                     {% endif %}
+                  </div>
+
+                  <div class="sidebar__info">
+                     <h3>{{ user.username }}</h3>
+                     <span>{{ user.email }}</span>
+                  </div>
+               </div>
+
+               <div class="sidebar__content">
+
+                  <!-- Manage Section -->
+                  <div>
+                     <h3 class="sidebar__title">MANAGE</h3>
+                     <div class="sidebar__list">
+                        <a href="#admin-dashboard" class="sidebar__link active-link">
+                           <i class="fa-solid fa-gauge-high" title="Dashboard"></i>
+                           <span>Dashboard</span>
+                        </a>
+                     </div>
+                  </div>
+
+                  <!-- INSTRUMENTS Section -->
+                  <div>
+                     <h3 class="sidebar__title">INSTRUMENTS</h3>
+                     <div class="sidebar__list">
+                        <a href="#admin-Instrument" class="sidebar__link">
+                           <i class="fa-solid fa-drum" title="Instruments"></i>
+                           <span>Philippines Instrument</span>
+                        </a>
+                        <a href="#admin-InsImage" class="sidebar__link">
+                           <i class="fa-solid fa-image" title="Instrument Views"></i>
+                           <span>Instrument Views</span>
+                        </a>
+                        <a href="#admin-History" class="sidebar__link">
+                           <i class="fa-solid fa-book-open" title="Instrument History"></i>
+                           <span>Instrument History</span>
+                        </a>
+                        <a href="#admin-InsLink" class="sidebar__link">
+                           <i class="fa-solid fa-link" title="Instrument Reference"></i>
+                           <span>Instrument Reference</span>
+                        </a>
+                     </div>
+                  </div>
+
+
+                  <!-- Instrument Settings -->
+                  <div>
+                     <h3 class="sidebar__title">MATERIALS AND PROCESS</h3>
+                     <div class="sidebar__list">
+                        <a href="#admin-Material" class="sidebar__link">
+                           <i class="fa-solid fa-recycle" title="Materials"></i>
+                           <span>Materials</span>
+                        </a>
+                        <a href="#admin-Construction" class="sidebar__link">
+                           <i class="fa-solid fa-list-check" title="Construction Steps"></i>
+                           <span>Construction Steps</span>
+                        </a>
+                     </div>
+                  </div>
+
+                  <!-- Instrument Settings -->
+                  <div>
+                     <h3 class="sidebar__title">INSTRUMENT SETTINGS</h3>
+                     <div class="sidebar__list">
+                        <a href="#Category" class="sidebar__link">
+                           <i class="fa-solid fa-layer-group" title="Instrument Categories"></i>
+                           <span>Categories</span>
+                        </a>
+                        <a href="#admin-Tribe" class="sidebar__link">
+                           <i class="fa-solid fa-earth-asia" title="Region"></i>
+                           <span>Regions</span>
+                        </a>
+                        <a href="#admin-Sound" class="sidebar__link">
+                           <i class="fa-solid fa-volume-high" title="Construction Process"></i>
+                           <span>Sounds</span>
+                        </a>
+                     </div>
+                  </div>
+
+                  <!-- Video Tutorials -->
+                  <div>
+                     <h3 class="sidebar__title">VIDEO TUTORIALS</h3>
+                     <div class="sidebar__list">
+                        <a href="#admin-Tutorial" class="sidebar__link">
+                           <i class="fa-solid fa-video" title="Tutorials"></i>
+                           <span>Video Tutorials</span>
+                        </a>
+                        <a href="#admin-PlayingGuide" class="sidebar__link">
+                           <i class="fa-solid fa-circle-play" title="Playing Guide"></i>
+                           <span>Playing Guide</span>
+                        </a>    
+                     </div>
+                  </div>
+
+                  <!-- Tradition & Trivia Section -->
+                  <div>
+                     <h3 class="sidebar__title">HERITAGE</h3>
+                     <div class="sidebar__list">
+                        <a href="#admin-Significance" class="sidebar__link">
+                           <i class="fa-solid fa-landmark" title="Cultural Significance"></i>
+                           <span>Cultural Significance</span>
+                        </a>
+                        <a href="#admin-FunFact" class="sidebar__link">
+                           <i class="fa-solid fa-lightbulb" title="Fun Fact"></i>
+                           <span>Fun Fact</span>
+                        </a>
+                     </div>
+                  </div>
+
+                  <!-- Instrument 3D Model -->
+                  <div>
+                     <h3 class="sidebar__title">3D Model Page</h3>
+                     <div class="sidebar__list">
+                        <a href="#admin_3dContent" class="sidebar__link">
+                           <i class="fa-solid fa-file-lines" title="3D Content"></i>
+                           <span>3D Content</span>
+                        </a>
+                        <a href="#admin_threeD" class="sidebar__link">
+                           <i class="fa-solid fa-cube" title="3D Models"></i>
+                           <span>3D Model<span>
+                        </a>
+                     </div>
+                  </div>
+
+                  <!-- User Page -->
+                  <div>
+                     <h3 class="sidebar__title">HOME PAGE</h3>
+                     <div class="sidebar__list">
+                        <a href="#admin-HomePage" class="sidebar__link">
+                           <i class="fa-solid fa-house" title="Home Page"></i>
+                           <span>Home Pages</span>
+                        </a>
+                        <a href="#admin-Principle" class="sidebar__link">
+                           <i class="fa-solid fa-compass-drafting" title="Guiding Principles"></i>
+                           <span>Guiding Principles</span>
+                        </a>
+                        <a href="#admin-Instructor" class="sidebar__link">
+                           <i class="fa-solid fa-chalkboard-teacher" title="Instructor"></i>
+                           <span>Instructor</span>
+                        </a>
+                     </div>
+                  </div>
+
+                  <!-- ABOUT PAGE -->
+                  <div>
+                     <h3 class="sidebar__title">ABOUT PAGE</h3>
+                     <div class="sidebar__list">
+                        <a href="#admin-Offering" class="sidebar__link">
+                           <i class="fa-solid fa-file-lines" title="Offering"></i>
+                           <span>Offering</span>
+                        </a>
+                        <a href="#admin-CulturalImportance" class="sidebar__link">
+                           <i class="fa-solid fa-landmark" title="Cultural Importance"></i>
+                           <span>Cultural Importance</span>
+                        </a>
+                        <a href="#admin-TargetAudience" class="sidebar__link">
+                           <i class="fa-solid fa-bullseye" title="Target Audience"></i>
+                           <span>Target Audience</span>
+                        </a>
+                        <a href="#admin-TeamMember" class="sidebar__link">
+                           <i class="fa-solid fa-users" title="Team Member"></i>
+                           <span>Team Member</span>
+                        </a>                        
+                     </div>
+                  </div>
+
+
+                  <!-- CONTACT PAGE -->
+                  <div>
+                     <h3 class="sidebar__title">CONTACT PAGE</h3>
+                     <div class="sidebar__list">
+                        <a href="#admin-ContactPage" class="sidebar__link">
+                           <i class="fa-solid fa-file-lines" title="Page Content"></i>
+                           <span>Page Content</span>
+                        </a>
+                        <a href="#admin-ContactMessage" class="sidebar__link">
+                           <i class="fa-solid fa-envelope" title="Contact Message"></i>
+                           <span>Contact Message</span>
+                        </a>
+                     </div>
+                  </div>
+
+                  <!-- Feedback Section -->
+                  <div>
+                     <h3 class="sidebar__title">User Interactions</h3>
+                     <div class="sidebar__list">
+                        <a href="#admin-feedback" class="sidebar__link">
+                           <i class="fa-solid fa-comments" title="Instrument Feedback"></i>
+                           <span>Instrument Chats</span>
+                        </a>
+                        <a href="#admin-testimonial" class="sidebar__link">
+                           <i class="fa-solid fa-quote-left" title="Testimonials"></i>
+                           <span>Testimonials</span>
+                        </a>
+                         <a href="#admin-Appointment" class="sidebar__link">
+                          <i class="fa-solid fa-calendar-check" title="Appointment"></i>
+                           <span>Appointment</span>
+                        </a>
+                     </div>
+                  </div>
+
+                  <!-- CONTACT PAGE -->
+                  <div>
+                     <h3 class="sidebar__title">Footers</h3>
+                     <div class="sidebar__list">
+                        <a href="#admin-Footer" class="sidebar__link">
+                           <i class="fa-solid fa-file-lines" title="Footers"></i>
+                           <span>Footers</span>
+                        </a>
+                     </div>
+                  </div>
+
+               </div>
+            
+               <div class="sidebar__actions">
+                  <button>
+                     <i class="ri-moon-clear-fill sidebar__link sidebar__theme" id="theme-button">
+                        <span>Theme</span>
+                     </i>
+                  </button>
+                     <!-- Your existing logout button (unchanged) -->
+                     <button class="sidebar__link" id="adminLogoutButton">
+                     <i class="ri-logout-box-r-fill"></i>
+                     <a class="logout-link" href="{% url 'logout' %}">
+                        <span>Logout</span> 
+                     </a>
+                     </button>
+               </div>
+            </div>
+         </nav>
+   
+         <!--=============== MAIN ===============-->
+         <main class="main container" id="main">
+           <div id="admin-dashboard"> 
+            {% include 'app/admin/admin_dashboard.html' %}
+            </div>
+
+            <div id="admin_threeD">
+               {% include 'app/admin/3D Model/admin_3DModel.html' %}
+           </div>
+
+            <div id="admin_3dContent">
+               {% include 'app/admin/3D Content/admin_3dContent.html' %}
+           </div>
+
+            <div id="admin-Instrument">
+               {% include 'app/admin/Instrument/admin_Instrument.html' %}
+           </div>
+
+            <div id="admin-InsImage">
+               {% include 'app/admin/InstrumentImage/admin_InstrumentImage.html' %}
+           </div>
+
+            <div id="admin-History">
+               {% include 'app/admin/History/admin_History.html' %}
+           </div>
+
+            <div id="admin-InsLink">
+               {% include 'app/admin/InstrumentLinks/admin_InsLink.html' %}
+           </div>
+
+           <div id="Category">
+            {% include 'app/admin/Category/admin_Category.html' %}
+           </div>
+           
+            <div id="admin-Tribe">
+                {% include 'app/admin/Tribe/admin_Tribe.html' %}
+            </div>
+
+            <div id="admin-Sound">
+               {% include 'app/admin/Sound/admin_sound.html' %}
+           </div>
+
+            <div id="admin-Material">
+                {% include 'app/admin/Material/admin_Material.html' %}
+            </div>
+
+            <div id="admin-Construction">
+                {% include 'app/admin/Construction/admin_Construction.html' %}
+            </div>
+
+            <div id="admin-Principle">
+               {% include 'app/admin/Principle/admin_Principle.html' %}
+           </div>
+
+           <div id="admin-Instructor">
+            {% include 'app/admin/Instructor/admin_Instructor.html' %}
+           </div>
+
+            <div id="admin-Tutorial">
+                {% include 'app/admin/Tutorial/admin_Tutorial.html' %}
+            </div>
+
+            <div id="admin-PlayingGuide">
+                {% include 'app/admin/PlayingGuide/admin_PlayingGuide.html' %}
+            </div>
+
+            <div id="admin-Significance">
+                {% include 'app/admin/Significance/admin_Significance.html' %}
+            </div>
+
+            <div id="admin-FunFact">
+                {% include 'app/admin/FunFact/admin_FunFact.html' %}
+            </div>
+
+            <div id="admin-HomePage">
+                {% include 'app/admin/HomePage/admin_HomePage.html' %}
+            </div>
+
+            <div id="admin-Offering">
+                {% include 'app/admin/Offering/admin_Offering.html' %}
+            </div>  
+
+            <div id="admin-TargetAudience">
+                {% include 'app/admin/TargetAudience/admin_TargetAudience.html' %}
+            </div>            
+
+            <div id="admin-TeamMember">
+                {% include 'app/admin/TeamMember/admin_TeamMember.html' %}
+            </div>   
+
+            <div id="admin-CulturalImportance">
+                {% include 'app/admin/CulturalImportance/admin_CulturalImportance.html' %}
+            </div>                
+
+            <div id="admin-ContactPage">
+                {% include 'app/admin/ContactPage/admin_contactPage.html' %}
+            </div>
+
+            <div id="admin-ContactMessage">
+                {% include 'app/admin/ContactMessage/admin_ContactMessage.html' %}
+            </div>
+
+            <div id="admin-feedback">
+                {% include 'app/admin/Feedback/admin_feedback.html' %}
+            </div>
+
+            <div id="admin-testimonial">
+               {% include 'app/admin/Testimonial/admin_testimonial.html' %}
+           </div>
+
+            <div id="admin-Appointment">
+               {% include 'app/admin/Appointment/admin_Appointment.html' %}
+           </div>
+
+            <div id="admin-Footer">
+                {% include 'app/admin/Footers/admin_Footer.html' %}
+            </div>
+
+         </main>
+   
+
+    <script src="{% static 'js/admin/sidenavbar.js' %}"></script>
+    <script src="{% static 'js/admin/dashboard.js' %}"></script>
+    
+<!-- Enhanced Admin Logout Modal -->
+<div id="adminLogoutModal" class="admin-modal">
+  <div class="admin-modal-content">
+    <div class="admin-modal-header">
+      <i class="ri-alert-fill admin-modal-icon"></i>
+      <h3 class="admin-modal-title">Confirm Logout</h3>
+    </div>
+    <div class="admin-modal-body">
+      <p>You're about to sign out of your admin account. Are you sure you want to continue?</p>
+    </div>
+    <div class="admin-modal-footer admin-modal-buttons">
+      <button id="adminCancelLogout" class="admin-modal-btn admin-cancel-btn">
+        <i class="ri-close-line"></i> Cancel
+      </button>
+      <a id="adminConfirmLogout" class="admin-logout-link" href="{% url 'logout' %}">
+        <button class="admin-modal-btn admin-confirm-btn">
+          <i class="ri-logout-box-r-line"></i> Logout
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

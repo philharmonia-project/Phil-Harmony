@@ -1,0 +1,776 @@
+{% load static %}
+<style>
+       .create-Page {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Page span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Page::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Page:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Page:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Page:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Page:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Page:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Page {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Page::before {
+            content: '+ Page';
+            font-size: 1.1rem;
+        }
+        
+        .create-Page span {
+            display: none;
+        }
+        
+        .create-Page::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Page {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Page:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Page btn-style" id="create-page-btn">
+                <span>Page</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Page" placeholder="Search for Pages...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if pages %}
+        <!-- Mobile Cards View -->
+        <div id="services-list" class="list-section mobile-cards">
+            {% for page in pages %}
+            <div class="instrument-card">
+                <div class="card-header">
+                    <div class="instrument-title">
+                        <h3>{{ page.title }}</h3>
+                        <p>Page for {{ page.instrument.name }}</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="instrument-detail">
+                        <span class="detail-label">Sections:</span>
+                        <span class="detail-value">{{ page.sections.count }}</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="instrument-actions">
+                        <a class="action-link edit-Page" 
+                           href="" 
+                           data-page-id="{{ page.pk }}">
+                            <i class="fa-solid fa-pen" title="Edit Page"></i>
+                        </a>
+                        <a class="action-link delete-Page" 
+                           href="" 
+                           data-page-id2="{{ page.pk }}">
+                            <i class="fa-solid fa-trash" title="Delete Page"></i>
+                        </a>
+                        <a class="action-link view-Page" 
+                           href="" 
+                           data-page-id3="{{ page.pk }}">
+                            <i class="fa-solid fa-eye" title="View Page"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Desktop Table View -->
+        <div id="services-table" class="table-section">
+            <table id="user-table" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Instrument</th>
+                        <th>Sections Count</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-tbody" class="Page1">
+                    {% for page in pages %}
+                    <tr>
+                        <td>{{ page.title }}</td>
+                        <td>{{ page.instrument.name }}</td>
+                        <td>{{ page.sections.count }}</td>
+                        <td>
+                            <a class="action-link edit-Page" href="" data-page-id="{{ page.pk }}">
+                                <i class="fa-solid fa-pen" title="Edit Page"></i>
+                            </a>
+                            |
+                            <a class="action-link delete-Page" href="" data-page-id2="{{ page.pk }}">
+                                <i class="fa-solid fa-trash" title="Delete Page"></i>
+                            </a>
+                            |
+                            <a class="action-link view-Page" href="" data-page-id3="{{ page.pk }}">
+                                <i class="fa-solid fa-eye" title="View Page"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">No Pages found. Start by adding one!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<!--UPDATE Page-->
+<div id="Edit-Page-Modal" class="Edit-Page-Modal">
+    <div class="Edit-Page-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Page-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE Page-->
+<div id="Delete-Page-Modal" class="Delete-Page-Modal">
+    <div class="Delete-Page-modal-content">
+
+        <div id="Delete-Page-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Page-->
+ <div id="Create-Page-Modal" class="Create-Page-Modal">
+    <div class="Create-Page-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Page-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Page CARD// Page CARD// Page CARD// Page CARD// Page CARD// Page CARD// Page CARD
+// Page CARD// Page CARD// Page CARD// Page CARD// Page CARD// Page CARD// Page CARD
+document.addEventListener("DOMContentLoaded", () => {
+    const addPagemodal = document.getElementById("Create-Page-Modal");
+    const closeBtn = addPagemodal.querySelector(".close-btn1");
+    const addPagemodalFormContainer = document.getElementById("Create-Page-modal-form-container");
+    const addPageLinks = document.querySelectorAll(".create-Page");
+
+    // Handle clicking on the edit link
+    addPageLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Page/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addPagemodalFormContainer.innerHTML = data;
+                    addPagemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addPagemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addPagemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Page Card
+document.addEventListener("DOMContentLoaded", () => {
+    const delPagemodal = document.getElementById("Delete-Page-Modal");
+    const closeBtn = delPagemodal.querySelector(".close-btn1");
+    const delPagemodalFormContainer = document.getElementById("Delete-Page-modal-form-container");
+    const delPageLinks = document.querySelectorAll(".delete-Page");
+
+    // Handle clicking on the edit link
+    delPageLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const PageId = link.getAttribute("data-Page-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Page/${PageId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delPagemodalFormContainer.innerHTML = data;
+                    delPagemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delPagemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delPagemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Page Card
+document.addEventListener("DOMContentLoaded", () => {
+    const updatePagemodal = document.getElementById("Edit-Page-Modal");
+    const closeBtn = updatePagemodal.querySelector(".close-btn1");
+    const PagemodalFormContainer = document.getElementById("Edit-Page-modal-form-container");
+    const editPageLinks = document.querySelectorAll(".edit-Page");
+
+    // Handle clicking on the edit link
+    editPageLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const PageId = link.getAttribute("data-Page-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Page/${PageId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    PagemodalFormContainer.innerHTML = data;
+                    updatePagemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    PagemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updatePagemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputPage = document.querySelector(".Page"); // Input field
+    const PageTableRows = document.querySelectorAll(".Page1 tr"); // Desktop table rows
+    const PagesCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputPage.addEventListener("input", () => {
+        const query = searchInputPage.value.toLowerCase().trim();
+
+        // Search in desktop table
+        PageTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        PagesCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>
+
+
+
+
+<style>
+       .create-Section {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Section span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Section::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Section:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Section:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Section:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Section:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Section:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Section {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Section::before {
+            content: '+ Section';
+            font-size: 1.1rem;
+        }
+        
+        .create-Section span {
+            display: none;
+        }
+        
+        .create-Section::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Section {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Section:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Section btn-style" id="create-section-btn">
+                <span>Section</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Section" placeholder="Search for Sections...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if sections %}
+        <!-- Mobile Cards View -->
+        <div id="services-list" class="list-section mobile-cards">
+            {% for section in sections %}
+            <div class="instrument-card">
+                <div class="card-header">
+                    <div class="instruments-image">
+                        {% if section.section_type == 'image' %}
+                            {% if section.image %}
+                            <img src="{{ section.image.url }}" alt="{{ section.title }}" class="img-fluid rounded">
+                            {% else %}
+                            <span>No image available</span>
+                            {% endif %}
+                        {% else %}
+                        <span>No image available</span>
+                        {% endif %}
+                    </div>
+                    <div class="instrument-title">
+                        <h3>{{ section.title|default:"No Title" }}</h3>
+                        <p>{{ section.get_section_type_display }}</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="instrument-detail">
+                        <span class="detail-label">Content:</span>
+                        <span class="detail-value">
+                            {% if section.section_type == 'image' %}
+                            Image Section
+                            {% elif section.section_type == 'bullet_points' %}
+                            <ul style="margin-left: 10px;">
+                                {% for point in section.content.splitlines %}
+                                    {% if point.strip %}
+                                        <li>{{ point.strip }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            {{ section.content|truncatewords:12|default:"No content" }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="instrument-detail">
+                        <span class="detail-label">Page:</span>
+                        <span class="detail-value">{{ section.page.title }}</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="instrument-actions">
+                        <a class="action-link edit-Section" 
+                           href="" 
+                           data-section-id="{{ section.pk }}">
+                            <i class="fa-solid fa-pen" title="Edit Section"></i>
+                        </a>
+                        <a class="action-link delete-Section" 
+                           href="" 
+                           data-section-id2="{{ section.pk }}">
+                            <i class="fa-solid fa-trash" title="Delete Section"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Desktop Table View -->
+        <div id="services-table" class="table-section">
+            <table id="user-table" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th>Content Preview</th>
+                        <th>Page</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-tbody" class="Section1">
+                    {% for section in sections %}
+                    <tr>
+                        <td>{{ section.title|default:"No Title" }}</td>
+                        <td>{{ section.get_section_type_display }}</td>
+                        <td>
+                            {% if section.section_type == 'image' %}
+                                {% if section.image %}
+                                <img src="{{ section.image.url }}" alt="{{ section.title }}" class="img-fluid rounded" style="max-height: 100px;">
+                                {% else %}
+                                No image available
+                                {% endif %}
+                            {% elif section.section_type == 'bullet_points' %}
+                            <ul class="custom-bullet-list">
+                                {% for point in section.content.splitlines %}
+                                    {% if point.strip %}
+                                        <li>{{ point.strip }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            {{ section.content|truncatewords:10|default:"No content" }}
+                            {% endif %}
+                        </td>
+                        <td>{{ section.page.title }}</td>
+                        <td>
+                            <a class="action-link edit-Section" href="" data-section-id="{{ section.pk }}">
+                                <i class="fa-solid fa-pen" title="Edit Section"></i>
+                            </a>
+                            |
+                            <a class="action-link delete-Section" href="" data-section-id2="{{ section.pk }}">
+                                <i class="fa-solid fa-trash" title="Delete Section"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">No Sections found. Start by adding one!</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+
+</style>
+
+<!--UPDATE Section-->
+<div id="Edit-Section-Modal" class="Edit-Section-Modal">
+    <div class="Edit-Section-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Section-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE Section-->
+<div id="Delete-Section-Modal" class="Delete-Section-Modal">
+    <div class="Delete-Section-modal-content">
+
+        <div id="Delete-Section-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Section-->
+ <div id="Create-Section-Modal" class="Create-Section-Modal">
+    <div class="Create-Section-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Section-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Page CARD// Page CARD// Page CARD// Page CARD// Page CARD// Page CARD// Page CARD
+// Page CARD// Page CARD// Page CARD// Page CARD// Page CARD// Page CARD// Page CARD
+document.addEventListener("DOMContentLoaded", () => {
+    const addSectionmodal = document.getElementById("Create-Section-Modal");
+    const closeBtn = addSectionmodal.querySelector(".close-btn1");
+    const addSectionmodalFormContainer = document.getElementById("Create-Section-modal-form-container");
+    const addSectionLinks = document.querySelectorAll(".create-Section");
+
+    // Handle clicking on the edit link
+    addSectionLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Section/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addSectionmodalFormContainer.innerHTML = data;
+                    addSectionmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addSectionmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addSectionmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Page Card
+document.addEventListener("DOMContentLoaded", () => {
+    const delSectionmodal = document.getElementById("Delete-Section-Modal");
+    const closeBtn = delSectionmodal.querySelector(".close-btn1");
+    const delSectionmodalFormContainer = document.getElementById("Delete-Section-modal-form-container");
+    const delSectionLinks = document.querySelectorAll(".delete-Section");
+
+    // Handle clicking on the edit link
+    delSectionLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const SectionId = link.getAttribute("data-Section-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Section/${SectionId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delSectionmodalFormContainer.innerHTML = data;
+                    delSectionmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delSectionmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delSectionmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Page Card
+document.addEventListener("DOMContentLoaded", () => {
+    const updateSectionmodal = document.getElementById("Edit-Section-Modal");
+    const closeBtn = updateSectionmodal.querySelector(".close-btn1");
+    const SectionmodalFormContainer = document.getElementById("Edit-Section-modal-form-container");
+    const editSectionLinks = document.querySelectorAll(".edit-Section");
+
+    // Handle clicking on the edit link
+    editSectionLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const SectionId = link.getAttribute("data-Section-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Section/${SectionId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    SectionmodalFormContainer.innerHTML = data;
+                    updateSectionmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    SectionmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateSectionmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputSection = document.querySelector(".Section"); // Input field
+    const SectionTableRows = document.querySelectorAll(".Section1 tr"); // Desktop table rows
+    const PagesCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputSection.addEventListener("input", () => {
+        const query = searchInputSection.value.toLowerCase().trim();
+
+        // Search in desktop table
+        SectionTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        PagesCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

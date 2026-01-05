@@ -1,0 +1,281 @@
+
+/*=============== CREATE MODAL FOR Tagline ===============*/
+.Create-Tagline-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+  }
+  
+  /* Show modal when triggered */
+  .Create-Tagline-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+  }
+  
+  /* Modal Content Styling */
+  .Create-Tagline-modal-content {
+    background: var(--body-color); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+  }
+  
+  /* Show modal content with transition */
+  .Create-Tagline-Modal.show .Create-Tagline-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+  }
+
+/*=============== UPDATE MODAL FOR Tagline ===============*/
+.Edit-Tagline-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Edit-Tagline-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Edit-Tagline-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Edit-Tagline-Modal.show .Edit-Tagline-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+/*=============== DELETE MODAL FOR Tagline ===============*/
+.Delete-Tagline-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Delete-Tagline-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Delete-Tagline-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Delete-Tagline-Modal.show .Delete-Tagline-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+
+
+
+
+
+
+
+/*=============== CREATE MODAL FOR HomePage ===============*/
+.Create-HomePage-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+  }
+  
+  /* Show modal when triggered */
+  .Create-HomePage-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+  }
+  
+  /* Modal Content Styling */
+  .Create-HomePage-modal-content {
+    background: var(--body-color); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+  }
+  
+  /* Show modal content with transition */
+  .Create-HomePage-Modal.show .Create-HomePage-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+  }
+
+/*=============== UPDATE MODAL FOR HomePage ===============*/
+.Edit-HomePage-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Edit-HomePage-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Edit-HomePage-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Edit-HomePage-Modal.show .Edit-HomePage-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+/*=============== DELETE MODAL FOR HomePage ===============*/
+.Delete-HomePage-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Delete-HomePage-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Delete-HomePage-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Delete-HomePage-Modal.show .Delete-HomePage-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+/*=============== Enhanced Close Button ===============*/
+.close-btn1 {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #ff4500; /* Vibrant red */
+    cursor: pointer;
+    z-index: 1050;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .close-btn1:hover {
+    color: #b41727; /* Darker red on hover */
+    transform: rotate(90deg) scale(1.1); /* Slight rotation and enlarge */
+  }

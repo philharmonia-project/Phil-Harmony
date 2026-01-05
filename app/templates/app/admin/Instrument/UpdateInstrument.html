@@ -1,0 +1,172 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'updateInstrument' instrument.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Left Section: Image and Sound Sample -->
+            <div class="form-left-section">
+                
+                <!-- Image Section -->
+                <div class="form-image">
+                    <label for="id_image" class="form-label">Instrument Picture</label>
+                    {% if instrument.image %}
+                    <img src="{{ instrument.image.url }}" class="img-fluid instrument-image" alt="{{ instrument.name }}">
+                    {% else %}
+                    <img src="{% static 'images/phil.png' %}" class="img-fluid instrument-image" alt="Default Instrument">
+                    {% endif %}
+                    <div class="file-input-wrapper">
+                        <label for="id_image" class="file-label">Add Instrument Picture</label>
+                        <input type="file" id="id_image" name="image" class="file-input">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+
+                                <!-- Province Field as Select Dropdown (hardcoded options like your example) -->
+            <div class="form-group">
+                <select id="id_province" name="province" class="form-control" required>
+                    <option value="Select Province" disabled {% if not instrument.province %}selected{% endif %}>Select Province</option>
+                    <option value="Abra" {% if instrument.province == 'Abra' %}selected{% endif %}>Abra</option>
+                    <option value="Agusan del Norte" {% if instrument.province == 'Agusan del Norte' %}selected{% endif %}>Agusan del Norte</option>
+                    <option value="Agusan del Sur" {% if instrument.province == 'Agusan del Sur' %}selected{% endif %}>Agusan del Sur</option>
+                    <option value="Aklan" {% if instrument.province == 'Aklan' %}selected{% endif %}>Aklan</option>
+                    <option value="Albay" {% if instrument.province == 'Albay' %}selected{% endif %}>Albay</option>
+                    <option value="Antique" {% if instrument.province == 'Antique' %}selected{% endif %}>Antique</option>
+                    <option value="Apayao" {% if instrument.province == 'Apayao' %}selected{% endif %}>Apayao</option>
+                    <option value="Aurora" {% if instrument.province == 'Aurora' %}selected{% endif %}>Aurora</option>
+                    <option value="Basilan" {% if instrument.province == 'Basilan' %}selected{% endif %}>Basilan</option>
+                    <option value="Bataan" {% if instrument.province == 'Bataan' %}selected{% endif %}>Bataan</option>
+                    <option value="Batanes" {% if instrument.province == 'Batanes' %}selected{% endif %}>Batanes</option>
+                    <option value="Batangas" {% if instrument.province == 'Batangas' %}selected{% endif %}>Batangas</option>
+                    <option value="Benguet" {% if instrument.province == 'Benguet' %}selected{% endif %}>Benguet</option>
+                    <option value="Biliran" {% if instrument.province == 'Biliran' %}selected{% endif %}>Biliran</option>
+                    <option value="Bohol" {% if instrument.province == 'Bohol' %}selected{% endif %}>Bohol</option>
+                    <option value="Bukidnon" {% if instrument.province == 'Bukidnon' %}selected{% endif %}>Bukidnon</option>
+                    <option value="Bulacan" {% if instrument.province == 'Bulacan' %}selected{% endif %}>Bulacan</option>
+                    <option value="Cagayan" {% if instrument.province == 'Cagayan' %}selected{% endif %}>Cagayan</option>
+                    <option value="Camarines Norte" {% if instrument.province == 'Camarines Norte' %}selected{% endif %}>Camarines Norte</option>
+                    <option value="Camarines Sur" {% if instrument.province == 'Camarines Sur' %}selected{% endif %}>Camarines Sur</option>
+                    <option value="Camiguin" {% if instrument.province == 'Camiguin' %}selected{% endif %}>Camiguin</option>
+                    <option value="Capiz" {% if instrument.province == 'Capiz' %}selected{% endif %}>Capiz</option>
+                    <option value="Catanduanes" {% if instrument.province == 'Catanduanes' %}selected{% endif %}>Catanduanes</option>
+                    <option value="Cavite" {% if instrument.province == 'Cavite' %}selected{% endif %}>Cavite</option>
+                    <option value="Cebu" {% if instrument.province == 'Cebu' %}selected{% endif %}>Cebu</option>
+                    <option value="Compostela Valley" {% if instrument.province == 'Compostela Valley' %}selected{% endif %}>Compostela Valley</option>
+                    <option value="Cotabato" {% if instrument.province == 'Cotabato' %}selected{% endif %}>Cotabato</option>
+                    <option value="Davao del Norte" {% if instrument.province == 'Davao del Norte' %}selected{% endif %}>Davao del Norte</option>
+                    <option value="Davao del Sur" {% if instrument.province == 'Davao del Sur' %}selected{% endif %}>Davao del Sur</option>
+                    <option value="Davao Oriental" {% if instrument.province == 'Davao Oriental' %}selected{% endif %}>Davao Oriental</option>
+                    <option value="Dinagat Islands" {% if instrument.province == 'Dinagat Islands' %}selected{% endif %}>Dinagat Islands</option>
+                    <option value="Eastern Samar" {% if instrument.province == 'Eastern Samar' %}selected{% endif %}>Eastern Samar</option>
+                    <option value="Guimaras" {% if instrument.province == 'Guimaras' %}selected{% endif %}>Guimaras</option>
+                    <option value="Ifugao" {% if instrument.province == 'Ifugao' %}selected{% endif %}>Ifugao</option>
+                    <option value="Ilocos Norte" {% if instrument.province == 'Ilocos Norte' %}selected{% endif %}>Ilocos Norte</option>
+                    <option value="Ilocos Sur" {% if instrument.province == 'Ilocos Sur' %}selected{% endif %}>Ilocos Sur</option>
+                    <option value="Iloilo" {% if instrument.province == 'Iloilo' %}selected{% endif %}>Iloilo</option>
+                    <option value="Isabela" {% if instrument.province == 'Isabela' %}selected{% endif %}>Isabela</option>
+                    <option value="Kalinga" {% if instrument.province == 'Kalinga' %}selected{% endif %}>Kalinga</option>
+                    <option value="La Union" {% if instrument.province == 'La Union' %}selected{% endif %}>La Union</option>
+                    <option value="Laguna" {% if instrument.province == 'Laguna' %}selected{% endif %}>Laguna</option>
+                    <option value="Lanao del Norte" {% if instrument.province == 'Lanao del Norte' %}selected{% endif %}>Lanao del Norte</option>
+                    <option value="Lanao del Sur" {% if instrument.province == 'Lanao del Sur' %}selected{% endif %}>Lanao del Sur</option>
+                    <option value="Leyte" {% if instrument.province == 'Leyte' %}selected{% endif %}>Leyte</option>
+                    <option value="Maguindanao" {% if instrument.province == 'Maguindanao' %}selected{% endif %}>Maguindanao</option>
+                    <option value="Marinduque" {% if instrument.province == 'Marinduque' %}selected{% endif %}>Marinduque</option>
+                    <option value="Masbate" {% if instrument.province == 'Masbate' %}selected{% endif %}>Masbate</option>
+                    <option value="Metro Manila" {% if instrument.province == 'Metro Manila' %}selected{% endif %}>Metro Manila</option>
+                    <option value="Misamis Occidental" {% if instrument.province == 'Misamis Occidental' %}selected{% endif %}>Misamis Occidental</option>
+                    <option value="Misamis Oriental" {% if instrument.province == 'Misamis Oriental' %}selected{% endif %}>Misamis Oriental</option>
+                    <option value="Mountain Province" {% if instrument.province == 'Mountain Province' %}selected{% endif %}>Mountain Province</option>
+                    <option value="Negros Occidental" {% if instrument.province == 'Negros Occidental' %}selected{% endif %}>Negros Occidental</option>
+                    <option value="Negros Oriental" {% if instrument.province == 'Negros Oriental' %}selected{% endif %}>Negros Oriental</option>
+                    <option value="Northern Samar" {% if instrument.province == 'Northern Samar' %}selected{% endif %}>Northern Samar</option>
+                    <option value="Nueva Ecija" {% if instrument.province == 'Nueva Ecija' %}selected{% endif %}>Nueva Ecija</option>
+                    <option value="Nueva Vizcaya" {% if instrument.province == 'Nueva Vizcaya' %}selected{% endif %}>Nueva Vizcaya</option>
+                    <option value="Occidental Mindoro" {% if instrument.province == 'Occidental Mindoro' %}selected{% endif %}>Occidental Mindoro</option>
+                    <option value="Oriental Mindoro" {% if instrument.province == 'Oriental Mindoro' %}selected{% endif %}>Oriental Mindoro</option>
+                    <option value="Palawan" {% if instrument.province == 'Palawan' %}selected{% endif %}>Palawan</option>
+                    <option value="Pampanga" {% if instrument.province == 'Pampanga' %}selected{% endif %}>Pampanga</option>
+                    <option value="Pangasinan" {% if instrument.province == 'Pangasinan' %}selected{% endif %}>Pangasinan</option>
+                    <option value="Quezon" {% if instrument.province == 'Quezon' %}selected{% endif %}>Quezon</option>
+                    <option value="Quirino" {% if instrument.province == 'Quirino' %}selected{% endif %}>Quirino</option>
+                    <option value="Rizal" {% if instrument.province == 'Rizal' %}selected{% endif %}>Rizal</option>
+                    <option value="Romblon" {% if instrument.province == 'Romblon' %}selected{% endif %}>Romblon</option>
+                    <option value="Samar" {% if instrument.province == 'Samar' %}selected{% endif %}>Samar</option>
+                    <option value="Sarangani" {% if instrument.province == 'Sarangani' %}selected{% endif %}>Sarangani</option>
+                    <option value="Siquijor" {% if instrument.province == 'Siquijor' %}selected{% endif %}>Siquijor</option>
+                    <option value="Sorsogon" {% if instrument.province == 'Sorsogon' %}selected{% endif %}>Sorsogon</option>
+                    <option value="South Cotabato" {% if instrument.province == 'South Cotabato' %}selected{% endif %}>South Cotabato</option>
+                    <option value="Southern Leyte" {% if instrument.province == 'Southern Leyte' %}selected{% endif %}>Southern Leyte</option>
+                    <option value="Sultan Kudarat" {% if instrument.province == 'Sultan Kudarat' %}selected{% endif %}>Sultan Kudarat</option>
+                    <option value="Sulu" {% if instrument.province == 'Sulu' %}selected{% endif %}>Sulu</option>
+                    <option value="Surigao del Norte" {% if instrument.province == 'Surigao del Norte' %}selected{% endif %}>Surigao del Norte</option>
+                    <option value="Surigao del Sur" {% if instrument.province == 'Surigao del Sur' %}selected{% endif %}>Surigao del Sur</option>
+                    <option value="Tarlac" {% if instrument.province == 'Tarlac' %}selected{% endif %}>Tarlac</option>
+                    <option value="Tawi-Tawi" {% if instrument.province == 'Tawi-Tawi' %}selected{% endif %}>Tawi-Tawi</option>
+                    <option value="Zambales" {% if instrument.province == 'Zambales' %}selected{% endif %}>Zambales</option>
+                    <option value="Zamboanga del Norte" {% if instrument.province == 'Zamboanga del Norte' %}selected{% endif %}>Zamboanga del Norte</option>
+                    <option value="Zamboanga del Sur" {% if instrument.province == 'Zamboanga del Sur' %}selected{% endif %}>Zamboanga del Sur</option>
+                    <option value="Zamboanga Sibugay" {% if instrument.province == 'Zamboanga Sibugay' %}selected{% endif %}>Zamboanga Sibugay</option>
+                </select>
+                <label for="id_province" class="floating-label">Province Name</label>
+            </div>            
+                
+                <!-- Name Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_name" name="name" class="form-control" placeholder=" " value="{{ instrument.name }}" required />
+                    <label for="id_name" class="floating-label">Instrument Name</label>
+                </div>
+
+
+                
+                <!-- Description Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_description" name="description" class="form-control" placeholder=" " required>{{ instrument.description }}</textarea>
+                    <label for="id_description" class="floating-label">Description</label>
+                </div>
+                
+                <!-- Category Section -->
+                <div class="form-group">
+                    <select id="id_category" name="category" class="form-control" required> 
+                        {% for category in Categorys %}
+                        <option value="{{ category.pk }}" {% if category.pk == instrument.category.pk %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_category" class="floating-label">Category</label>
+                </div>
+                
+                <!-- Origin Section -->
+                <div class="form-group">
+                    <select id="id_region" name="region" class="form-control" required>
+                        {% for region in regions %}
+                        <option value="{{ region.pk }}" {% if region.pk == instrument.region.pk %}selected{% endif %}>
+                            {{ region.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_origin" class="floating-label">Tribe of Origin</label>
+                </div>
+                
+
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Update Instrument</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    #id_province {
+  font-size: 14px;
+}
+
+</style>

@@ -1,0 +1,60 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateLink' Link.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+
+                <!-- Team Member Select -->
+    <div class="form-group">
+        <label for="id_member">Team Member</label>
+        <select name="member" id="id_member" class="form-control" required>
+            <option value="">Select Member</option>
+            {% for member in Member %}
+                <option value="{{ member.id }}" {% if member.id == Link.member.id %}selected{% endif %}>
+                    {{ member.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Platform Selection -->
+    <div class="form-group">
+        <label for="id_platform">Social Platform</label>
+        <select name="platform" id="id_platform" class="form-control" required>
+            {% for value, label in PLATFORM_CHOICES %}
+                <option value="{{ value }}" {% if value == Link.platform %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- URL Field -->
+    <div class="form-group">
+        <label for="id_url">Profile URL</label>
+        <input type="url" name="url" id="id_url" class="form-control" value="{{ Link.url }}" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Link</button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const platformSelect = document.getElementById('id_platform');
+    const form = document.getElementById('socialLinkForm');
+    
+    // Optional: Show current platform and icon in console
+    console.log('Current Platform:', '{{ Link.platform }}');
+    console.log('Current Icon Class:', '{{ Link.icon_class }}');
+    
+    // If you want to update the icon in real-time (optional UI feedback)
+    platformSelect.addEventListener('change', function() {
+        const platform = this.value;
+        console.log('Platform changed to:', platform);
+    });
+});
+</script>

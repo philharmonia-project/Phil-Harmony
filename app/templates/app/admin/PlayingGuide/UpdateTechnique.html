@@ -1,0 +1,44 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateTechnique' Technique.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Step Details -->
+            <div class="form-right-section">
+                {% csrf_token %}
+
+                <!-- Video Tutorial Selection -->
+                <div class="form-group">
+                    <select id="id_video_tutorial" name="video_tutorial" class="form-control" required>
+                        {% for video in Tutorials %}
+                        <option value="{{ video.pk }}" {% if video.pk == Technique.video.pk %}selected{% endif %}>
+                            {{ video.title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_video_tutorial" class="floating-label">Select Video Tutorial</label>
+                </div>
+                
+                <!-- Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_title" name="title" class="form-control" 
+                           value="{{ Technique.title }}" 
+                           placeholder=" " required />
+                    <label for="id_title" class="floating-label">Step Title</label>
+                </div>
+
+                <!-- Description Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_description" name="description" class="form-control" 
+                              placeholder=" " required>{{ Technique.description }}</textarea>
+                    <label for="id_description" class="floating-label">Step Description</label>
+                </div>                
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Update Technique Step</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

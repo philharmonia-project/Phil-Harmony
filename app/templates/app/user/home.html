@@ -1,0 +1,1919 @@
+{% extends 'app/user/user_main.html' %}
+{% load static %}
+{% block content %}
+<!-- 
+<style>
+  .loader-container5 {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #f5e6c8 0%, #e6c9a8 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  .loader-container5.fade-out5 {
+      opacity: 0;
+      transform: translateY(-20px);
+      pointer-events: none;
+  }
+
+  .logo-container5 {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin-bottom: 30px;
+  }
+
+  .logo-loader5 {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      animation: kulintangPulse5 3s ease-in-out infinite;
+  }
+
+  @keyframes kulintangPulse5 {
+      0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 10px rgba(218, 165, 32, 0.7)); }
+      25% { transform: scale(1.05) rotate(1deg); filter: drop-shadow(0 0 15px rgba(184, 134, 11, 0.8)); }
+      50% { transform: scale(1.1) rotate(-1deg); filter: drop-shadow(0 0 20px rgba(139, 69, 19, 0.9)); }
+      75% { transform: scale(1.05) rotate(1deg); filter: drop-shadow(0 0 15px rgba(160, 82, 45, 0.8)); }
+      100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 10px rgba(218, 165, 32, 0.7)); }
+  }
+
+  @keyframes rondallaStrum5 {
+      0% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(-5px) rotate(2deg); }
+      50% { transform: translateY(0px) rotate(-2deg); }
+      75% { transform: translateY(5px) rotate(2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+  }
+
+  .progress-container5 {
+      width: 300px;
+      height: 8px;
+      background: rgba(139, 69, 19, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 20px;
+      border: 1px solid #8B4513;
+  }
+
+  .progress-bar5 {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #DAA520, #8B4513);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+      position: relative;
+      overflow: hidden;
+  }
+
+  .progress-bar5::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+      animation: bambooShine5 2s infinite linear;
+  }
+
+  @keyframes bambooShine5 {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+  }
+
+  .loader-text5 {
+      font-family: 'Montserrat', sans-serif;
+      color: #5C3317;
+      font-size: 22px;
+      margin-top: 30px;
+      position: relative;
+      text-align: center;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+  }
+
+  .loader-text5::after {
+      content: '...';
+      position: absolute;
+      animation: ellipsis5 1.5s infinite;
+  }
+
+  @keyframes ellipsis5 {
+      0% { content: '.'; }
+      33% { content: '..'; }
+      66% { content: '...'; }
+  }
+
+  .particles5 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+  }
+
+  .particle5 {
+      position: absolute;
+      background: transparent;
+      border-radius: 50%;
+      animation: float5 linear infinite;
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.7;
+  }
+
+  .particle5.banig5 {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0,0 L20,0 L20,20 L0,20 Z" fill="none" stroke="%235C3317" stroke-width="1" stroke-dasharray="2,2"/></svg>');
+  }
+
+  .particle5.sarimanok5 {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10,0 Q15,5 10,10 Q5,5 10,0 Z" fill="%23DAA520"/></svg>');
+  }
+
+  .particle5.leaf5 {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10,0 Q15,10 10,20 Q5,10 10,0 Z" fill="%23228B22"/></svg>');
+  }
+
+  @keyframes float5 {
+      to { transform: translateY(-100vh) rotate(360deg); }
+  }
+
+  .instrument-icons5 {
+      position: absolute;
+      width: 100%;
+      height: 100px;
+      bottom: 50px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+  }
+
+  .instrument-icon5 {
+      width: 60px;
+      height: 60px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: instrumentAppear5 0.5s forwards;
+  }
+
+  @keyframes instrumentAppear5 {
+      to { opacity: 0.8; transform: translateY(0); }
+  }
+
+  .content5 {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1) 0.3s;
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+  }
+
+  .content-loaded5 {
+      opacity: 1;
+      transform: translateY(0);
+  }
+</style>
+
+<div class="loader-container5" id="loader5">
+  <div class="particles5" id="particles5"></div>
+
+  <div class="logo-container5">
+      <img src="{% static 'images/phil.png' %}" alt="Kulintang Instrument" class="logo-loader5" id="logo5">
+  </div>
+
+  <div class="loader-text5">Naglo-load ng iyong karanasan</div>
+
+  <div class="progress-container5">
+      <div class="progress-bar5" id="progress5"></div>
+  </div>
+
+  <div class="instrument-icons5" id="instruments5"></div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const loader = document.getElementById('loader5');
+      const progressBar = document.getElementById('progress5');
+      const logo = document.getElementById('logo5');
+      const particlesContainer = document.getElementById('particles5');
+      const instrumentsContainer = document.getElementById('instruments5');
+
+      const filipinoInstruments = [
+          { name: 'Kulintang', icon: '🎵' },
+          { name: 'Rondalla', icon: '🎸' },
+          { name: 'Angklung', icon: '🎶' },
+          { name: 'Kudyapi', icon: '🪕' },
+          { name: 'Gabbang', icon: '🎼' }
+      ];
+
+      function createParticles() {
+          const particleCount = 40;
+          const particleTypes = ['banig5', 'sarimanok5', 'leaf5'];
+
+          for (let i = 0; i < particleCount; i++) {
+              const particle = document.createElement('div');
+              const type = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+              particle.classList.add('particle5', type);
+
+              const size = Math.random() * 30 + 10;
+              const posX = Math.random() * 100;
+              const duration = Math.random() * 20 + 10;
+              const delay = Math.random() * 10;
+              const opacity = Math.random() * 0.5 + 0.3;
+              const rotation = Math.random() * 360;
+
+              particle.style.width = `${size}px`;
+              particle.style.height = `${size}px`;
+              particle.style.left = `${posX}%`;
+              particle.style.bottom = `-${size}px`;
+              particle.style.animationDuration = `${duration}s`;
+              particle.style.animationDelay = `${delay}s`;
+              particle.style.opacity = opacity;
+              particle.style.transform = `rotate(${rotation}deg)`;
+
+              particlesContainer.appendChild(particle);
+          }
+      }
+
+      function showInstruments() {
+          filipinoInstruments.forEach((instrument, index) => {
+              setTimeout(() => {
+                  const icon = document.createElement('div');
+                  icon.className = 'instrument-icon5';
+                  icon.style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" font-size="60" text-anchor="middle" dominant-baseline="middle" fill="%235C3317">${instrument.icon}</text></svg>')`;
+                  icon.style.animationDelay = `${index * 0.3}s`;
+                  instrumentsContainer.appendChild(icon);
+              }, index * 500);
+          });
+      }
+
+      function animateProgressBar(duration) {
+          const startTime = performance.now();
+
+          function updateProgress(now) {
+              const elapsed = now - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              progressBar.style.width = `${progress * 100}%`;
+
+              if (progress < 1) {
+                  requestAnimationFrame(updateProgress);
+              }
+          }
+
+          requestAnimationFrame(updateProgress);
+      }
+
+      function completeLoading() {
+          loader.classList.add('fade-out5');
+          setTimeout(() => {
+              loader.style.display = 'none';
+          }, 800);
+      }
+
+      const instrumentAnimations = ['kulintangPulse5', 'rondallaStrum5'];
+      const randomAnim = instrumentAnimations[Math.floor(Math.random() * instrumentAnimations.length)];
+      logo.style.animationName = randomAnim;
+
+      createParticles();
+      showInstruments();
+      animateProgressBar(5000); // 5 seconds
+
+      setTimeout(completeLoading, 5000);
+  });
+</script> -->
+
+
+
+
+
+<div class="music-container">
+  <div class="custom-shape-divider-bottom-1745659549">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+        <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+        <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+    </svg>
+</div>
+  <div class="text-content">
+    <div class="tagline">
+    <span class="icons"><i class="fas fa-{{ taglines.icon }}"></i></span>
+    <h3>{{ taglines.title }}</h3>
+  </div>
+    <h1>{{ homepages.main_heading }} <span class="highlight">{{ homepages.highlight_word }}</span></h1>
+    <p>{{ homepages.description|safe }}</p>
+    <div class="btn-group">
+      <button class="btn btn-primary1" id="exploreBtn">
+        <span>EXPLORE INSTRUMENTS</span>
+        <i class="fas fa-chevron-right"></i>
+      </button>
+      <button href="javascript:void(0);" class="create-Performance btn btn-outline">
+        <span>SCHEDULE APPOINTMENT</span>
+        <i class="fas fa-play"></i>
+      </button>
+    </div>
+    
+    <!-- Instrument Icons Section -->
+    <div class="instrument-icons1">
+      {% for instrument in Instruments|slice:":5"  %}
+      <div class="icon-tooltip" data-tooltip="{{ instrument.name }}" data-instrument-id="{{ instrument.id }}">
+        <div class="icon-circle1">
+          {% if instrument.image %}
+          <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}">
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="image-container">
+    <div class="image-slider">
+      <div class="slider-track">
+        {% for instrument in Instruments|slice:":5"  %}
+        <div class="slide" data-instrument-id="{{ instrument.id }}">
+          {% if instrument.image %}
+          <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}">
+          {% endif %}
+          <div class="slide-caption">{{ instrument.name }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="slider-controls">
+      <!-- <button class="slider-btn prev-btn"><i class="fas fa-chevron-left"></i></button> -->
+      <div class="slider-dots"></div>
+      <!-- <button class="slider-btn next-btn"><i class="fas fa-chevron-right"></i></button> -->
+    </div>
+  </div>
+</div>
+    <!-- Modal Dialogs -->
+    <div id="Create-Performances-Modal" class="Create-Performances-Modal">
+        <div class="Create-Performances-modal-content">
+            <span class="close-btn3"></span>
+            <div id="Create-Performances-modal-form-container">
+                <!-- Dynamic form content will load here -->
+            </div>
+        </div>
+    </div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const addPerformancemodal = document.getElementById("Create-Performances-Modal");
+  const closeBtn = addPerformancemodal.querySelector(".close-btn3");
+  const addPerformancemodalFormContainer = document.getElementById("Create-Performances-modal-form-container");
+  const addPerformanceLinks = document.querySelectorAll(".create-Performance");
+
+  // Function to check if date is already booked
+  async function checkDateAvailability(date, appointmentType) {
+    try {
+      const response = await fetch('/api/check-date-availability/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken(),
+        },
+        body: JSON.stringify({
+          date: date,
+          appointment_type: appointmentType
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error checking date availability:', error);
+      return { available: true }; // Default to available if check fails
+    }
+  }
+
+  // Function to get CSRF token
+  function getCSRFToken() {
+    const cookieValue = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('csrftoken='))
+      ?.split('=')[1];
+    return cookieValue;
+  }
+
+  // Function to initialize appointment form handlers
+  function initializeAppointmentForm() {
+    console.log("Initializing appointment form handlers...");
+    
+    // ---- Tabs Animation ----
+    const tabInputs = document.querySelectorAll('input[name="appoint-tab"]');
+    tabInputs.forEach(input => {
+      input.addEventListener('change', function() {
+        const activeForm = document.querySelector('.appoint-form-section[style*="display: block"]');
+        if (activeForm) {
+          activeForm.style.animation = 'none';
+          setTimeout(() => activeForm.style.animation = 'fadeIn 0.4s ease forwards', 10);
+        }
+      });
+    });
+
+    // ---- Error Message Functions ----
+    function showError(element, message, isSuccess = false, isDateConflict = false) {
+      if (!element) return;
+      
+      // Clear existing classes
+      element.classList.remove('success-message', 'date-conflict-message');
+      
+      // Add appropriate classes based on message type
+      if (isSuccess) {
+        element.classList.add('success-message');
+      } else if (isDateConflict) {
+        element.classList.add('date-conflict-message');
+      }
+      
+      element.innerHTML = message;
+      element.classList.add('show');
+      
+      // For success messages, don't auto-hide
+      if (!isSuccess) {
+        setTimeout(() => {
+          element.classList.remove('show');
+          setTimeout(() => element.innerHTML = '', 300);
+        }, 5000);
+      }
+    }
+
+    function clearError(element) {
+      if (!element) return;
+      element.classList.remove('show', 'success-message', 'date-conflict-message');
+      setTimeout(() => element.innerHTML = '', 300);
+    }
+
+    function markFieldAsError(field, hasError, isDateConflict = false) {
+      if (!field) return;
+      
+      // Remove existing error classes
+      field.classList.remove('error', 'date-conflict-error');
+      
+      if (hasError) {
+        field.classList.add('error');
+        if (isDateConflict) {
+          field.classList.add('date-conflict-error');
+        }
+      }
+    }
+
+    // ---- Date Validation Functions ----
+    async function validateDate(dateInput, timeInput = null, appointmentType = 'performance') {
+      if (!dateInput) return { isValid: false, errorMessage: "Date field not found", isDateConflict: false };
+      
+      const selectedDate = new Date(dateInput.value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time part for date-only comparison
+      
+      let isValid = true;
+      let errorMessage = '';
+      let isDateConflict = false;
+
+      // Basic date validation
+      if (!dateInput.value) {
+        isValid = false;
+        errorMessage = "Please select a date.";
+      } else if (selectedDate < today) {
+        isValid = false;
+        errorMessage = "Cannot book appointments for past dates.";
+      }
+      
+      // If time is provided, validate datetime combination
+      if (isValid && timeInput && timeInput.value) {
+        const selectedDateTime = new Date(dateInput.value + 'T' + timeInput.value);
+        const now = new Date();
+        
+        if (selectedDateTime < now) {
+          isValid = false;
+          errorMessage = "Cannot book appointments for past date and time.";
+        }
+      }
+
+      // Check date availability if date is valid
+      if (isValid && dateInput.value) {
+        try {
+          const availability = await checkDateAvailability(dateInput.value, appointmentType);
+          if (!availability.available) {
+            isValid = false;
+            isDateConflict = true;
+            errorMessage = availability.message || `We already have an accepted appointment on ${dateInput.value}. Please choose a different date.`;
+          }
+        } catch (error) {
+          console.error('Error validating date availability:', error);
+          // Continue with submission if availability check fails
+        }
+      }
+
+      return { isValid, errorMessage, isDateConflict };
+    }
+
+    function setupDateValidation(dateField, timeField, errorContainer, appointmentType = 'performance') {
+      if (!dateField) return;
+      
+      // Debounce function to prevent too many API calls
+      let debounceTimer;
+      dateField.addEventListener('change', function() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(async () => {
+          const validation = await validateDate(dateField, timeField, appointmentType);
+          markFieldAsError(dateField, !validation.isValid, validation.isDateConflict);
+          
+          if (!validation.isValid) {
+            showError(errorContainer, validation.errorMessage, false, validation.isDateConflict);
+          } else {
+            clearError(errorContainer);
+            markFieldAsError(dateField, false);
+          }
+        }, 500); // 500ms debounce
+      });
+
+      // Also validate when time changes (if time field exists)
+      if (timeField) {
+        timeField.addEventListener('change', async function() {
+          const validation = await validateDate(dateField, timeField, appointmentType);
+          markFieldAsError(dateField, !validation.isValid, validation.isDateConflict);
+          markFieldAsError(timeField, !validation.isValid, validation.isDateConflict);
+          
+          if (!validation.isValid) {
+            showError(errorContainer, validation.errorMessage, false, validation.isDateConflict);
+          } else {
+            clearError(errorContainer);
+            markFieldAsError(dateField, false);
+            markFieldAsError(timeField, false);
+          }
+        });
+      }
+    }
+
+    // ---- Form Validation Before Submission ----
+    async function validateFormBeforeSubmit(form, dateField, timeField, errorContainer, appointmentType = 'performance') {
+      const validation = await validateDate(dateField, timeField, appointmentType);
+      
+      if (!validation.isValid) {
+        showError(errorContainer, validation.errorMessage, false, validation.isDateConflict);
+        markFieldAsError(dateField, true, validation.isDateConflict);
+        if (timeField) markFieldAsError(timeField, true, validation.isDateConflict);
+        dateField.focus();
+        return false;
+      }
+      
+      return true;
+    }
+
+    // ---- AJAX Form Handler ----
+    function handleFormAjax(formId, dateFieldId, timeFieldId, errorElementId, appointmentType = 'performance') {
+      const form = document.getElementById(formId);
+      const dateField = document.getElementById(dateFieldId);
+      const timeField = timeFieldId ? document.getElementById(timeFieldId) : null;
+      const errorElement = document.getElementById(errorElementId);
+
+      if (!form || !dateField) {
+        console.error(`Form elements not found for ${formId}`);
+        return;
+      }
+
+      // Setup real-time date validation
+      setupDateValidation(dateField, timeField, errorElement, appointmentType);
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        console.log("Form submission intercepted for:", formId);
+        
+        // Clear previous errors
+        clearError(errorElement);
+        markFieldAsError(dateField, false);
+        if (timeField) markFieldAsError(timeField, false);
+
+        // Validate date before submission (including availability check)
+        const isValid = await validateFormBeforeSubmit(form, dateField, timeField, errorElement, appointmentType);
+        if (!isValid) {
+          return;
+        }
+
+        const formData = new FormData(form);
+
+        // Show loading state
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        submitButton.innerHTML = 'Submitting...';
+        submitButton.disabled = true;
+
+        fetch(form.getAttribute('action'), {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCSRFToken()
+          },
+          credentials: 'same-origin'
+        })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then(data => {
+          console.log("Response received:", data);
+          
+          // Restore button state
+          submitButton.innerHTML = originalText;
+          submitButton.disabled = false;
+          
+          if (data.success) {
+            // Clear form
+            form.reset();
+            markFieldAsError(dateField, false);
+            if (timeField) markFieldAsError(timeField, false);
+            
+            // Show success message with countdown
+            let countdown = 5; // 5 seconds countdown
+            const successMessage = data.message || "";
+            
+            // Show initial success message
+            showError(errorElement, `${successMessage}<br><small>Page will refresh in ${countdown} seconds...</small>`, true);
+            
+            // Disable form inputs during countdown
+            const formInputs = form.querySelectorAll('input, textarea, button');
+            formInputs.forEach(input => {
+              input.disabled = true;
+            });
+            
+            // Update countdown every second
+            const countdownInterval = setInterval(() => {
+              countdown--;
+              if (countdown > 0) {
+                showError(errorElement, `${successMessage}<br><small>Page will refresh in ${countdown} seconds...</small>`, true);
+              } else {
+                clearInterval(countdownInterval);
+                
+                // Add smooth fade-out transition to modal
+                addPerformancemodal.style.transition = 'opacity 0.5s ease';
+                addPerformancemodal.style.opacity = '0';
+                
+                // Wait for fade-out transition to complete, then refresh
+                setTimeout(() => {
+                  addPerformancemodalFormContainer.innerHTML = "";
+                  window.location.reload(); // Refresh the page
+                }, 500); // Wait for fade-out transition
+              }
+            }, 1000);
+            
+          } else if (data.errors) {
+            console.log("Form validation errors:", data.errors);
+            
+            let messages = [];
+            let hasDateError = false;
+            let hasDateConflict = false;
+            
+            for (const [field, errs] of Object.entries(data.errors)) {
+              console.log(`Error field: ${field}, errors:`, errs);
+              
+              // Show field-specific errors with better formatting
+              if (field === 'event_date' || field === 'lesson_date') {
+                const errorText = errs.join(', ');
+                messages.push(errorText);
+                markFieldAsError(dateField, true);
+                hasDateError = true;
+                
+                // Check if this is a date conflict error
+                if (errorText.includes('already have an accepted')) {
+                  hasDateConflict = true;
+                }
+              } else if (field === '__all__') {
+                // Handle non-field errors
+                messages.push(errs.join(', '));
+              } else {
+                // Handle other field errors
+                const fieldName = field.replace(/_/g, ' ');
+                messages.push(`<strong>${fieldName}:</strong> ${errs.join(', ')}`);
+              }
+            }
+            
+            // Show all error messages with appropriate styling
+            if (messages.length > 0) {
+              showError(errorElement, messages.join('<br>'), false, hasDateConflict);
+            } else {
+              showError(errorElement, "Please correct the errors below.");
+            }
+            
+            // If there's a date error, focus on the date field
+            if (hasDateError) {
+              dateField.focus();
+            }
+          }
+        })
+        .catch(err => {
+          console.error('Fetch error:', err);
+          // Restore button state on error
+          submitButton.innerHTML = originalText;
+          submitButton.disabled = false;
+          showError(errorElement, "Something went wrong. Please try again.");
+        });
+      });
+    }
+
+    // ---- Cancel Button Handler ----
+    const cancelButtons = document.querySelectorAll('.appoint-cancel-btn');
+    cancelButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Clear forms and errors
+        document.querySelectorAll('form').forEach(form => form.reset());
+        document.querySelectorAll('.FrontLerror-message').forEach(error => {
+          clearError(error);
+        });
+        document.querySelectorAll('.appoint-form-control.error, .appoint-form-control.date-conflict-error').forEach(field => {
+          field.classList.remove('error', 'date-conflict-error');
+        });
+        // Close modal
+        addPerformancemodal.classList.remove("show");
+        addPerformancemodalFormContainer.innerHTML = "";
+      });
+    });
+
+    // ---- Initialize Form Handlers ----
+    // Performance Form
+    handleFormAjax(
+      'performanceForm', 
+      'appoint_event_date_css', 
+      'appoint_event_time_css', 
+      'performanceFormError',
+      'performance'
+    );
+
+    // Lesson Form
+    handleFormAjax(
+      'lessonForm', 
+      'appoint_lesson_date_css', 
+      'appoint_lesson_time_css', 
+      'lessonFormError',
+      'lesson'
+    );
+
+    // ---- Set minimum date to today for all date inputs ----
+    const today = new Date().toISOString().split('T')[0];
+    document.querySelectorAll('input[type="date"]').forEach(input => {
+      input.setAttribute('min', today);
+    });
+
+    console.log("Appointment form handlers initialized successfully");
+  }
+
+  // Fetch + show modal when clicking create links
+  addPerformanceLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      // Reset modal opacity when opening
+      addPerformancemodal.style.opacity = '1';
+      addPerformancemodal.style.transition = '';
+      
+      fetch(`/Appointment/create/`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.text();
+        })
+        .then((data) => {
+          addPerformancemodalFormContainer.innerHTML = data;
+          addPerformancemodal.classList.add("show");
+          
+          // Initialize the form handlers AFTER the content is loaded
+          setTimeout(() => {
+            initializeAppointmentForm();
+          }, 100);
+        })
+        .catch((error) => {
+          console.error("Error loading form:", error);
+          addPerformancemodalFormContainer.innerHTML = `
+            <div class="error-message">
+              <h2>Error loading form</h2>
+              <p>Please try again later.</p>
+            </div>
+          `;
+        });
+    });
+  });
+
+  // Close modal with the 'x' button
+  closeBtn.addEventListener("click", () => {
+    addPerformancemodal.classList.remove("show");
+    addPerformancemodalFormContainer.innerHTML = "";
+  });
+
+  // Close modal when clicking outside
+  addPerformancemodal.addEventListener("click", (e) => {
+    if (e.target === addPerformancemodal) {
+      addPerformancemodal.classList.remove("show");
+      addPerformancemodalFormContainer.innerHTML = "";
+    }
+  });
+
+  // Extra UI: Explore button scroll
+  const exploreBtn = document.getElementById('exploreBtn');
+  if (exploreBtn) {
+    exploreBtn.addEventListener('click', function () {
+      document.querySelector('.ins-body1')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+});
+</script>
+
+
+
+<!-- <button popovertarget="my-popover" class="popover-button">Open</button>
+<div popover id="my-popover" class="styled-popover">
+  <h1>{{ instrument.name }}</h1>
+  <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolore harum ad inventore adipisci. Laborum tempore aperiam laboriosam labore velit quidem. Voluptatem quis similique expedita eligendi, dicta obcaecati! Reiciendis, ipsa inventore!</p>
+  <button popovertarget="my-popover" class="close-button">
+    Close
+  </button>
+</div>
+<style>
+  .styled-popover {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centering */
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 400px;
+  background-color: #f9fafb; /* Light Gray */
+  color: #111827; /* Slate-900 */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 999; /* Ensure it appears on top */
+}
+
+.styled-popover h1 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  color: #1e3a8a; /* Indigo-900 */
+}
+
+.styled-popover p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.popover-button,
+.close-button {
+  padding: 0.5rem 1rem;
+  background-color: #4f46e5; /* Indigo */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.popover-button:hover,
+.close-button:hover {
+  background-color: #3730a3; /* Darker Indigo */
+}
+
+/* Optional: Smooth entry animation */
+.styled-popover:popover-open {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+</style> -->
+
+
+<!-- MISSION VISSION CARD --><!-- MISSION VISSION CARD -->
+<section class="mv-container" id="Principles">
+  <div class="mv-layout">
+    <div class="mv-left-column">
+      <div class="mv-intro" data-scroll>
+        <h2>{{ guiding_principle.title }}</h2>
+        <p>{{ guiding_principle.description }}</p>
+      </div>
+      <div class="mv-image" data-scroll>
+        {% if guiding_principle.image %}
+          <img src="{{ guiding_principle.image.url }}" alt="Music education">
+        {% else %}
+          <img src="{% static 'images/phil.png' %}" alt="Music education">
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="mv-cards">
+      {% for card in guiding_principle.cards.all %}
+      <div class="mv-card" style="--accent: {{ card.accent_color }}" data-scroll data-scroll-delay="0.{{ forloop.counter0 }}">
+        <div class="mv-card-header">
+          <div class="mv-icon">
+            <i class="fa-solid {{ card.icon }}"></i>
+          </div>
+          <h3>{{ card.card_type }}</h3>
+        </div>
+
+        {% if card.get_bullet_list %}
+          <ul>
+            {% for bullet in card.get_bullet_list %}
+              <li>{{ bullet }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>{{ card.description }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- MISSION VISSION CARD --><!-- MISSION VISSION CARD --><!-- MISSION VISSION CARD -->
+
+
+<!-- /* INSTRUCTOR SECTION DESIGN */ --><!-- /* INSTRUCTOR SECTION DESIGN */ --><!-- /* INSTRUCTOR SECTION DESIGN */ -->
+<div class="instructor-section">
+  <div class="custom-shape-divider-top-1745662341">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+        <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+        <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+    </svg>
+</div>
+
+<div class="instructor-section-buttom">
+  <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+      <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+      <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+  </svg>
+</div>
+
+{% for discover_section in section %}
+<div class="header">
+  <h1>{{ discover_section.title }}</h1><br>
+  <p>{{ discover_section.description }}</p>
+</div>
+
+<div class="main-content-wrapper">
+  <div class="content-section">
+    <div class="content-row">
+      <div class="image-description">
+        <div class="image-description-container">
+          {% if discover_section.image %}
+          <img src="{{ discover_section.image.url }}" alt="..." />
+        {% else %}
+          <img src="{% static 'images/phil.png' %}" alt="..." />
+        {% endif %}
+        </div>
+        <div class="description">
+          <h2>{{ discover_section.mastering_title }}</h2>
+          <p>{{ discover_section.mastering_paragraph1 }}</p>
+          <p>{{ discover_section.mastering_paragraph2 }}</p>
+        </div>
+      </div>
+
+      <div class="video-section"><br>
+        <h2>Experience the Music</h2>
+        
+        {% if discover_section.video1 %}
+          <div class="video-container">
+            <video controls width="100%" loading="lazy">
+              <source src="{{ discover_section.video1.url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        {% endif %}
+
+        <p>{{ discover_section.video_description }}</p><br>
+
+        {% if discover_section.video2 %}
+          <div class="video-container">
+            <video controls width="100%" loading="lazy">
+              <source src="{{ discover_section.video2.url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+</div>
+<!-- /* INSTRUCTOR SECTION DESIGN */ --><!-- /* INSTRUCTOR SECTION DESIGN */ --><!-- /* INSTRUCTOR SECTION DESIGN */ -->
+
+
+<!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ --><!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ -->
+<div class="ins-body1" id="Instrument">
+  <!-- New heading section -->
+  <div class="instruments-intro">
+    <h2>Philippine Traditional Instruments</h2>
+    <p class="intro-text">Explore the rich musical heritage of the Philippines. Learn about each instrument's history, unique sound, and cultural significance by clicking "View Details" below.</p>
+  </div>
+<!-- Category Tabs -->
+<div class="category-header1">
+  <div class="category-tabs1">
+    <button class="category-btn1 active" data-category="all">
+      All Instruments
+    </button>
+    {% for category in categorys %}
+    <button class="category-btn1" data-category="{{ category.id }}">
+      {{ category.name }}
+    </button>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Instrument Cards Container -->
+<div class="cards-container-wrapper">
+  <div class="carousel-controls1">
+    <button class="carousel-btn1" onclick="prevInstrument()">❮</button>
+    <button class="carousel-btn1" onclick="nextInstrument()">❯</button>
+  </div>
+
+  <div class="instrument-cards-container1" id="instrumentCarousel">
+    {% for instrument in Instruments %}
+    <div class="instrument-card1" data-category="{{ instrument.category.id }}" data-index="{{ forloop.counter0 }}">
+      <!-- Region Badge -->
+      <div class="region-badge">
+        {{ instrument.region }}
+      </div>
+      
+      <div class="instrument-img-container1">
+        {% if instrument.image %}
+        <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}">
+        {% else %}
+        <img src="{% static 'images/default_instrument.jpg' %}" alt="{{ instrument.name }}">
+        {% endif %}
+      </div>
+      
+      <div class="instrument-info1">
+        <h3>{{ instrument.name }}</h3>
+        <!-- Province Information -->
+        <div class="province-info">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>{{ instrument.province }}</span>
+        </div>
+        <p>{{ instrument.description|truncatewords:10 }}</p>
+        <a class="detail-btn" href="{% url 'detail' instrument.pk %}">VIEW DETAILS</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  
+  <div class="no-results1">
+    <i class="fas fa-inbox"></i>
+    <h3>No instruments found in this category</h3>
+    <p>Try selecting a different category</p>
+  </div>
+</div>
+</div>
+
+<!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ --><!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ -->
+
+
+
+<!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT -->
+<div class="featured-instrument-view-section">
+  <h3 class="section-view-title">
+    <i class="fas fa-crown view-title-icon"></i>
+    Featured Instrument
+  </h3>
+  
+  <!-- Featured Instrument Card (Top 1 Most Viewed) -->
+  <div class="featured-view-card">
+    <div class="featured-view-image">
+      {% if popular_instruments.0.image %}
+        <img src="{{ popular_instruments.0.image.url }}" alt="{{ popular_instruments.0.name }}" loading="lazy">
+      {% else %}
+        <img src="{% static 'images/default_instrument.jpg' %}" alt="{{ popular_instruments.0.name }}" loading="lazy">
+      {% endif %}
+    </div>
+    <div class="featured-view-content">
+      <div class="featured-view-badge">#1 Most Viewed</div>
+      <h4 class="featured-view-name">{{ popular_instruments.0.name }}</h4>
+      <p class="featured-view-description">{{ popular_instruments.0.short_description|default:"The most popular traditional instrument on our platform with rich cultural significance." }}</p>
+      
+      <div class="featured-view-meta">
+        <span class="view-count">
+          <i class="fas fa-eye"></i> {{ popular_instruments.0.views }} views
+        </span>
+        <span class="view-origin">
+          <i class="fas fa-map-marker-alt"></i> {{ popular_instruments.0.region|default:"Philippines" }}
+        </span>
+      </div>
+      
+      <div class="featured-view-actions">
+        {% with popular_instruments.0.sound_set.first as sound_sample %}
+          {% if sound_sample %}
+            <button class="audio-view-btn" onclick="toggleSound('{{ sound_sample.sound_sample.url }}', this, 'featured')">
+              <i class="fas fa-volume-up"></i> Hear It
+            </button>
+          {% else %}
+            <button class="audio-view-btn" disabled>
+              <i class="fas fa-volume-mute"></i> No Sample
+            </button>
+          {% endif %}
+        {% endwith %}
+        
+
+      </div>
+    </div>
+  </div>
+  
+  <!-- Other Popular Instruments List (Starting from #2) -->
+  <div class="popular-view-list-section">
+    <h4 class="popular-view-list-title">
+      <i class="fas fa-fire"></i> Other Most Viewed Instruments
+    </h4>
+    <div class="popular-view-instruments">
+      {% for instrument in popular_instruments %}
+        {% if forloop.counter > 1 %}
+          <div class="popular-view-item">
+            <div class="popular-view-image">
+              {% if instrument.image %}
+                <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}" loading="lazy">
+              {% else %}
+                <img src="{% static 'images/default_instrument.jpg' %}" alt="{{ instrument.name }}" loading="lazy">
+              {% endif %}
+            </div>
+            <div class="popular-view-info">
+              <h5>{{ instrument.name }}</h5>
+              <span class="view-count">
+                <i class="fas fa-eye"></i> {{ instrument.views }} views
+              </span>
+              
+              {% with instrument.sound_set.first as sound_sample %}
+                {% if sound_sample %}
+                  <button class="small-audio-view-btn" onclick="toggleSound('{{ sound_sample.sound_sample.url }}', this, 'list')">
+                    <i class="fas fa-volume-up"></i> Play
+                  </button>
+                {% else %}
+                  <button class="small-audio-view-btn" disabled>
+                    <i class="fas fa-volume-mute"></i> No Sample
+                  </button>
+                {% endif %}
+              {% endwith %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<audio id="instrument-view-audio"></audio>
+
+
+<script>
+let currentViewAudio = document.getElementById('instrument-view-audio');
+let currentlyPlayingView = null;
+
+function toggleSound(soundUrl, buttonElement, buttonType) {
+  // If clicking the currently playing button
+  if (currentlyPlayingView === buttonElement) {
+    if (!currentViewAudio.paused) {
+      currentViewAudio.pause();
+      updateViewButtonState(buttonElement, buttonType, false);
+      currentlyPlayingView = null;
+      return;
+    }
+  }
+  
+  // If a different sound is already playing
+  if (currentlyPlayingView && currentlyPlayingView !== buttonElement) {
+    currentViewAudio.pause();
+    updateViewButtonState(currentlyPlayingView, 
+                     currentlyPlayingView.classList.contains('audio-view-btn') ? 'featured' : 'list', 
+                     false);
+  }
+  
+  // Play new sound or resume paused sound
+  if (currentViewAudio.src !== soundUrl) {
+    currentViewAudio.src = soundUrl;
+    currentViewAudio.load();
+  }
+  
+  currentViewAudio.play()
+    .then(() => {
+      currentlyPlayingView = buttonElement;
+      updateViewButtonState(buttonElement, buttonType, true);
+    })
+    .catch(error => {
+      console.error("Audio playback failed:", error);
+      updateViewButtonState(buttonElement, buttonType, false);
+    });
+  
+  // Handle when audio ends naturally
+  currentViewAudio.onended = function() {
+    updateViewButtonState(buttonElement, buttonType, false);
+    currentlyPlayingView = null;
+  };
+}
+
+function updateViewButtonState(button, type, isPlaying) {
+  if (type === 'featured') {
+    if (isPlaying) {
+      button.innerHTML = '<i class="fas fa-pause"></i> Playing...';
+      button.classList.add('playing');
+    } else {
+      button.innerHTML = '<i class="fas fa-volume-up"></i> Hear It';
+      button.classList.remove('playing');
+    }
+  } else {
+    if (isPlaying) {
+      button.innerHTML = '<i class="fas fa-pause"></i> Playing';
+      button.classList.add('playing');
+    } else {
+      button.innerHTML = '<i class="fas fa-volume-up"></i> Play';
+      button.classList.remove('playing');
+    }
+  }
+}
+</script>
+<!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT --><!-- Popular INSTRUMENT -->
+
+
+
+<!-- Map Container -->
+<div class="map-container" id="Map">
+  <!-- Animated Header Section -->
+  <div class="map-header">
+    <h2 class="title-animate">Explore the Philippine Map</h2>
+    <p class="subtitle">Discover traditional instruments from different regions by clicking on the map below.</p>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="map-content">
+    <!-- Interactive Map Visualization -->
+    <div id="chartdiv" class="map-visualization">
+      <div class="loading-animation">
+        <div class="loader"></div>
+        <p>Loading cultural map...</p>
+      </div>
+    </div>
+
+    <!-- Instrument Details Panel -->
+    <div id="instrument-details" class="instrument-panel">
+      <div class="panel-header">
+        <div class="region-header">
+          <h3 id="province-name">Select a Region</h3>
+          <div class="cultural-tag" id="cultural-group">Cultural Group: <span>---</span></div>
+        </div>
+        <p id="province-description" class="panel-description">Click on a region to discover its traditional musical heritage</p>
+        <div class="divider"></div>
+      </div>
+            
+      <!-- Instrument Grid -->
+      <div class="section-title">Regional Instruments</div>
+      <div id="instrument-list" class="instrument-grid"></div>
+      
+      <!-- Empty State -->
+      <div class="no-instruments">
+        <div class="empty-state">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#ddd" viewBox="0 0 16 16">
+            <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
+            <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
+            <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
+            <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
+          </svg>
+          <h4>Discover Musical Heritage</h4>
+          <p>Select a region to view its traditional instruments</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Cultural Context Footer -->
+  <div class="cultural-footer">
+    <p>The Philippines has over <strong>180 ethnolinguistic groups</strong> with distinct musical traditions. This map showcases instruments from major cultural groups including <span class="cultural-tag">Luzon</span>, <span class="cultural-tag">Visayas</span>, <span class="cultural-tag">Mindanao</span>, and indigenous communities.</p>
+  </div>
+</div>
+
+<script>
+    const DETAIL_URL_BASE = "{% url 'detail' 0 %}".replace("0/", "");
+</script>
+
+
+
+<!-- VIDEO --><!-- VIDEO --><!-- VIDEO --><!-- VIDEO --><!-- VIDEO --><!-- VIDEO -->
+
+<!-- <div class="video-gallery">
+
+  <div class="video-card">
+      <div class="video-wrapper">
+          <video class="video" poster="{% static 'images/poster.jpg' %}">
+              <source src="{% static 'images/front.mp4' %}" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+          <div class="video-poster">
+              <div class="play-button"></div>
+          </div>
+          <div class="fullscreen-button"></div>
+      </div>
+      <div class="video-info">
+          <h3 class="video-title">Sample Video</h3>
+          <p class="video-description">Lorem ipsum dolor sit amet consectetur adipisicing elit.!</p>
+          <a href="#" class="watch-btn">Watch Now</a>
+      </div>
+  </div>
+  
+ 
+  <div class="video-card">
+      <div class="video-wrapper">
+          <video class="video" poster="{% static 'images/poster.jpg' %}">
+              <source src="{% static 'images/front.mp4' %}" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+          <div class="video-poster">
+              <div class="play-button"></div>
+          </div>
+          <div class="fullscreen-button"></div>
+      </div>
+      <div class="video-info">
+          <h3 class="video-title">Sample Video</h3>
+          <p class="video-description">Lorem ipsum dolor sit amet consectetur adipisicing elit.!</p>
+          <a href="#" class="watch-btn">Watch Now</a>
+      </div>
+  </div>
+  
+
+  <div class="video-card">
+      <div class="video-wrapper">
+          <video class="video" poster="{% static 'images/poster.jpg' %}">
+              <source src="{% static 'images/front.mp4' %}" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+          <div class="video-poster">
+              <div class="play-button"></div>
+          </div>
+          <div class="fullscreen-button"></div>
+      </div>
+      <div class="video-info">
+          <h3 class="video-title">Sample Video</h3>
+          <p class="video-description">Lorem ipsum dolor sit amet consectetur adipisicing elit.!</p>
+          <a href="#" class="watch-btn">Watch Now</a>
+      </div>
+  </div>
+</div> -->
+
+<!-- VIDEO --><!-- VIDEO --><!-- VIDEO --><!-- VIDEO -->
+
+
+
+
+
+
+
+
+
+
+<!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  -->
+<!-- <div class="carousel-wrapper">
+  <div class="carousel-container">
+    <div class="instrument-carousel">
+      {% for instrument in Instruments %}
+      <div class="instrument-card4" data-category="{{ instrument.category.id }}">
+        <div class="instrument-img-container4">
+          {% if instrument.image %}
+          <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}">
+          {% endif %}
+        </div>
+        <div class="instrument-info4">
+          <h3>{{ instrument.name }}</h3>
+        </div>
+      </div>
+      {% endfor %}
+      <*!-- Clone first few items for seamless looping --*>
+      {% for instrument in Instruments|slice:":3" %}
+      <div class="instrument-card4 cloned" data-category="{{ instrument.category.id }}">
+        <div class="instrument-img-container4">
+          {% if instrument.image %}
+          <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}">
+          {% endif %}
+        </div>
+        <div class="instrument-info4">
+          <h3>{{ instrument.name }}</h3>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-btn prev">❮</button>
+    <button class="carousel-btn next">❯</button>
+  </div>
+</div> -->
+
+<!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  --><!-- SLIDING CAROUSEL DESIGN  -->
+
+
+<div class="testimonials-section">
+  <div class="custom-shape-divider-top-1745662341">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+        <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+        <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+    </svg>
+</div>
+  <div class="testimonials-header">
+    <h2>Student Experiences</h2>
+    <p>Hear what our students say about their journey with traditional music</p>
+  </div>
+  
+  <div class="testimonials-slider-wrapper">
+    <div class="testimonials-container">
+      {% for testimonial in testimonials %}
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          <p>{{ testimonial.message }}</p>
+          <div class="quote-icon right">"</div>
+          
+          <!-- Rating stars - now left-aligned -->
+          <div class="testimonial-rating">
+            {% for i in "12345" %}
+              {% if forloop.counter <= testimonial.rating %}
+                <span class="star filled">★</span>
+              {% else %}
+                <span class="star">★</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="testimonial-author">
+          {% if testimonial.user.profile_picture %}
+            <img src="{{ testimonial.user.profile_picture.url }}" alt="{{ testimonial.user.get_full_name }}" loading="lazy">
+          {% else %}
+            <img  src="{% static 'images/phil.png' %}" alt="{{ testimonial.user.get_full_name }}" loading="lazy">
+          {% endif %}
+          <div>
+            <h4>{{ testimonial.user.get_full_name|default:testimonial.user.username }}</h4>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="no-testimonials">
+        <p>No approved testimonials yet.</p>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <!-- Slider navigation - only show if there are testimonials -->
+   
+    <div class="slider-nav">
+      <button class="slider-prev" aria-label="Previous testimonials">❮</button>
+
+<div class="text-end">
+    <a href="javascript:void(0);" class="create-Testimonial testimonial-btn" id="create-service-btn">
+        <span>Testimonials </span>
+    </a>
+</div>
+
+      <div class="slider-dots1"></div>
+      <button class="slider-next" aria-label="Next testimonials">❯</button>
+    </div>
+  
+  </div>
+</div>
+
+<!-- Modal Dialogs -->
+<div id="Create-Testimonial-Modal" class="Create-Testimonial-Modal">
+    <div class="Create-Testimonial-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Testimonial-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+
+<style>
+ .testimonial-btn {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.4s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
+    /* Gradient */
+    background-color: #4F46E5;
+    background-image: linear-gradient(to right, #4F46E5, #6D65F0);
+    color: white;
+    text-decoration: none;
+}
+
+.testimonial-btn:hover {
+    background-color: #4338CA;
+    background-image: linear-gradient(to right, #4338CA, #5B52D8);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.testimonial-btn:active {
+    transform: translateY(0);
+}
+
+/* Ripple effect */
+.testimonial-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.testimonial-btn:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(20);
+        opacity: 0;
+    }
+}
+
+/* --------------------------------------------
+    RESPONSIVENESS
+--------------------------------------------- */
+
+/* Tablet & small desktop (768px–1024px) */
+@media (max-width: 1024px) {
+    .testimonial-btn {
+        padding: 14px 28px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Medium phones (480px and up) */
+@media (max-width: 768px) {
+    .testimonial-btn {
+        padding: 13px 26px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Small phones (375px–480px) */
+@media (max-width: 480px) {
+    .testimonial-btn {
+        padding: 12px 22px;
+        font-size: 0.88rem;
+        gap: 6px;
+    }
+}
+
+/* Very small devices (iPhone SE, 320px–360px) */
+@media (max-width: 360px) {
+    .testimonial-btn {
+        padding: 10px 18px;
+        font-size: 0.82rem;
+        gap: 5px;
+    }
+}
+/* Very small devices (iPhone SE, 320px–360px) */
+@media (max-width: 260px) {
+    .testimonial-btn {
+        padding: 8px 15px;
+        font-size: 0.50rem;
+        gap: 3px;
+    }
+}
+</style>
+
+
+
+<!-- FOOTERS -->
+<footer class="footer7">
+  <div class="footer-container7">
+    <div class="footer-section7 brand7">
+      <h2><span class="logo7">✦ Philharmonia</span></h2>
+      <p>{{ homepages.description|safe }}</p>
+    </div>
+  
+<div class="footer-section7 office7">
+  <h3><i class="fas fa-building"></i> Office</h3>
+  <div class="contact-item7">
+    <i class="fas fa-map-marker-alt"></i>
+    <p>{{ contact.location_address|linebreaksbr }}</p>
+  </div>
+  <div class="contact-item7">
+    <i class="fas fa-envelope"></i>
+    <p>{{ contact.primary_email }}</p>
+  </div>
+  <div class="contact-item7">
+    <i class="fas fa-phone-alt"></i>
+    <p>{{ contact.landline_phone }}</p>
+  </div>
+</div>
+    
+    <div class="footer-section7 links7">
+      <h3><i class="fas fa-link"></i> Quick Links</h3>
+      <ul>
+        <li><a href="{% url 'user_home' %}"><i class="fas fa-chevron-right"></i> Home</a></li>
+        <li><a href="{% url 'User_video' %}"><i class="fas fa-chevron-right"></i> Instrument Tutorials</a></li>
+        <!-- <li><a href="#"><i class="fas fa-chevron-right"></i> 3D Model</a></li> -->
+        <li><a href="{% url 'User_about' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+        <li><a href="{% url 'User_contact' %}"><i class="fas fa-chevron-right"></i> Contacts</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section7 newsletter7">
+      <h3><i class="fas fa-share-alt"></i> {{ footer_settings.follow_us_title }}</h3>
+      <p>{{ footer_settings.follow_us_description }}</p>
+      <div class="social-icons7">
+        {% for link in social_links %}
+          {% if link.is_active %}
+            <a href="{{ link.url }}" aria-label="{{ link.get_platform_display }}">
+              <i class="{{ link.icon_class }}"></i>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-bottom7">
+    <div class="footer-bottom-container7">
+      <p>© 2025 Philharmonia Musical Heritage. All Rights Reserved.</p>
+      <div class="instrument-icons7">
+        {% for instrument in Instruments|slice:":6"  %}
+        {% if instrument.image %}
+          <img src="{{ instrument.image.url }}" title="{{ instrument.name }}" alt="{{ instrument.name }}">
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+/* FontAwesome for icons */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+
+.footer7 {
+  background-color: var(--darks);
+  color: var(--light);
+  padding: 60px 0 0;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+.footer-container7 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.footer-section7 {
+  margin-bottom: 40px;
+}
+
+.footer-section7 h3 {
+  color: var(--lighter);
+  font-size: 1.3rem;
+  margin-bottom: 25px;
+  position: relative;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.footer-section7 h3 i {
+  margin-right: 10px;
+  color: var(--primary);
+}
+
+.footer-section7 h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 2px;
+  background-color: var(--primary);
+}
+
+.footer-section7 p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.logo7 {
+  font-size: 2rem;
+  color: var(--primary);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Office Section */
+.contact-item7 {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.contact-item7 i {
+  color: var(--primary);
+  margin-right: 15px;
+  margin-top: 5px;
+  font-size: 1.1rem;
+}
+
+.contact-item7 p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+}
+
+/* Links Section */
+.footer-section7.links7 ul {
+  padding-left: 0;
+}
+
+.footer-section7.links7 ul li {
+  margin-bottom: 12px;
+  list-style: none;
+}
+
+.footer-section7.links7 ul li a {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+}
+
+.footer-section7.links7 ul li a i {
+  margin-right: 10px;
+  font-size: 0.8rem;
+  color: var(--primary);
+}
+
+.footer-section7.links7 ul li a:hover {
+  color: var(--primary);
+  padding-left: 5px;
+}
+
+/* Social Icons */
+.social-icons7 {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.social-icons7 a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--light);
+  transition: var(--transition);
+  font-size: 1.1rem;
+}
+
+.social-icons7 a:hover {
+  background-color: var(--primary);
+  color: var(--light);
+  transform: translateY(-3px);
+}
+
+/* Footer Bottom */
+.footer-bottom7 {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 25px 0;
+  margin-top: 50px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom-container7 {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer-bottom7 p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.instrument-icons7 {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.instrument-icons7 img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  transition: var(--transition);
+ 
+}
+
+.instrument-icons7 img:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .footer-container7 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer7 {
+    padding: 50px 0 0;
+  }
+  
+  .footer-container7 {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 0 20px;
+  }
+  
+  .footer-section7 {
+    margin-bottom: 30px;
+  }
+  
+  .footer-bottom-container7 {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .instrument-icons7 img {
+    width: 24px;
+    height: 24px;
+  }
+}
+</style>
+
+{% endblock content %}

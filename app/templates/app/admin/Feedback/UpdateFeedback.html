@@ -1,0 +1,48 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateFeedback' feedback.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- User Section -->
+                <div class="form-group">
+                    <select id="id_user" name="user" class="form-control" required>
+                        {% for user in Users %}
+                        <option value="{{ user.pk }}" {% if user.pk == feedback.user.pk %}selected{% endif %}>
+                            {{ user.username }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_user" class="floating-label">User Name</label>
+                </div>
+                
+                <!-- Instrument Section -->
+                <div class="form-group">
+                    <select id="id_instrument" name="instrument" class="form-control" required>
+                        {% for instrument in Instruments %}
+                        <option value="{{ instrument.pk }}" {% if instrument.pk == feedback.instrument.pk %}selected{% endif %}>
+                            {{ instrument.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_instrument" class="floating-label">Instrument Name</label>
+                </div>
+                
+                <!-- Message Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_message" name="message" class="form-control" placeholder=" " value="{{ feedback.message }}" required />
+                    <label for="id_message" class="floating-label">Feedback</label>
+                </div>
+                
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Update Feedback</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

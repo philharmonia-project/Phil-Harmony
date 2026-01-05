@@ -1,0 +1,57 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'Create3dContent' %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Left Section: Image -->
+            <div class="form-left-section">
+                <div class="form-image">
+                    <label for="id_about_image" class="form-label">About Image</label>
+                    {% if sitecontent.about_image %}
+                    <img src="{{ sitecontent.about_image.url }}" class="img-fluid instrument-image" alt="{{ sitecontent.hero_title }}">
+                    {% else %}
+                    <img src="{% static 'images/phil.png' %}" class="img-fluid instrument-image" alt="Default Image">
+                    {% endif %}
+                    <div class="file-input-wrapper">
+                        <label for="id_about_image" class="file-label">Add Image</label>
+                        <input type="file" id="id_about_image" name="about_image" class="file-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+
+                <!-- Hero Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_hero_title" name="hero_title" class="form-control" placeholder=" " required value="{{ sitecontent.hero_title|default_if_none:'Discover Philippine Traditional Instruments' }}" />
+                    <label for="id_hero_title" class="floating-label">Hero Title</label>
+                </div>
+
+                <!-- Hero Description Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_hero_description" name="hero_description" class="form-control" placeholder=" " required>{{ sitecontent.hero_description|default_if_none:'Explore our gallery of authentic Filipino musical heritage with sound samples' }}</textarea>
+                    <label for="id_hero_description" class="floating-label">Hero Description</label>
+                </div>
+
+                <!-- About Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_about_title" name="about_title" class="form-control" placeholder=" " required value="{{ sitecontent.about_title|default_if_none:'Preserving Philippine Musical Heritage' }}" />
+                    <label for="id_about_title" class="floating-label">About Title</label>
+                </div>
+
+                <!-- About Content Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_about_content" name="about_content" class="form-control" placeholder=" " required>{{ sitecontent.about_content|default_if_none:'This project aims to digitally preserve and showcase the rich variety of traditional Philippine musical instruments through images and authentic sound recordings.' }}</textarea>
+                    <label for="id_about_content" class="floating-label">About Content</label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Save Site Content</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,798 @@
+{% load static %}
+<header class="header-navbar">
+    <div class="logo">
+        <img src="{% static 'images/phil.png' %}" alt="Website Logo">
+    </div>
+    <nav class="navbar" id="main-navbar">
+        <div class="dropdown">
+            <a href="{% url 'frontpage' %}" class="dropbtn" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-home"></i>
+                <span class="nav-text">Home</span>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </a>
+            <div class="dropdown-content">
+                <a href="#Instrument"><i class="fas fa-guitar"></i> <span>Instrument</span></a>
+                <a href="#Map"><i class="fas fa-map-marked-alt"></i> <span>Philippine Map</span></a>
+                <a href="#Principles"><i class="fas fa-lightbulb"></i> <span>Guiding Principle</span></a>
+            </div>
+        </div>
+        <a href="{% url 'video' %}"><i class="fas fa-video"></i> <span class="nav-text">Instrument Tutorial</span></a>
+        <a href="{% url '3dModel' %}"><i class="fas fa-cube"></i> <span class="nav-text">3D Model</span></a> 
+        <a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> <span class="nav-text">About Us</span></a>
+        <a href="{% url 'contact' %}"><i class="fas fa-envelope"></i> <span class="nav-text">Contact</span></a>
+        <a href="#" class="logout-btn" id="login-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="nav-text">Login</span>
+        </a>
+    </nav>
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="main-navbar">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </button>
+</header>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+
+/* Floating Navbar Style */
+.header-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px;
+    background-color: white;
+    border-radius: 50px;
+    box-shadow: var(--shadow);
+    margin: 15px auto;
+    max-width: 100%;
+    width: fit-content;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    z-index: 1000;
+    height: auto;
+    opacity: 0.95;
+    transition: transform 0.4s var(--transition), 
+                opacity 0.3s ease,
+                box-shadow 0.3s ease;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.header-navbar.hide {
+    transform: translateX(-50%) translateY(-100px);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.header-navbar.scrolled {
+    box-shadow: var(--card-shadow-hover);
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.98);
+}
+
+.header-navbar:hover {
+    opacity: 1;
+    box-shadow: var(--card-shadow-hover);
+}
+
+.logo img {
+    height: 32px;
+    transition: transform 0.3s;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
+}
+
+.navbar {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    transition: all 0.4s ease;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    padding: 6px 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.navbar a:hover,
+.navbar a:focus-visible,
+.navbar .active {
+    color: var(--primary);
+    background-color: rgba(120, 0, 0, 0.08);
+    outline: none;
+}
+
+.navbar a.active::after,
+.navbar a:hover::after {
+    content: "";
+    position: absolute;
+    width: calc(100% - 16px);
+    height: 2px;
+    background-color: var(--primary);
+    left: 8px;
+    bottom: -4px;
+    border-radius: 2px;
+    animation: underline 0.3s ease;
+}
+
+.nav-text {
+    transition: all 0.3s ease;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    transition: transform 0.3s;
+    margin-left: 2px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--white);
+    min-width: 160px;
+    box-shadow: var(--shadow);
+    z-index: 1;
+    border-radius: var(--border-radius);
+    top: 100%;
+    left: 0;
+    padding: 8px 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown:hover .dropdown-arrow,
+.dropdown:focus-within .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-content a {
+    padding: 8px 16px;
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-radius: 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.dropdown-content a:hover,
+.dropdown-content a:focus-visible {
+    background-color: rgba(120, 0, 0, 0.1);
+    color: var(--primary);
+    padding-left: 20px;
+    outline: none;
+}
+
+.dropdown-content i {
+    width: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.logout-btn {
+    padding: 6px 12px;
+    background-color: var(--accent);
+    color: var(--white);
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover,
+.logout-btn:focus-visible {
+    background-color: var(--accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(193, 18, 31, 0.2);
+    outline: none;
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 1001;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-btn:hover,
+.mobile-menu-btn:focus-visible {
+    opacity: 0.8;
+    outline: none;
+}
+
+.mobile-menu-btn .bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    margin: 4px auto;
+    background-color: var(--text);
+    transition: all 0.3s ease;
+}
+
+/* Animation for navbar slide in */
+@keyframes navbarSlideIn {
+    0% {
+        transform: translateX(-50%) translateY(-100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 0.95;
+    }
+}
+
+@keyframes underline {
+    0% {
+        transform: scaleX(0);
+    }
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .navbar {
+        gap: 12px;
+    }
+    
+    .navbar a {
+        padding: 6px 10px;
+    }
+    
+    .nav-text {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 992px) {
+    .header-navbar {
+        width: 95%;
+        padding: 8px 15px;
+    }
+    
+    .navbar {
+        gap: 8px;
+    }
+    
+    .navbar a {
+        padding: 6px 8px;
+    }
+    
+    /* Enable hover for dropdowns on tablet */
+    .dropdown:hover .dropdown-content,
+    .dropdown:focus-within .dropdown-content {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+        position: absolute;
+        background-color: var(--white);
+        min-width: 160px;
+        box-shadow: var(--shadow);
+        z-index: 1;
+        border-radius: var(--border-radius);
+        top: 100%;
+        left: 0;
+        padding: 8px 0;
+    }
+    
+    .dropdown:hover .dropdown-arrow,
+    .dropdown:focus-within .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+    
+    /* Hide text on smaller tablets */
+    @media (max-width: 860px) {
+        .nav-text {
+            display: none;
+        }
+        
+        .navbar a {
+            padding: 8px;
+        }
+        
+        .logout-btn .nav-text {
+            display: inline;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .header-navbar {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        margin: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        transform: translateY(0);
+        padding: 8px 15px;
+        box-shadow: var(--shadow);
+    }
+    
+    .header-navbar.hide {
+        transform: translateY(-100px);
+    }
+    
+    .navbar {
+        position: fixed;
+        top: 52px;
+        left: -100%;
+        width: 80%;
+        max-width: 280px;
+        height: calc(100vh - 52px);
+        background-color: var(--white);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px 15px;
+        gap: 12px;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        overflow-y: auto;
+    }
+    
+    .navbar.active {
+        left: 0;
+    }
+    
+    /* Show all text in mobile menu */
+    .navbar.active .nav-text {
+        display: inline;
+    }
+    
+    .navbar a {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+    }
+    
+    /* Mobile dropdown styles - hover-based */
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        display: none;
+        width: 100%;
+        padding: 5px 0 5px 20px;
+        margin-top: 5px;
+        opacity: 1;
+        transform: none;
+        background-color: rgba(0, 0, 0, 0.03);
+        border-radius: 8px;
+    }
+    
+    .dropdown:hover .dropdown-content,
+    .dropdown:focus-within .dropdown-content {
+        display: block;
+    }
+    
+    .dropdown:hover .dropdown-arrow,
+    .dropdown:focus-within .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+    }
+    
+    .mobile-menu-btn.active .bar:nth-child(1) {
+        transform: translateY(6px) rotate(45deg);
+        background-color: var(--primary);
+    }
+    
+    .mobile-menu-btn.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .mobile-menu-btn.active .bar:nth-child(3) {
+        transform: translateY(-6px) rotate(-45deg);
+        background-color: var(--primary);
+    }
+    
+    /* Mobile dropdown items */
+    .dropdown-content a {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    @keyframes navbarSlideIn {
+        0% {
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 0.95;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .logo img {
+        height: 28px;
+    }
+    
+    .navbar {
+        width: 85%;
+        padding: 15px 10px;
+    }
+    
+    .navbar a {
+        padding: 10px 12px;
+    }
+    
+    .dropdown-content {
+        padding-left: 15px;
+    }
+    
+    .logout-btn {
+        padding: 8px 12px;
+    }
+}
+
+/* Accessibility improvements */
+[aria-expanded="true"] .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Focus styles for keyboard navigation */
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const navbar = document.querySelector('.navbar');
+    const header = document.querySelector('.header-navbar');
+    
+    // Mobile menu functionality
+    mobileMenuBtn.addEventListener('click', function() {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        this.classList.toggle('active');
+        navbar.classList.toggle('active');
+        this.setAttribute('aria-expanded', !isExpanded);
+        
+        // Toggle body scroll when menu is open
+        document.body.style.overflow = !isExpanded ? 'hidden' : '';
+    });
+    
+    // Close mobile menu when clicking a link
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768 && e.target.closest('.navbar a')) {
+            if (!e.target.closest('.dropdown-content a')) {
+                mobileMenuBtn.classList.remove('active');
+                navbar.classList.remove('active');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+        }
+    });
+    
+    // Improved scroll behavior
+    let lastScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    let isHidden = false;
+    const scrollThreshold = 50;
+    const navbarHeight = header.offsetHeight;
+    let scrollTimeout;
+    
+    function handleScroll() {
+        const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (currentScrollPosition > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+        
+        if (Math.abs(currentScrollPosition - lastScrollPosition) > scrollThreshold) {
+            if (currentScrollPosition > lastScrollPosition && currentScrollPosition > navbarHeight) {
+                if (!isHidden && !navbar.classList.contains('active')) {
+                    header.classList.add('hide');
+                    isHidden = true;
+                }
+            } else {
+                if (isHidden) {
+                    header.classList.remove('hide');
+                    header.style.animation = 'none';
+                    void header.offsetWidth;
+                    header.style.animation = 'navbarSlideIn 0.4s cubic-bezier(0.25, 0.8, 0.5, 1)';
+                    isHidden = false;
+                }
+            }
+            
+            lastScrollPosition = currentScrollPosition;
+        }
+        
+       
+    }
+    
+    window.addEventListener('scroll', function() {
+        requestAnimationFrame(handleScroll);
+    });
+    
+    header.addEventListener('mouseenter', function() {
+        if (isHidden) {
+            header.classList.remove('hide');
+            isHidden = false;
+            clearTimeout(scrollTimeout);
+        }
+    });
+    
+    function handleResize() {
+        if (window.innerWidth > 768) {
+            mobileMenuBtn.classList.remove('active');
+            navbar.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(handleResize, 250);
+    });
+});
+</script>
+       <!-- Login Button -->
+
+<!-- <button class="login" id="login-btn">
+    <span class="shadow"></span>
+    <span class="edge"></span>
+    <span class="front text"> Login </span>
+  </button> -->
+<!-- Modal -->
+<div id="loginModal" class="FrontLmodal">
+  <div class="FrontLmodal-content">
+      <!-- Close Button -->
+      <span class="FrontLclose" id="loginClose">&times;</span>
+
+      <!-- Left Section -->
+      <div class="FrontLleft-section">
+          <h2 id="leftSectionTitle">Welcome Back!</h2>
+          <p id="leftSectionText">Reconnect with the soulful rhythms of Philippine culture through traditional instruments.</p>
+          <button id="leftSectionButton">Register Now</button>
+      </div>
+
+      <!-- Right Section -->
+      <div class="FrontLright-section">
+          <!-- Login Form -->
+<div id="loginForm" class="FrontLform-container">
+    <img style="height: 100px; width: 190px;" src="{% static 'images/phil.png' %}" alt="Logo">
+    <form method="post" action="{% url 'login' %}" id="loginFormElement">
+        {% csrf_token %}
+        <div class="FrontLlogin-input-group">
+            <input type="text" id="login-username" name="username" placeholder=" " required />
+            <label for="login-username">Username</label>
+            <div id="username-login-error" class="FrontLerror-message"></div>
+        </div>
+        <div class="FrontLlogin-input-group">
+            <input type="password" id="login-password" name="password" placeholder=" " required />
+            <label for="login-password">Password</label>
+            <div id="password-login-error" class="FrontLerror-message"></div>
+        </div>
+        <div id="loginError" class="FrontLerror-message"></div>
+        
+        <button type="submit" class="FrontLbtn">Login</button>
+        
+        <!-- Enhanced Google Login -->
+        <div class="login-divider">or continue with</div>
+        
+        <!-- Replace your current Google button with this -->
+        <button type="button" class="google-login-btn" id="google-login-btn">
+            <i class="fab fa-google"></i> Continue with Google
+        </button>
+    </form>
+</div>
+
+          <!-- Register Form -->
+          <div id="registerForm" class="FrontLform-container">
+              <img style="height: 50px; width: 150px;" src="{% static 'images/phil.png' %}" alt="Logo">
+              <form method="post" action="{% url 'register' %}" id="registerFormElement">
+                  {% csrf_token %}
+                  <div class="FrontLinput-group">
+                      <input type="text" id="register-username" name="username" placeholder=" " required />
+                      <label for="register-username">Username</label>
+                      <div id="username-error" class="FrontLerror-message">
+                          {% if register_form.username.errors %}
+                              {{ register_form.username.errors|join:", " }}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="FrontLform-group-row">
+                      <div class="FrontLinput-group">
+                          <input type="text" id="first_name" name="first_name" placeholder=" " required />
+                          <label for="first_name">First Name</label>
+                          <div id="first-name-error" class="FrontLerror-message"></div>
+                      </div>
+                      <div class="FrontLinput-group">
+                          <input type="text" id="last_name" name="last_name" placeholder=" " required />
+                          <label for="last_name">Last Name</label>
+                          <div id="last-name-error" class="FrontLerror-message"></div>
+                      </div>
+                  </div>
+                  <div class="FrontLinput-group">
+                      <input type="email" id="email" name="email" placeholder=" " required />
+                      <label for="email">Email</label>
+                      <div id="email-error" class="FrontLerror-message">
+                          {% if register_form.email.errors %}
+                              {{ register_form.email.errors|join:", " }}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="FrontLinput-group">
+                      <input type="password" id="password1" name="password1" placeholder=" " required />
+                      <label for="password1">Password</label>
+                      <div id="password1-error" class="FrontLerror-message"></div>
+                  </div>
+                  <div class="FrontLinput-group">
+                      <input type="password" id="password2" name="password2" placeholder=" " required />
+                      <label for="password2">Confirm Password</label>
+                      <div id="password2-error" class="FrontLerror-message"></div>
+                  </div>
+                  <div id="registerError" class="FrontLerror-message"></div>
+                  <button type="submit" class="FrontLbtn">Register</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+<!-- Google Login Popup -->
+<div id="googleLoginPopup" class="google-popup-modal">
+    <div class="google-popup-content">
+        <span class="google-popup-close" id="googlePopupClose">&times;</span>
+        
+        <div class="google-popup-header">
+            <div class="google-popup-icon">
+                <i class="fab fa-google"></i>
+            </div>
+            <h2 class="google-popup-title">Continue with Google</h2>
+            <p class="google-popup-subtitle">You'll be redirected to Google to sign in securely</p>
+        </div>
+
+        <div class="google-popup-body">
+            <div class="google-features">
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure Google authentication</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-bolt"></i>
+                    <span>Quick one-click login</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-user-check"></i>
+                    <span>No password needed</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="google-popup-footer">
+            <button class="google-popup-btn google-popup-cancel" id="googlePopupCancel">
+                Cancel
+            </button>
+            <button class="google-popup-btn google-popup-confirm" id="googlePopupConfirm">
+                <i class="fab fa-google"></i> Continue to Google
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+
+</style>
+
+<script>
+    // Google Login with Popup Confirmation
+    document.addEventListener('DOMContentLoaded', function() {
+        const googlePopupModal = document.getElementById('googleLoginPopup');
+        const googlePopupClose = document.getElementById('googlePopupClose');
+        const googlePopupCancel = document.getElementById('googlePopupCancel');
+        const googlePopupConfirm = document.getElementById('googlePopupConfirm');
+        const googleLoginBtn = document.getElementById('google-login-btn');
+
+        // Show popup when Google login button is clicked
+        if (googleLoginBtn) {
+            googleLoginBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                showGooglePopup();
+            });
+        }
+
+        function showGooglePopup() {
+            googlePopupModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function hideGooglePopup() {
+            googlePopupModal.style.display = 'none';
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        // Close events
+        if (googlePopupClose) googlePopupClose.addEventListener('click', hideGooglePopup);
+        if (googlePopupCancel) googlePopupCancel.addEventListener('click', hideGooglePopup);
+
+        // Close when clicking outside
+        googlePopupModal.addEventListener('click', function(e) {
+            if (e.target === googlePopupModal) {
+                hideGooglePopup();
+            }
+        });
+
+        // Handle Google login confirmation
+        if (googlePopupConfirm) {
+            googlePopupConfirm.addEventListener('click', function() {
+                // Close the popup
+                hideGooglePopup();
+                
+                // Close the main login modal if it's open
+                const loginModal = document.getElementById('loginModal');
+                if (loginModal) {
+                    loginModal.style.display = 'none';
+                }
+                
+                // Show loading state on the Google button
+                const originalText = googleLoginBtn.innerHTML;
+                googleLoginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting to Google...';
+                googleLoginBtn.disabled = true;
+                
+                // Redirect to Google OAuth after a short delay for better UX
+                setTimeout(() => {
+                    window.location.href = '/accounts/google/login/';
+                }, 500);
+                
+                // Restore button after 5 seconds (in case redirect fails)
+                setTimeout(() => {
+                    googleLoginBtn.innerHTML = originalText;
+                    googleLoginBtn.disabled = false;
+                }, 5000);
+            });
+        }
+
+        // Close popup with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && googlePopupModal.style.display === 'flex') {
+                hideGooglePopup();
+            }
+        });
+    });
+</script>

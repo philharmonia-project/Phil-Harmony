@@ -1,0 +1,730 @@
+{% load static %}
+<style>
+       .create-Footers {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Footers span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Footers::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Footers:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Footers:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Footers:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Footers:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Footers:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Footers {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Footers::before {
+            content: '+ Footers';
+            font-size: 1.1rem;
+        }
+        
+        .create-Footers span {
+            display: none;
+        }
+        
+        .create-Footers::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Footers {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Footers:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Footers btn-style" id="create-service-btn">
+                <span>Footer Settings</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Footers" placeholder="Search in Footer Settings...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if footers %}
+            
+                <!-- Footer Settings List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for settings in footers %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>Footer Settings</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Follow Us Title:</span>
+                                <span class="detail-value">{{ settings.follow_us_title }}</span>
+                            </div>
+                            <div class="instrument-detail">
+                                <span class="detail-label">Follow Us Description:</span>
+                                <span class="detail-value">{{ settings.follow_us_description|truncatewords:20 }}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Footers" href="" data-Footers-id="{{ settings.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Footer Settings"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <!-- Footer Settings Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Follow Us Title</th>
+                                <th>Follow Us Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Footers1">
+                            {% for settings in footers %}
+                            <tr>
+                                <td>{{ settings.follow_us_title }}</td>
+                                <td>{{ settings.follow_us_description|truncatewords:15 }}</td>
+                                <td>
+                                    <a class="action-link edit-Footers" href="" data-Footers-id="{{ settings.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Footer Settings"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            
+        {% else %}
+        <p class="text-center">No footer settings found. Start by adding one!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<!--UPDATE Footers-->
+<div id="Edit-Footers-Modal" class="Edit-Footers-Modal">
+    <div class="Edit-Footers-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Footers-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE Footers-->
+<div id="Delete-Footers-Modal" class="Delete-Footers-Modal">
+    <div class="Delete-Footers-modal-content">
+
+        <div id="Delete-Footers-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Footers-->
+ <div id="Create-Footers-Modal" class="Create-Footers-Modal">
+    <div class="Create-Footers-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Footers-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // create Footers
+document.addEventListener("DOMContentLoaded", () => {
+    const addFootersmodal = document.getElementById("Create-Footers-Modal");
+    const closeBtn = addFootersmodal.querySelector(".close-btn1");
+    const addFootersmodalFormContainer = document.getElementById("Create-Footers-modal-form-container");
+    const addFootersLinks = document.querySelectorAll(".create-Footers");
+
+    // Handle clicking on the edit link
+    addFootersLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Footers/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addFootersmodalFormContainer.innerHTML = data;
+                    addFootersmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addFootersmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addFootersmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Footers
+document.addEventListener("DOMContentLoaded", () => {
+    const delFootersmodal = document.getElementById("Delete-Footers-Modal");
+    const closeBtn = delFootersmodal.querySelector(".close-btn1");
+    const delFootersmodalFormContainer = document.getElementById("Delete-Footers-modal-form-container");
+    const delFootersLinks = document.querySelectorAll(".delete-Footers");
+
+    // Handle clicking on the edit link
+    delFootersLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const FootersId = link.getAttribute("data-Footers-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Footers/${FootersId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delFootersmodalFormContainer.innerHTML = data;
+                    delFootersmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delFootersmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delFootersmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Footers
+document.addEventListener("DOMContentLoaded", () => {
+    const updateFootersmodal = document.getElementById("Edit-Footers-Modal");
+    const closeBtn = updateFootersmodal.querySelector(".close-btn1");
+    const FootersmodalFormContainer = document.getElementById("Edit-Footers-modal-form-container");
+    const editFootersLinks = document.querySelectorAll(".edit-Footers");
+
+    // Handle clicking on the edit link
+    editFootersLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const FootersId = link.getAttribute("data-Footers-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Footers/${FootersId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    FootersmodalFormContainer.innerHTML = data;
+                    updateFootersmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    FootersmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateFootersmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputFooters = document.querySelector(".Footers"); // Input field
+    const FootersTableRows = document.querySelectorAll(".Footers1 tr"); // Desktop table rows
+    const FootersCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputFooters.addEventListener("input", () => {
+        const query = searchInputFooters.value.toLowerCase().trim();
+
+        // Search in desktop table
+        FootersTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        FootersCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<style>
+       .create-SocialMedia {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-SocialMedia span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-SocialMedia::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-SocialMedia:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-SocialMedia:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-SocialMedia:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-SocialMedia:active {
+        transform: scale(0.98);
+    }
+    
+    .create-SocialMedia:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-SocialMedia {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-SocialMedia::before {
+            content: '+ Social Media';
+            font-size: 1.1rem;
+        }
+        
+        .create-SocialMedia span {
+            display: none;
+        }
+        
+        .create-SocialMedia::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-SocialMedia {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-SocialMedia:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-SocialMedia btn-style" id="create-service-btn">
+                <span>Social Media</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="SocialMedia" placeholder="Search for Social Media Links...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if socialMedia %}
+            
+                <!-- Social Media Links List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for link in socialMedia %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>{{ link.get_platform_display }}</h3>
+                                <p><i class="{{ link.icon_class }}"></i></p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Platform:</span>
+                                <span class="detail-value">{{ link.get_platform_display }}</span>
+                            </div>
+                            <div class="instrument-detail">
+                                <span class="detail-label">URL:</span>
+                                <span class="detail-value">{{ link.url|truncatechars:30 }}</span>
+                            </div>
+                            <div class="instrument-detail">
+                                <span class="detail-label">Active:</span>
+                                <form method="POST" action="{% url 'socialmedia_approval' link.pk %}" class="approval-form">
+                                    {% csrf_token %}
+                                    <input type="checkbox" name="is_active" {% if link.is_active %}checked{% endif %}>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-SocialMedia" href="" data-SocialMedia-id="{{ link.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Social Media"></i>
+                                </a>
+                                <a class="action-link delete-SocialMedia" href="" data-SocialMedia-id2="{{ link.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Social Media"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <!-- Social Media Links Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>Icon</th>
+                                <th>URL</th>
+                                <th>Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="SocialMedia1">
+                            {% for link in socialMedia %}
+                            <tr>
+                                <td>{{ link.get_platform_display }}</td>
+                                <td><i class="{{ link.icon_class }}"></i></td>
+                                <td>{{ link.url|truncatechars:30 }}</td>
+                                <td>
+                                    <form method="POST" action="{% url 'socialmedia_approval' link.pk %}" class="approval-form">
+                                        {% csrf_token %}
+                                        <input type="checkbox" name="is_active" class="table-approval-checkbox" {% if link.is_active %}checked{% endif %}>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a class="action-link edit-SocialMedia" href="" data-SocialMedia-id="{{ link.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Social Media"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-SocialMedia" href="" data-SocialMedia-id2="{{ link.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Social Media"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            
+        {% else %}
+        <p class="text-center">No social media links found. Start by adding one!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+
+<!--UPDATE SocialMedia-->
+<div id="Edit-SocialMedia-Modal" class="Edit-SocialMedia-Modal">
+    <div class="Edit-SocialMedia-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-SocialMedia-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE SocialMedia-->
+<div id="Delete-SocialMedia-Modal" class="Delete-SocialMedia-Modal">
+    <div class="Delete-SocialMedia-modal-content">
+
+        <div id="Delete-SocialMedia-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE SocialMedia-->
+ <div id="Create-SocialMedia-Modal" class="Create-SocialMedia-Modal">
+    <div class="Create-SocialMedia-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-SocialMedia-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+// create SocialMedia
+document.addEventListener("DOMContentLoaded", () => {
+    const addSocialMediamodal = document.getElementById("Create-SocialMedia-Modal");
+    const closeBtn = addSocialMediamodal.querySelector(".close-btn1");
+    const addSocialMediamodalFormContainer = document.getElementById("Create-SocialMedia-modal-form-container");
+    const addSocialMediaLinks = document.querySelectorAll(".create-SocialMedia");
+
+    // Handle clicking on the edit link
+    addSocialMediaLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_SocialMedia/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addSocialMediamodalFormContainer.innerHTML = data;
+                    addSocialMediamodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addSocialMediamodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addSocialMediamodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Instrument
+document.addEventListener("DOMContentLoaded", () => {
+    const delSocialMediamodal = document.getElementById("Delete-SocialMedia-Modal");
+    const closeBtn = delSocialMediamodal.querySelector(".close-btn1");
+    const delSocialMediamodalFormContainer = document.getElementById("Delete-SocialMedia-modal-form-container");
+    const delSocialMediaLinks = document.querySelectorAll(".delete-SocialMedia");
+
+    // Handle clicking on the edit link
+    delSocialMediaLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const SocialMediaId = link.getAttribute("data-SocialMedia-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_SocialMedia/${SocialMediaId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delSocialMediamodalFormContainer.innerHTML = data;
+                    delSocialMediamodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delSocialMediamodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delSocialMediamodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update SocialMedia
+document.addEventListener("DOMContentLoaded", () => {
+    const updateSocialMediamodal = document.getElementById("Edit-SocialMedia-Modal");
+    const closeBtn = updateSocialMediamodal.querySelector(".close-btn1");
+    const SocialMediamodalFormContainer = document.getElementById("Edit-SocialMedia-modal-form-container");
+    const editSocialMediaLinks = document.querySelectorAll(".edit-SocialMedia");
+
+    // Handle clicking on the edit link
+    editSocialMediaLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const SocialMediaId = link.getAttribute("data-SocialMedia-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_SocialMedia/${SocialMediaId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    SocialMediamodalFormContainer.innerHTML = data;
+                    updateSocialMediamodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    SocialMediamodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateSocialMediamodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputSocialMedia = document.querySelector(".SocialMedia"); // Input field
+    const SocialMediaTableRows = document.querySelectorAll(".SocialMedia1 tr"); // Desktop table rows
+    const SocialMedias = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputSocialMedia.addEventListener("input", () => {
+        const query = searchInputSocialMedia.value.toLowerCase().trim();
+
+        // Search in desktop table
+        SocialMediaTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        SocialMedias.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

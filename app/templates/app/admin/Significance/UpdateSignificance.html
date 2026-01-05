@@ -1,0 +1,35 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateSignificance' Significance.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Instrument Selection -->
+                <div class="form-group">
+                    <select id="id_instrument" name="instrument" class="form-control" required>
+                        {% for instrument in Instruments %}
+                        <option value="{{ instrument.pk }}" {% if instrument.pk == Significance.instrument.pk %}selected{% endif %}>
+                            {{ instrument.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_instrument" class="floating-label">Select Instrument</label>
+                </div>
+
+                <!-- Description Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_description" name="description" class="form-control" placeholder=" " required>{{ Significance.description }}</textarea>
+                    <label for="id_description" class="floating-label">Description</label>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Update Significance</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

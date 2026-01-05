@@ -1,0 +1,64 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'CreateView' %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Left Section: Image Upload -->
+            <div class="form-left-section">
+                
+                <!-- Image Section -->
+                <div class="form-image">
+                    <label for="id_image" class="form-label">Instrument Image</label>
+                    {% if InstrumentImage.image %}
+                    <img src="{{ InstrumentImage.image.url }}" class="img-fluid instrument-image" alt="{{ InstrumentImage.caption|default:'Instrument Image' }}">
+                    {% else %}
+                    <img src="{% static 'images/phil.png' %}" class="img-fluid instrument-image" alt="Default Instrument Image">
+                    {% endif %}
+                    <div class="file-input-wrapper">
+                        <label for="id_image" class="file-label-ins">Add Instrument Image</label>
+                        <input type="file" id="id_image" name="image" class="file-input" required>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Instrument Selection -->
+                <div class="form-group">
+                    <select id="id_instrument" name="instrument" class="form-control" required>
+                        {% for instrument in Instruments %}
+                        <option value="{{ instrument.pk }}">
+                            {{ instrument.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_instrument" class="floating-label">Select Instrument</label>
+                </div>
+
+                <!-- View Type Selection -->
+                <div class="form-group">
+                    <select id="id_view_type" name="view_type" class="form-control" required>
+                        <option value="front" {% if InstrumentImage.view_type == 'front' %}selected{% endif %}>Front View</option>
+                        <option value="side" {% if InstrumentImage.view_type == 'side' %}selected{% endif %}>Side View</option>
+                        <option value="detail" {% if InstrumentImage.view_type == 'detail' %}selected{% endif %}>Detail View</option>
+                    </select>
+                    <label for="id_view_type" class="floating-label">View Type</label>
+                </div>                
+                
+                <!-- Caption Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_caption" name="caption" class="form-control" placeholder=" ">{% if InstrumentImage.caption %}{{ InstrumentImage.caption }}{% endif %}</textarea>
+                    <label for="id_caption" class="floating-label">Caption</label>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Add Instrument Image</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

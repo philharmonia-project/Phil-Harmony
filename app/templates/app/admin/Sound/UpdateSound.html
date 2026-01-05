@@ -1,0 +1,65 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateSound' sound.pk %}" class="admin-form">
+        <div class="form-layout">
+            <!-- Left Section: Sound Sample -->
+            <div class="form-left-section">
+                <div class="form-audio">
+                    <label for="id_sound_sample" class="form-label">Sound Sample</label>
+                    {% if sound.sound_sample %}
+                    <audio controls>
+                        <source src="{{ sound.sound_sample.url }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    {% else %}
+                    <span>No audio available</span>
+                    {% endif %}
+                    <div class="file-input-wrapper">
+                        <label for="id_sound_sample" class="file-label-ins">Upload Sound</label>
+                        <input type="file" id="id_sound_sample" name="sound_sample" class="file-input" accept="audio/*" onchange="previewAudio(this)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section: Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_title" name="title" class="form-control" placeholder=" " required value="{{ sound.title }}" />
+                    <label for="id_title" class="floating-label">Sound Title</label>
+                </div>
+
+                <!-- Instrument Dropdown -->
+                <div class="form-group">
+                    <select id="id_instrument" name="instrument" class="form-control" required>
+                        {% for instrument in Instruments %}
+                        <option value="{{ instrument.pk }}">{{ instrument.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_instrument" class="floating-label">Instrument</label>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Add Sound</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+function previewAudio(input) {
+    const audioPreview = document.getElementById('sound-preview');
+    const audioSource = document.getElementById('audio-source');
+
+    if (input.files && input.files[0]) {
+        const fileURL = URL.createObjectURL(input.files[0]);
+        audioSource.src = fileURL;
+        audioPreview.load();
+        audioPreview.style.display = 'block';
+    }
+}
+</script>

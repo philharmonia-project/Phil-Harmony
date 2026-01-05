@@ -1,0 +1,34 @@
+{% load static %}
+
+<div id="delete-form" class="delete-container1">
+    <form method="POST" action="{% url 'DeleteContactPage' page.pk %}" class="admin-form1">
+        {% csrf_token %}
+
+        <div class="delete-card1">
+
+            <!-- Delete Confirmation -->
+            <div class="delete-content1">
+                <h1 class="delete-title1">Are you sure you want to delete "<span>{{ page.header_title }}</span>"?</h1>
+                <p class="delete-warning1">This action cannot be undone. All related data will be permanently removed.</p>
+
+                <!-- Instrument Details (Read-Only) -->
+                <div class="form-group1">
+                    <label for="id_name1" class="floating-label1">Contact Name</label>
+                    <input type="text" id="id_name1" name="header_title" class="form-control1" value="{{  page.header_title }}" readonly />
+                </div>
+
+                <div class="form-group1">
+                    <label for="id_description1" class="floating-label1">Description</label>
+                    <textarea id="id_description1" name="header_description" class="form-control1" readonly>{{ page.header_description }}</textarea>
+                </div>
+
+                <!-- Buttons: Delete & Cancel -->
+                <div class="button-group1">
+                    <button type="submit" class="btn-danger1">Delete</button>
+                    <a href="{% url 'admin_main' %}" class="btn-secondary1">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

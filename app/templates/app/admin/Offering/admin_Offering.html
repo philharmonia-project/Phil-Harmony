@@ -1,0 +1,363 @@
+{% load static %}
+<style>
+       .create-Offering {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Offering span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Offering::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Offering:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Offering:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Offering:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Offering:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Offering:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Offering {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Offering::before {
+            content: '+ Offering';
+            font-size: 1.1rem;
+        }
+        
+        .create-Offering span {
+            display: none;
+        }
+        
+        .create-Offering::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Offering {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Offering:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Offering btn-style" id="create-service-btn">
+                <span>Offering</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Offering" placeholder="Search for Offerings...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if Offerings %}
+       
+                <!-- Offering List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for offering in Offerings %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>{{ offering.title }}</h3>
+                                <p>Offering</p>
+                            </div>
+                            <i class="{{ offering.get_full_icon_class }}"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">{{ offering.description|truncatewords:12 }}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Offering" href="" data-Offering-id="{{ offering.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Offering"></i>
+                                </a>
+                                <a class="action-link delete-Offering" href="" data-Offering-id2="{{ offering.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Offering"></i>
+                                </a>
+                            </div>
+                            <div class="instrument-date">
+                                Added: {{ offering.created_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+           
+                <!-- Offering Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Icon</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Date Added</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Offering1">
+                            {% for offering in Offerings %}
+                            <tr>
+                                <td><i class="{{ offering.get_full_icon_class }}"></i></td>
+                                <td>{{ offering.title }}</td>
+                                <td>{{ offering.description|truncatewords:10 }}</td>
+                                <td>{{ offering.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a class="action-link edit-Offering" href="" data-Offering-id="{{ offering.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Offering"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Offering" href="" data-Offering-id2="{{ offering.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Offering"></i>
+                                    </a>
+                                    <!-- |
+                                    <a class="action-link View-Offering" href="">
+                                        <i class="fa-solid fa-eye" title="View Offering"></i>
+                                    </a> -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+        {% else %}
+        <p class="text-center">No Offerings found. Start by adding a new Offering!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<!--UPDATE Offering-->
+<div id="Edit-Offering-Modal" class="Edit-Offering-Modal">
+    <div class="Edit-Offering-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Offering-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE Offering-->
+<div id="Delete-Offering-Modal" class="Delete-Offering-Modal">
+    <div class="Delete-Offering-modal-content">
+
+        <div id="Delete-Offering-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Offering-->
+ <div id="Create-Offering-Modal" class="Create-Offering-Modal">
+    <div class="Create-Offering-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Offering-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // create Offering
+document.addEventListener("DOMContentLoaded", () => {
+    const addOfferingmodal = document.getElementById("Create-Offering-Modal");
+    const closeBtn = addOfferingmodal.querySelector(".close-btn1");
+    const addOfferingmodalFormContainer = document.getElementById("Create-Offering-modal-form-container");
+    const addOfferingLinks = document.querySelectorAll(".create-Offering");
+
+    // Handle clicking on the edit link
+    addOfferingLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Offering/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addOfferingmodalFormContainer.innerHTML = data;
+                    addOfferingmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addOfferingmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addOfferingmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Offering
+document.addEventListener("DOMContentLoaded", () => {
+    const delOfferingmodal = document.getElementById("Delete-Offering-Modal");
+    const closeBtn = delOfferingmodal.querySelector(".close-btn1");
+    const delOfferingmodalFormContainer = document.getElementById("Delete-Offering-modal-form-container");
+    const delOfferingLinks = document.querySelectorAll(".delete-Offering");
+
+    // Handle clicking on the edit link
+    delOfferingLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const OfferingId = link.getAttribute("data-Offering-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Offering/${OfferingId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delOfferingmodalFormContainer.innerHTML = data;
+                    delOfferingmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delOfferingmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delOfferingmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Offering
+document.addEventListener("DOMContentLoaded", () => {
+    const updateOfferingmodal = document.getElementById("Edit-Offering-Modal");
+    const closeBtn = updateOfferingmodal.querySelector(".close-btn1");
+    const OfferingmodalFormContainer = document.getElementById("Edit-Offering-modal-form-container");
+    const editOfferingLinks = document.querySelectorAll(".edit-Offering");
+
+    // Handle clicking on the edit link
+    editOfferingLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const OfferingId = link.getAttribute("data-Offering-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Offering/${OfferingId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    OfferingmodalFormContainer.innerHTML = data;
+                    updateOfferingmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    OfferingmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateOfferingmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputOffering = document.querySelector(".Offering"); // Input field
+    const OfferingTableRows = document.querySelectorAll(".Offering1 tr"); // Desktop table rows
+    const OfferingCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputOffering.addEventListener("input", () => {
+        const query = searchInputOffering.value.toLowerCase().trim();
+
+        // Search in desktop table
+        OfferingTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        OfferingCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

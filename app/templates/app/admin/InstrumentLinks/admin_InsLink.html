@@ -1,0 +1,424 @@
+{% load static %}
+<style>
+       .create-InsLink {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-InsLink span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-InsLink::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-InsLink:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-InsLink:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-InsLink:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-InsLink:active {
+        transform: scale(0.98);
+    }
+    
+    .create-InsLink:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-InsLink {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-InsLink::before {
+            content: '+ Citation';
+            font-size: 1.1rem;
+        }
+        
+        .create-InsLink span {
+            display: none;
+        }
+        
+        .create-InsLink::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-InsLink {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-InsLink:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-InsLink btn-style" id="create-service-btn">
+                <span>Source citation</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="InsLink" placeholder="Search for Instrument Links...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if InsLink %}
+            
+                <!-- Instrument Links List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for link in InsLink %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>{{ link.title }}</h3>
+                                <p>{{ link.get_link_type_display }}</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Instrument:</span>
+                                <span class="detail-value">{{ link.instrument.name }}</span>
+                            </div>
+                            <div class="instrument-detail">
+                                <span class="detail-label">URL:</span>
+                                <span class="detail-value"><a href="{{ link.url }}" target="_blank">{{ link.url|truncatechars:40 }}</a></span>
+                            </div>
+                            <div class="instrument-detail">
+                                <span class="detail-label">Link Type:</span>
+                                <span class="detail-value">{{ link.get_link_type_display }}</span>
+                            </div>
+                            <div class="instrument-detail">
+                                <span class="detail-label">Primary Source:</span>
+                                <!-- In both mobile cards and table -->
+                                <form method="POST" action="{% url 'primary_source_approve' link.pk %}" class="approval-form">
+                                    {% csrf_token %}
+                                    <input type="checkbox" name="is_primary_source" class="primary-source-checkbox" 
+                                        {% if link.is_primary_source %}checked{% endif %}>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Link" href="" data-link-id="{{ link.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Link"></i>
+                                </a>
+                                <a class="action-link delete-Link" href="" data-link-id2="{{ link.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Link"></i>
+                                </a>
+                            </div>
+                            <div class="instrument-date">
+                                Added: {{ link.date_added|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <!-- Instrument Links Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Instrument</th>
+                                <th>URL</th>
+                                <th>Link Type</th>
+                                <th>Primary Source</th>
+                                <th>Date Added</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Testimonial1">
+                            {% for link in InsLink %}
+                            <tr>
+                                <td>{{ link.title }}</td>
+                                <td>{{ link.instrument.name }}</td>
+                                <td><a href="{{ link.url }}" target="_blank">{{ link.url|truncatechars:20 }}</a></td>
+                                <td>{{ link.get_link_type_display }}</td>
+                                <td>
+                                    <!-- In both mobile cards and table -->
+                                    <form method="POST" action="{% url 'primary_source_approve' link.pk %}" class="approval-form">
+                                        {% csrf_token %}
+                                        <input type="checkbox" name="is_primary_source" class="primary-source-checkbox" 
+                                            {% if link.is_primary_source %}checked{% endif %}>
+                                    </form>
+                                </td>
+                                <td>{{ link.date_added|date:"M d, Y" }}</td>
+                                <td>
+                                    <a class="action-link edit-Link" href="" data-link-id="{{ link.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Link"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Link" href="" data-link-id2="{{ link.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Link"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            
+        {% else %}
+        <p class="text-center">No instrument links found. Start by adding one!</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    
+/* Approval checkbox styling */
+.primary-source-checkbox {
+        width: 18px;
+    height: 18px;
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.approval-form {
+    display: inline-block;
+    margin: 0;
+}
+
+/* Responsive table adjustments */
+@media (max-width: 768px) {
+    .table-section {
+        overflow-x: auto;
+    }
+}
+
+</style>
+
+<!--UPDATE InsLink-->
+<div id="Edit-InsLink-Modal" class="Edit-InsLink-Modal">
+    <div class="Edit-InsLink-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-InsLink-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE InsLink-->
+<div id="Delete-InsLink-Modal" class="Delete-InsLink-Modal">
+    <div class="Delete-InsLink-modal-content">
+
+        <div id="Delete-InsLink-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE InsLink-->
+ <div id="Create-InsLink-Modal" class="Create-InsLink-Modal">
+    <div class="Create-InsLink-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-InsLink-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Handle primary source checkbox changes
+document.addEventListener("DOMContentLoaded", () => {
+    const checkboxes = document.querySelectorAll('.primary-source-checkbox, .table-approval-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            // Find the closest form and submit it
+            const form = this.closest('.approval-form');
+            if (form) {
+                form.submit();
+            }
+        });
+    });
+});
+    // create InsLink
+document.addEventListener("DOMContentLoaded", () => {
+    const addInsLinkmodal = document.getElementById("Create-InsLink-Modal");
+    const closeBtn = addInsLinkmodal.querySelector(".close-btn1");
+    const addInsLinkmodalFormContainer = document.getElementById("Create-InsLink-modal-form-container");
+    const addInsLinkLinks = document.querySelectorAll(".create-InsLink");
+
+    // Handle clicking on the edit link
+    addInsLinkLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_InsLink/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addInsLinkmodalFormContainer.innerHTML = data;
+                    addInsLinkmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addInsLinkmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addInsLinkmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete InsLink
+document.addEventListener("DOMContentLoaded", () => {
+    const delInsLinkmodal = document.getElementById("Delete-InsLink-Modal");
+    const closeBtn = delInsLinkmodal.querySelector(".close-btn1");
+    const delInsLinkmodalFormContainer = document.getElementById("Delete-InsLink-modal-form-container");
+    const delInsLinkLinks = document.querySelectorAll(".delete-Link");
+
+    // Handle clicking on the edit link
+    delInsLinkLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const InsLinkId = link.getAttribute("data-Link-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_InsLink/${InsLinkId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delInsLinkmodalFormContainer.innerHTML = data;
+                    delInsLinkmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delInsLinkmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delInsLinkmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update InsLink
+document.addEventListener("DOMContentLoaded", () => {
+    const updateInsLinkmodal = document.getElementById("Edit-InsLink-Modal");
+    const closeBtn = updateInsLinkmodal.querySelector(".close-btn1");
+    const InsLinkmodalFormContainer = document.getElementById("Edit-InsLink-modal-form-container");
+    const editInsLinkLinks = document.querySelectorAll(".edit-Link");
+
+    // Handle clicking on the edit link
+    editInsLinkLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const InsLinkId = link.getAttribute("data-Link-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_InsLink/${InsLinkId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    InsLinkmodalFormContainer.innerHTML = data;
+                    updateInsLinkmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    InsLinkmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateInsLinkmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputInsLink = document.querySelector(".InsLink"); // Input field
+    const InsLinkTableRows = document.querySelectorAll(".InsLink1 tr"); // Desktop table rows
+    const InsLinkCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputInsLink.addEventListener("input", () => {
+        const query = searchInputInsLink.value.toLowerCase().trim();
+
+        // Search in desktop table
+        InsLinkTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        InsLinkCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

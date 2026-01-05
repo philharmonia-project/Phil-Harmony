@@ -1,0 +1,362 @@
+{% load static %}
+<style>
+       .create-Audience {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Audience span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Audience::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Audience:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Audience:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Audience:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Audience:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Audience:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Audience {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Audience::before {
+            content: '+ Audience';
+            font-size: 1.1rem;
+        }
+        
+        .create-Audience span {
+            display: none;
+        }
+        
+        .create-Audience::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Audience {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Audience:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Audience btn-style" id="create-service-btn">
+                <span>Target Audience</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Audience" placeholder="Search for Target Audiences...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if Audiences %}
+                <!-- Target Audience List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for audience in Audiences %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>{{ audience.title }}</h3>
+                                <p>Target Audience</p>
+                            </div>
+                            <i class="{{ audience.get_full_icon_class }}"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">{{ audience.description|truncatewords:12 }}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Audience" href="" data-Audience-id="{{ audience.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Audience"></i>
+                                </a>
+                                <a class="action-link delete-Audience" href="" data-Audience-id2="{{ audience.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Audience"></i>
+                                </a>
+                            </div>
+                            <div class="instrument-date">
+                                Added: {{ audience.created_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <!-- Target Audience Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Icon</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Date Added</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Audience1">
+                            {% for audience in Audiences %}
+                            <tr>
+                                <td><i class="{{ audience.get_full_icon_class }}"></i></td>
+                                <td>{{ audience.title }}</td>
+                                <td>{{ audience.description|truncatewords:10 }}</td>
+                                <td>{{ audience.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a class="action-link edit-Audience" href="" data-Audience-id="{{ audience.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Audience"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Audience" href="" data-Audience-id2="{{ audience.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Audience"></i>
+                                    </a>
+                                    <!-- |
+                                    <a class="action-link View-Audience" href="">
+                                        <i class="fa-solid fa-eye" title="View Audience"></i>
+                                    </a> -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+        {% else %}
+        <p class="text-center">No Target Audiences found. Start by adding a new one!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<!--UPDATE Audience-->
+<div id="Edit-Audience-Modal" class="Edit-Audience-Modal">
+    <div class="Edit-Audience-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Audience-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE Audience-->
+<div id="Delete-Audience-Modal" class="Delete-Audience-Modal">
+    <div class="Delete-Audience-modal-content">
+
+        <div id="Delete-Audience-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Audience-->
+ <div id="Create-Audience-Modal" class="Create-Audience-Modal">
+    <div class="Create-Audience-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Audience-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // create Audience
+document.addEventListener("DOMContentLoaded", () => {
+    const addAudiencemodal = document.getElementById("Create-Audience-Modal");
+    const closeBtn = addAudiencemodal.querySelector(".close-btn1");
+    const addAudiencemodalFormContainer = document.getElementById("Create-Audience-modal-form-container");
+    const addAudienceLinks = document.querySelectorAll(".create-Audience");
+
+    // Handle clicking on the edit link
+    addAudienceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Audience/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addAudiencemodalFormContainer.innerHTML = data;
+                    addAudiencemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addAudiencemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addAudiencemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Audience
+document.addEventListener("DOMContentLoaded", () => {
+    const delAudiencemodal = document.getElementById("Delete-Audience-Modal");
+    const closeBtn = delAudiencemodal.querySelector(".close-btn1");
+    const delAudiencemodalFormContainer = document.getElementById("Delete-Audience-modal-form-container");
+    const delAudienceLinks = document.querySelectorAll(".delete-Audience");
+
+    // Handle clicking on the edit link
+    delAudienceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const AudienceId = link.getAttribute("data-Audience-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Audience/${AudienceId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delAudiencemodalFormContainer.innerHTML = data;
+                    delAudiencemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delAudiencemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delAudiencemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Audience
+document.addEventListener("DOMContentLoaded", () => {
+    const updateAudiencemodal = document.getElementById("Edit-Audience-Modal");
+    const closeBtn = updateAudiencemodal.querySelector(".close-btn1");
+    const AudiencemodalFormContainer = document.getElementById("Edit-Audience-modal-form-container");
+    const editAudienceLinks = document.querySelectorAll(".edit-Audience");
+
+    // Handle clicking on the edit link
+    editAudienceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const AudienceId = link.getAttribute("data-Audience-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Audience/${AudienceId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    AudiencemodalFormContainer.innerHTML = data;
+                    updateAudiencemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    AudiencemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateAudiencemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputAudience = document.querySelector(".Audience"); // Input field
+    const AudienceTableRows = document.querySelectorAll(".Audience1 tr"); // Desktop table rows
+    const AudienceCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputAudience.addEventListener("input", () => {
+        const query = searchInputAudience.value.toLowerCase().trim();
+
+        // Search in desktop table
+        AudienceTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        AudienceCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

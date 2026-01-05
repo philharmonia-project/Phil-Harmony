@@ -1,0 +1,1260 @@
+// INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS
+// INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS
+
+// INSTRUMENT JS// INSTRUMENT JS// INSTRUMENT JS// INSTRUMENT JS// INSTRUMENT JS// INSTRUMENT JS// INSTRUMENT JS// INSTRUMENT JS
+// INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS // INSTRUMENT JS
+
+
+
+// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS
+am4core.ready(function () {
+    // Check if required libraries are loaded
+    if (typeof am4core === 'undefined' || typeof am4maps === 'undefined' || typeof am4geodata_philippinesLow === 'undefined') {
+        console.error('Required amCharts libraries not loaded');
+        const loadingElement = document.querySelector('.loading-animation');
+        if (loadingElement) {
+            loadingElement.innerHTML = '<p>Error loading map libraries. Please refresh the page.</p>';
+        }
+        return;
+    }
+
+    am4core.useTheme(am4themes_animated);
+
+    var chart = am4core.create("chartdiv", am4maps.MapChart);
+    
+    // Check if geodata is available
+    if (!am4geodata_philippinesLow || !am4geodata_philippinesLow.features) {
+        console.error('Philippines geodata not loaded properly');
+        const loadingElement = document.querySelector('.loading-animation');
+        if (loadingElement) {
+            loadingElement.innerHTML = '<p>Error loading map data. Please refresh the page.</p>';
+        }
+        return;
+    }
+
+    chart.geodata = am4geodata_philippinesLow;
+    chart.projection = new am4maps.projections.Miller();
+
+    var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+    polygonSeries.useGeodata = true;
+
+    var polygonTemplate = polygonSeries.mapPolygons.template;
+    polygonTemplate.tooltipText = "{name}";
+    polygonTemplate.fill = am4core.color("#d3d3d3");
+    polygonTemplate.stroke = am4core.color("#000000");
+    polygonTemplate.strokeWidth = 0.5;
+
+    // Function to normalize province names for matching
+    function normalizeProvinceName(name) {
+        if (!name) return '';
+        return name
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '') // Remove special characters and spaces
+            .trim();
+    }
+
+    // Store provinces with instruments for later use
+    let provincesWithInstrumentsData = [];
+
+    // Function to apply colors directly to map polygons
+    function applyColorsToMap() {
+        console.log("Applying colors to map polygons...");
+        
+        polygonSeries.mapPolygons.each(function(polygon) {
+            if (polygon.dataItem && polygon.dataItem.dataContext) {
+                const provinceName = polygon.dataItem.dataContext.name;
+                const normalizedProvinceName = normalizeProvinceName(provinceName);
+                const normalizedProvincesWithInstruments = provincesWithInstrumentsData.map(province => 
+                    normalizeProvinceName(province)
+                );
+                
+                const hasInstrument = normalizedProvincesWithInstruments.includes(normalizedProvinceName);
+                
+                // Apply color directly to the polygon
+                polygon.fill = hasInstrument ? am4core.color("#1E90FF") : am4core.color("#d3d3d3");
+                
+                console.log(`Applied color to ${provinceName}: ${hasInstrument ? 'BLUE' : 'GRAY'}`);
+            }
+        });
+        
+        // Force the chart to redraw
+        chart.invalidateData();
+    }
+
+    // Enhanced hover effects
+    polygonTemplate.events.on("over", function (ev) {
+        if (ev.target) {
+            ev.target.originalFill = ev.target.fill;
+            ev.target.fill = am4core.color("#f2d974");
+            
+            // Hide the hover instruction when user starts interacting
+            const hoverInstruction = document.getElementById('hover-instruction');
+            if (hoverInstruction) {
+                hoverInstruction.style.display = 'none';
+            }
+        }
+    });
+
+    polygonTemplate.events.on("out", function (ev) {
+        if (ev.target && ev.target.dataItem && ev.target.dataItem.dataContext) {
+            const provinceName = ev.target.dataItem.dataContext.name;
+            const normalizedProvinceName = normalizeProvinceName(provinceName);
+            const normalizedProvincesWithInstruments = provincesWithInstrumentsData.map(province => 
+                normalizeProvinceName(province)
+            );
+            
+            const hasInstrument = normalizedProvincesWithInstruments.includes(normalizedProvinceName);
+            ev.target.fill = hasInstrument ? am4core.color("#1E90FF") : am4core.color("#d3d3d3");
+        }
+    });
+
+    function updateInstrumentPanel(provinceName, data) {
+        const instrumentList = document.getElementById("instrument-list");
+        const provinceNameElement = document.getElementById("province-name");
+        const provinceDescription = document.getElementById("province-description");
+        const noInstruments = document.querySelector(".no-instruments");
+        const culturalGroupElement = document.getElementById("cultural-group");
+        const culturalGroupTag = culturalGroupElement ? culturalGroupElement.querySelector("span") : null;
+
+        // Null checks for all DOM elements
+        if (provinceNameElement) {
+            provinceNameElement.innerText = `Instruments from ${provinceName}`;
+        }
+        
+        if (provinceDescription) {
+            if (data.length === 0) {
+                provinceDescription.innerText = `No traditional instruments found for ${provinceName}.`;
+            } else {
+                provinceDescription.innerText = `This region is known for the following instruments:`;
+            }
+        }
+
+        if (culturalGroupTag) {
+            culturalGroupTag.textContent = data.length > 0 && data[0].region ? data[0].region : "---";
+        }
+
+        if (instrumentList) {
+            instrumentList.innerHTML = '';
+            instrumentList.style.display = 'grid';
+        }
+        
+        if (noInstruments) {
+            noInstruments.style.display = 'none';
+        }
+
+        if (data.length === 0) {
+            if (instrumentList) {
+                instrumentList.style.display = 'none';
+            }
+            if (noInstruments) {
+                noInstruments.style.display = 'block';
+            }
+        } else {
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'instrument-card';
+                card.innerHTML = `
+                    <a href="${DETAIL_URL_BASE}${item.id}" class="instrument-link">
+                        <img src="${item.image || 'https://via.placeholder.com/150'}" 
+                             alt="${item.name}" loading="lazy">
+                        <p>${item.name}</p>
+                    </a>
+                `;
+                if (instrumentList) {
+                    instrumentList.appendChild(card);
+                }
+            });
+        }
+    }
+
+    function loadProvinceData(provinceName) {
+        fetch(`/api/instruments/province/?province_name=${encodeURIComponent(provinceName)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => updateInstrumentPanel(provinceName, data))
+            .catch(error => {
+                console.error('Error loading province data:', error);
+                updateInstrumentPanel(provinceName, []);
+            });
+    }
+
+    fetch('/api/instruments/provinces-with-instruments/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(provincesWithInstruments => {
+            console.log('Provinces with instruments from API:', provincesWithInstruments);
+            
+            // Store the data for later use
+            provincesWithInstrumentsData = provincesWithInstruments;
+            
+            // Hide loading animation
+            const loadingElement = document.querySelector('.loading-animation');
+            if (loadingElement) {
+                loadingElement.style.display = 'none';
+            }
+
+            // Create the data structure WITH COLORS
+            polygonSeries.data = polygonSeries.geodata.features.map(feature => {
+                const provinceName = feature.properties.name;
+                const normalizedProvinceName = normalizeProvinceName(provinceName);
+                const normalizedProvincesWithInstruments = provincesWithInstruments.map(province => 
+                    normalizeProvinceName(province)
+                );
+                
+                const hasInstrument = normalizedProvincesWithInstruments.includes(normalizedProvinceName);
+                
+                console.log(`Province: ${provinceName} - Has instruments: ${hasInstrument}`);
+                
+                return {
+                    id: feature.id,
+                    name: provinceName,
+                    has_instrument: hasInstrument,
+                    // ADD THIS LINE - Set the color in the data
+                    fill: hasInstrument ? "#1E90FF" : "#d3d3d3"
+                };
+            });
+
+            // ADD THIS LINE - Tell amCharts to use the fill property from data
+            polygonTemplate.propertyFields.fill = "fill";
+
+            // Apply colors immediately
+            applyColorsToMap();
+
+            // Apply colors when chart is ready
+            chart.events.on("ready", function() {
+                applyColorsToMap();
+            });
+
+            // Auto-select the first province with instruments if available
+            if (provincesWithInstruments.length > 0) {
+                console.log(`Auto-selecting first province with instruments: ${provincesWithInstruments[0]}`);
+                loadProvinceData(provincesWithInstruments[0]);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching provinces with instruments:', error);
+            
+            // Hide loading animation and show error
+            const loadingElement = document.querySelector('.loading-animation');
+            if (loadingElement) {
+                loadingElement.innerHTML = '<p>Error loading map data. Please try again later.</p>';
+            }
+        });
+
+    polygonTemplate.events.on("hit", function (ev) {
+        if (ev.target && ev.target.dataItem && ev.target.dataItem.dataContext) {
+            const provinceName = ev.target.dataItem.dataContext.name;
+            console.log(`Clicked on province: ${provinceName}`);
+            loadProvinceData(provinceName);
+            
+            // Hide the hover instruction when user clicks
+            const hoverInstruction = document.getElementById('hover-instruction');
+            if (hoverInstruction) {
+                hoverInstruction.style.display = 'none';
+            }
+        }
+    });
+
+    // Add a legend and hover instruction to the map
+    chart.events.on("ready", function() {
+        const chartDiv = document.getElementById('chartdiv');
+        
+        // Add hover instruction
+        const hoverInstruction = document.createElement('div');
+        hoverInstruction.id = 'hover-instruction';
+        hoverInstruction.innerHTML = `
+            <div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.95); padding: 10px 20px; border-radius: 25px; font-size: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 1000; text-align: center; border: 2px solid #1E90FF;">
+                <span style="color: #1E90FF; font-weight: bold;">💡 Explore the map! Hover over provinces to discover traditional instruments</span>
+            </div>
+        `;
+        if (chartDiv) {
+            chartDiv.appendChild(hoverInstruction);
+        }
+
+        // Add legend - only show if there are provinces with instruments
+        if (provincesWithInstrumentsData.length > 0) {
+            const legend = document.createElement('div');
+            legend.innerHTML = `
+                <div style="position: absolute; bottom: 10px; left: 10px; background: white; padding: 10px; border-radius: 5px; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 1000;">
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <div style="width: 15px; height: 15px; background: #1E90FF; margin-right: 5px; border: 1px solid #000;"></div>
+                        <span>Has Instruments</span>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div style="width: 15px; height: 15px; background: #d3d3d3; margin-right: 5px; border: 1px solid #000;"></div>
+                        <span>No Instruments</span>
+                    </div>
+                </div>
+            `;
+            if (chartDiv) {
+                chartDiv.appendChild(legend);
+            }
+        }
+    });
+
+    chart.chartContainer.wheelable = false;
+    chart.seriesContainer.draggable = false;
+    chart.seriesContainer.resizable = false;
+    chart.maxZoomLevel = 1;
+    chart.minZoomLevel = 1;
+    chart.zoomControl = null;
+
+    chart.homeZoomLevel = 1;
+    chart.homeGeoPoint = { latitude: 12.8797, longitude: 121.7740 };
+    chart.goHome();
+
+    // Make map responsive
+    window.addEventListener("resize", () => {
+        chart.invalidateSize();
+    });
+});
+  // MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS
+  // MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS// MAP JS
+
+
+
+
+//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS
+//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS
+document.addEventListener('DOMContentLoaded', function() {
+    const track = document.querySelector('.slider-track');
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.slider-dots .dot');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    const iconTools = document.querySelectorAll('.icon-tooltip'); // Get all instrument icons
+    let currentIndex = 0;
+    let autoSlideInterval;
+    const slideCount = slides.length;
+    
+    // Initialize dots
+    function initDots() {
+        const dotsContainer = document.querySelector('.slider-dots');
+        dotsContainer.innerHTML = '';
+        
+        for (let i = 0; i < slideCount; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsContainer.appendChild(dot);
+        }
+    }
+    
+    // Update slider position
+    function updateSlider() {
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        // Update active dot
+        document.querySelectorAll('.slider-dots .dot').forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentIndex);
+        });
+        
+        // Add active class to current slide for animations
+        slides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === currentIndex);
+        });
+
+        // Update active icon
+        iconTools.forEach((icon, index) => {
+            icon.classList.toggle('active', index === currentIndex);
+        });
+    }
+    
+    // Go to specific slide
+    function goToSlide(index) {
+        currentIndex = index;
+        updateSlider();
+        resetAutoSlide();
+    }
+    
+    // Next slide
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % slideCount;
+        updateSlider();
+        resetAutoSlide();
+    }
+    
+    // Previous slide
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+        updateSlider();
+        resetAutoSlide();
+    }
+    
+    // Auto slide
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(nextSlide, 5000);
+    }
+    
+    // Reset auto slide timer
+    function resetAutoSlide() {
+        clearInterval(autoSlideInterval);
+        startAutoSlide();
+    }
+
+    // Connect instrument icons to slides
+    function connectIconsToSlides() {
+        iconTools.forEach((icon, index) => {
+            icon.addEventListener('click', () => {
+                goToSlide(index);
+            });
+
+            // Add hover effect
+            icon.addEventListener('mouseenter', () => {
+                slides[index].classList.add('highlight');
+            });
+
+            icon.addEventListener('mouseleave', () => {
+                slides[index].classList.remove('highlight');
+            });
+        });
+    }
+    
+    // Initialize
+    initDots();
+    connectIconsToSlides(); // Connect the icons
+    startAutoSlide();
+    
+    // Button controls
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') prevSlide();
+    });
+    
+    // Pause on hover
+    const slider = document.querySelector('.image-slider');
+    slider.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+    slider.addEventListener('mouseleave', startAutoSlide);
+    
+    // Swipe support for touch devices
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    slider.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        clearInterval(autoSlideInterval);
+    }, {passive: true});
+    
+    slider.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+        startAutoSlide();
+    }, {passive: true});
+    
+    function handleSwipe() {
+        const threshold = 50;
+        if (touchEndX < touchStartX - threshold) {
+            nextSlide();
+        } else if (touchEndX > touchStartX + threshold) {
+            prevSlide();
+        }
+    }
+});
+//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS
+//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS//HOME PAGE JS
+
+
+// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS
+// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all video elements and their corresponding play buttons and posters
+    const videoWrappers = document.querySelectorAll('.video-wrapper');
+    
+    videoWrappers.forEach(wrapper => {
+        const video = wrapper.querySelector('video');
+        const poster = wrapper.querySelector('.video-poster');
+        const playButton = wrapper.querySelector('.play-button');
+        const fullscreenButton = wrapper.querySelector('.fullscreen-button');
+        
+        // Play button click handler
+        playButton.addEventListener('click', function() {
+            poster.style.display = 'none';
+            video.style.display = 'block';
+            video.play();
+        });
+        
+        // Video click handler to pause/play
+        video.addEventListener('click', function() {
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        });
+        
+        // Fullscreen button click handler
+        fullscreenButton.addEventListener('click', function() {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) { /* Safari */
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) { /* IE11 */
+                video.msRequestFullscreen();
+            }
+        });
+        
+        // When video ends, show the poster again
+        video.addEventListener('ended', function() {
+            poster.style.display = 'block';
+            video.style.display = 'none';
+        });
+    });
+});
+// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS
+// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS// 3 VIDEO JS
+
+// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS
+// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS
+
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollElements = document.querySelectorAll('[data-scroll]');
+    
+    const elementInView = (el) => {
+      const elementTop = el.getBoundingClientRect().top;
+      return (
+        elementTop <= (window.innerHeight * 0.8)
+      );
+    };
+    
+    const handleScrollAnimation = () => {
+      scrollElements.forEach((el) => {
+        if (elementInView(el)) {
+          el.classList.add('is-visible');
+        }
+      });
+    };
+    
+    // Initialize
+    window.addEventListener('load', handleScrollAnimation);
+    window.addEventListener('scroll', handleScrollAnimation);
+  });
+// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS
+// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS// MISSION VISSION JS
+
+
+// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS
+// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Scroll animation
+    const section = document.querySelector('.popular-instruments-section2');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    if (section) {
+      observer.observe(section);
+    }
+  
+    // Carousel functionality
+    const carousel = document.querySelector('.popular-instruments2');
+    const prevBtn = document.querySelector('.prev-btn2');
+    const nextBtn = document.querySelector('.next-btn2');
+    const card = document.querySelector('.instrument-card2');
+    
+    if (!card) return;
+    
+    const cardWidth = card.offsetWidth + 24; // card width + gap
+    let currentPosition = 0;
+    let maxScroll = carousel.scrollWidth - carousel.clientWidth;
+    
+    function updateButtons() {
+        prevBtn.disabled = currentPosition <= 10; // small buffer
+        nextBtn.disabled = currentPosition >= maxScroll - 10;
+    }
+    
+    function scrollCarousel(direction) {
+        const scrollAmount = Math.min(cardWidth * 3, direction === 'prev' ? currentPosition : maxScroll - currentPosition);
+        currentPosition = direction === 'prev' 
+            ? Math.max(currentPosition - scrollAmount, 0)
+            : Math.min(currentPosition + scrollAmount, maxScroll);
+        
+        carousel.scrollTo({
+            left: currentPosition,
+            behavior: 'smooth'
+        });
+        
+        setTimeout(updateButtons, 300);
+    }
+    
+    prevBtn.addEventListener('click', () => scrollCarousel('prev'));
+    nextBtn.addEventListener('click', () => scrollCarousel('next'));
+    
+    // Handle window resize
+    function handleResize() {
+        maxScroll = carousel.scrollWidth - carousel.clientWidth;
+        updateButtons();
+    }
+    
+    // Initialize
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(carousel);
+    updateButtons();
+  });
+
+// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS
+// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS// POPULAR INSTRUMENT JS
+
+
+// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN
+// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN
+
+  // Carousel functionality
+  let currentInstrumentIndex = 0;
+  let instruments = Array.from(document.querySelectorAll('.instrument-card1'));
+  let totalInstruments = instruments.length;
+  let autoRotateInterval;
+  
+  // Initialize carousel
+  function initCarousel() {
+    if (totalInstruments === 0) return;
+    
+    // Reset current index if out of bounds
+    if (currentInstrumentIndex >= totalInstruments) {
+      currentInstrumentIndex = 0;
+    } else if (currentInstrumentIndex < 0) {
+      currentInstrumentIndex = totalInstruments - 1;
+    }
+    
+    // Position all cards
+    updateCarousel();
+    
+    // Set active card
+    instruments.forEach((card, index) => {
+      card.classList.remove('active', 'left-1', 'left-2', 'left-3', 'right-1', 'right-2', 'right-3');
+      
+      if (index === currentInstrumentIndex) {
+        card.classList.add('active');
+      } else {
+        // Calculate the shortest path difference (considering infinite loop)
+        let diff = index - currentInstrumentIndex;
+        
+        // Handle wrapping for infinite effect
+        if (Math.abs(diff) > totalInstruments / 2) {
+          diff = diff > 0 ? diff - totalInstruments : diff + totalInstruments;
+        }
+        
+        if (diff < 0) {
+          // Left side cards
+          const position = Math.min(Math.abs(diff), 3);
+          card.classList.add(`left-${position}`);
+        } else {
+          // Right side cards
+          const position = Math.min(diff, 3);
+          card.classList.add(`right-${position}`);
+        }
+      }
+    });
+  }
+  
+  // Update carousel position
+  function updateCarousel() {
+    const container = document.querySelector('.instrument-cards-container1');
+    const activeCard = instruments[currentInstrumentIndex];
+    
+    if (!activeCard) return;
+    
+    // Center the active card visually
+    const cardWidth = activeCard.offsetWidth;
+    const containerWidth = container.offsetWidth;
+    const offset = (containerWidth / 2) - (activeCard.offsetLeft + (cardWidth / 2));
+    container.style.transform = `translateX(${offset}px)`;
+  }
+  
+  // Next instrument
+  function nextInstrument() {
+    if (totalInstruments === 0) return;
+    
+    currentInstrumentIndex = (currentInstrumentIndex + 1) % totalInstruments;
+    initCarousel();
+  }
+  
+  // Previous instrument
+  function prevInstrument() {
+    if (totalInstruments === 0) return;
+    
+    currentInstrumentIndex = (currentInstrumentIndex - 1 + totalInstruments) % totalInstruments;
+    initCarousel();
+  }
+  
+  // Filter instruments by category
+  function filterInstruments(category) {
+    const allCards = document.querySelectorAll('.instrument-card1');
+    let hasVisible = false;
+    
+    allCards.forEach(card => {
+      if (category === 'all' || card.dataset.category === category) {
+        card.style.display = 'block';
+        hasVisible = true;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    
+    // Update instruments array with only visible cards
+    instruments = Array.from(document.querySelectorAll('.instrument-card1[style*="display: block"]'));
+    totalInstruments = instruments.length;
+    currentInstrumentIndex = totalInstruments > 0 ? 0 : -1;
+    
+    // Show/hide no results
+    document.querySelector('.no-results1').classList.toggle('show', !hasVisible);
+    
+    if (hasVisible) {
+      initCarousel();
+    }
+    
+    // Reset auto-rotate
+    resetAutoRotate();
+  }
+  
+  // Set up category button click handlers
+  document.querySelectorAll('.category-btn1').forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Remove .active from all and set on clicked
+      document.querySelectorAll('.category-btn1').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      
+      const category = this.dataset.category;
+      filterInstruments(category);
+    });
+  });
+  
+  // View Details button
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+      const productId = this.dataset.productId;
+      // You can implement your view details logic here
+      console.log(`View details for product ${productId}`);
+      // window.location.href = `/product/${productId}`;
+    });
+  });
+  
+  // Auto-rotate functionality
+  function startAutoRotate() {
+    if (autoRotateInterval) clearInterval(autoRotateInterval);
+    autoRotateInterval = setInterval(nextInstrument, 5000);
+  }
+  
+  function resetAutoRotate() {
+    if (autoRotateInterval) clearInterval(autoRotateInterval);
+    startAutoRotate();
+  }
+  
+  // Initialize carousel on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    initCarousel();
+    startAutoRotate();
+    
+    // Pause auto-rotate on hover
+    document.querySelector('.cards-container-wrapper').addEventListener('mouseenter', () => {
+      if (autoRotateInterval) clearInterval(autoRotateInterval);
+    });
+    
+    document.querySelector('.cards-container-wrapper').addEventListener('mouseleave', () => {
+      startAutoRotate();
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+      initCarousel();
+    });
+  });
+  
+  // Optional: Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight') {
+      nextInstrument();
+    } else if (e.key === 'ArrowLeft') {
+      prevInstrument();
+    }
+  });
+
+  
+
+// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN
+// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN// INSTRUMENT WITH DETAILED CAROUSEL DESIGN
+
+// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN
+// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN
+document.addEventListener('DOMContentLoaded', function() {
+    // VIDEO MANAGEMENT SYSTEM
+    class VideoManager {
+        constructor() {
+            this.videos = [];
+            this.currentlyPlaying = null;
+            this.visibilityObserver = null;
+            this.setupVideoManager();
+        }
+
+        setupVideoManager() {
+            // Initialize all video elements
+            this.initVideos();
+            
+            // Setup intersection observer for visibility
+            this.setupVisibilityObserver();
+            
+            // Setup play/pause event listeners
+            this.setupEventListeners();
+        }
+
+        initVideos() {
+            const videoElements = document.querySelectorAll('video');
+            videoElements.forEach(video => {
+                const videoObj = {
+                    element: video,
+                    isPlaying: false,
+                    wasPlayingBeforeHidden: false
+                };
+                
+                this.videos.push(videoObj);
+                
+                // Add data attribute for tracking
+                video.dataset.videoId = `video-${this.videos.length}`;
+            });
+        }
+
+        setupVisibilityObserver() {
+            this.visibilityObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    const videoObj = this.findVideoByElement(video);
+                    
+                    if (!videoObj) return;
+                    
+                    if (entry.isIntersecting) {
+                        // Video became visible
+                        if (videoObj.wasPlayingBeforeHidden && this.currentlyPlaying !== video) {
+                            // Only auto-play if no other video is currently playing
+                            if (!this.currentlyPlaying) {
+                                video.play().catch(e => console.log("Autoplay prevented:", e));
+                            }
+                        }
+                    } else {
+                        // Video became invisible
+                        if (!video.paused) {
+                            videoObj.wasPlayingBeforeHidden = true;
+                            video.pause();
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.3, // At least 30% visible
+                rootMargin: '50px' // Add some margin for smoother transitions
+            });
+
+            // Observe all videos
+            this.videos.forEach(videoObj => {
+                this.visibilityObserver.observe(videoObj.element);
+            });
+        }
+
+        setupEventListeners() {
+            this.videos.forEach(videoObj => {
+                const video = videoObj.element;
+                
+                // Play event
+                video.addEventListener('play', (e) => {
+                    this.handlePlay(e.target);
+                });
+                
+                // Pause event
+                video.addEventListener('pause', (e) => {
+                    this.handlePause(e.target);
+                });
+                
+                // Click on video toggles play/pause
+                video.addEventListener('click', (e) => {
+                    this.handleVideoClick(e.target);
+                });
+                
+                // When user interacts with controls
+                video.addEventListener('playing', (e) => {
+                    this.handlePlay(e.target);
+                });
+            });
+            
+            // Pause videos when page becomes hidden (tab switch)
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    this.pauseAllVideos();
+                }
+            });
+            
+            // Pause videos when window loses focus
+            window.addEventListener('blur', () => {
+                this.pauseAllVideos();
+            });
+        }
+
+        handlePlay(videoElement) {
+            // If a different video is already playing, pause it
+            if (this.currentlyPlaying && this.currentlyPlaying !== videoElement) {
+                this.currentlyPlaying.pause();
+                
+                // Reset the wasPlaying flag for the paused video
+                const previousVideoObj = this.findVideoByElement(this.currentlyPlaying);
+                if (previousVideoObj) {
+                    previousVideoObj.wasPlayingBeforeHidden = false;
+                }
+            }
+            
+            // Set the new currently playing video
+            this.currentlyPlaying = videoElement;
+            
+            // Update video object state
+            const videoObj = this.findVideoByElement(videoElement);
+            if (videoObj) {
+                videoObj.isPlaying = true;
+                videoObj.wasPlayingBeforeHidden = false;
+            }
+        }
+
+        handlePause(videoElement) {
+            // If the paused video was the currently playing one, clear it
+            if (this.currentlyPlaying === videoElement) {
+                this.currentlyPlaying = null;
+            }
+            
+            // Update video object state
+            const videoObj = this.findVideoByElement(videoElement);
+            if (videoObj) {
+                videoObj.isPlaying = false;
+            }
+        }
+
+        handleVideoClick(videoElement) {
+            if (videoElement.paused) {
+                videoElement.play();
+            } else {
+                videoElement.pause();
+            }
+        }
+
+        findVideoByElement(videoElement) {
+            return this.videos.find(v => v.element === videoElement);
+        }
+
+        pauseAllVideos() {
+            this.videos.forEach(videoObj => {
+                if (!videoObj.element.paused) {
+                    videoObj.wasPlayingBeforeHidden = true;
+                    videoObj.element.pause();
+                }
+            });
+            this.currentlyPlaying = null;
+        }
+
+        // Cleanup method (optional)
+        destroy() {
+            if (this.visibilityObserver) {
+                this.videos.forEach(videoObj => {
+                    this.visibilityObserver.unobserve(videoObj.element);
+                });
+                this.visibilityObserver.disconnect();
+            }
+        }
+    }
+
+    // Initialize Video Manager
+    const videoManager = new VideoManager();
+
+    // Your existing animation code (keep this)
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                }, index * 150);
+            }
+        });
+    }, { 
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    });
+    
+    const elementsToAnimate = [
+        '.header', 
+        '.image-description', 
+        '.video-section', 
+        '.learn-more'
+    ];
+    
+    elementsToAnimate.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+            observer.observe(el);
+        });
+    });
+    
+    // Smooth scroll for arrow click
+    const arrowDown = document.querySelector('.arrow-down');
+    if (arrowDown) {
+        arrowDown.addEventListener('click', () => {
+            const ctaSection = document.querySelector('.cta-section');
+            if (ctaSection) {
+                ctaSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        });
+    }
+});
+
+// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN
+// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN// INSTRUCTOR SECTION DESIGN
+
+
+// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN
+// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN
+
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.querySelector('.instrument-carousel');
+    const cards = document.querySelectorAll('.instrument-card4:not(.cloned)');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    
+    let currentIndex = 0;
+    let autoSlideInterval;
+    let isAnimating = false;
+    const cardWidth = cards[0].offsetWidth + 15; // width + gap
+    const visibleCards = Math.floor(carousel.parentElement.offsetWidth / cardWidth);
+    
+    // Initialize carousel position
+    carousel.style.transform = `translateX(0)`;
+    
+    function updateCarousel(instant = false) {
+      if (instant) {
+        carousel.style.transition = 'none';
+      } else {
+        carousel.style.transition = 'transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)';
+        isAnimating = true;
+        setTimeout(() => { isAnimating = false; }, 600);
+      }
+      carousel.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+    }
+    
+    function nextSlide() {
+      if (isAnimating) return;
+      
+      currentIndex++;
+      updateCarousel();
+      
+      // When reaching the cloned items, instantly reset to beginning
+      if (currentIndex >= cards.length) {
+        setTimeout(() => {
+          currentIndex = 0;
+          updateCarousel(true);
+          // Force reflow to make the transition none take effect
+          void carousel.offsetWidth;
+        }, 600); // Matches the transition duration
+      }
+    }
+    
+    function prevSlide() {
+      if (isAnimating) return;
+      
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCarousel();
+      } else {
+        // Jump to the end (visual only)
+        currentIndex = cards.length;
+        updateCarousel(true);
+        void carousel.offsetWidth;
+        
+        setTimeout(() => {
+          currentIndex = cards.length - 1;
+          updateCarousel();
+        }, 10);
+      }
+    }
+    
+    // Auto-slide every 3 seconds
+    function startAutoSlide() {
+      autoSlideInterval = setInterval(() => {
+        if (!document.hidden) { // Only slide if tab is active
+          nextSlide();
+        }
+      }, 3000);
+    }
+    
+    // Pause auto-slide on hover
+    carousel.addEventListener('mouseenter', () => {
+      clearInterval(autoSlideInterval);
+    });
+    
+    // Resume auto-slide when mouse leaves
+    carousel.addEventListener('mouseleave', startAutoSlide);
+    
+    // Pause when tab is inactive
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        clearInterval(autoSlideInterval);
+      } else {
+        startAutoSlide();
+      }
+    });
+    
+    // Manual navigation
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      clearInterval(autoSlideInterval);
+      nextSlide();
+      startAutoSlide();
+    });
+    
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      clearInterval(autoSlideInterval);
+      prevSlide();
+      startAutoSlide();
+    });
+    
+    // Start the auto-slide
+    startAutoSlide();
+    
+    // Handle responsive adjustments
+    window.addEventListener('resize', function() {
+      updateCarousel(true);
+      void carousel.offsetWidth; // Force reflow
+    });
+  });
+
+// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN
+// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN// SLIDING CAROUSEL DESIGN
+
+
+// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL
+// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.querySelector('.testimonials-container');
+  const cards = document.querySelectorAll('.testimonial-card');
+  const prevBtn = document.querySelector('.slider-prev');
+  const nextBtn = document.querySelector('.slider-next');
+  const dotsContainer = document.querySelector('.slider-dots');
+  
+  // Only initialize if we have testimonials and navigation
+  if (cards.length > 0 && prevBtn && nextBtn && dotsContainer) {
+    // Create dots
+    const totalSlides = Math.ceil(cards.length / getVisibleCards());
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.classList.add('slider-dot');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => {
+        goToSlide(i);
+      });
+      dotsContainer.appendChild(dot);
+    }
+
+    const dots = document.querySelectorAll('.slider-dot');
+    let currentIndex = 0;
+    let cardWidth = cards[0].offsetWidth + 30;
+    let visibleCards = getVisibleCards();
+
+    function getVisibleCards() {
+      if (window.innerWidth >= 992) return 3;
+      if (window.innerWidth >= 768) return 2;
+      return 1;
+    }
+
+    function updateSlider() {
+      visibleCards = getVisibleCards();
+      cardWidth = cards[0].offsetWidth + 30;
+      if (prevBtn) prevBtn.disabled = currentIndex === 0;
+      if (nextBtn) nextBtn.disabled = currentIndex >= Math.ceil(cards.length / visibleCards) - 1;
+      updateDots();
+    }
+
+    function goToSlide(index) {
+      currentIndex = index;
+      container.scrollTo({
+        left: index * (cardWidth * visibleCards + 30), // Added gap calculation
+        behavior: 'smooth'
+      });
+      updateSlider();
+    }
+
+    function updateDots() {
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentIndex);
+      });
+    }
+
+    function nextSlide() {
+      if (currentIndex < Math.ceil(cards.length / visibleCards) - 1) {
+        currentIndex++;
+        goToSlide(currentIndex);
+      }
+    }
+
+    function prevSlide() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        goToSlide(currentIndex);
+      }
+    }
+
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    window.addEventListener('resize', function() {
+      updateSlider();
+      goToSlide(currentIndex);
+    });
+
+    updateSlider();
+  }
+});
+
+  // create Testimonial
+document.addEventListener("DOMContentLoaded", () => {
+    const addTestimonialmodal = document.getElementById("Create-Testimonial-Modal");
+    const closeBtn = addTestimonialmodal.querySelector(".close-btn1");
+    const addTestimonialmodalFormContainer = document.getElementById("Create-Testimonial-modal-form-container");
+    const addTestimonialLinks = document.querySelectorAll(".create-Testimonial");
+
+    // Handle clicking on the edit link
+    addTestimonialLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_testimonial/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addTestimonialmodalFormContainer.innerHTML = data;
+                    addTestimonialmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addTestimonialmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addTestimonialmodal.classList.remove("show"); // Close the modal
+    });
+});
+// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL
+// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL// TESTIMONIAL

@@ -1,0 +1,72 @@
+
+<div id="ContactPage2">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateContactPage' page.pk %}" class="admin-form2">
+        {% csrf_token %}
+        
+        <div class="form-sections-container2">
+            <!-- Header Section -->
+            <div class="form-section2">
+                <h3 class="section-title2">Header</h3>
+                <div class="form-group2">
+                    <label for="id_header_title" class="form-label2">Header Title</label>
+                    <input type="text" id="id_header_title" name="header_title" class="form-control2" value="{{ page.header_title }}" required />
+                </div>
+                <div class="form-group2">
+                    <label for="id_header_description" class="form-label2">Description</label>
+                    <textarea id="id_header_description" name="header_description" class="form-control2" required>{{ page.header_description }}"</textarea>
+                </div>
+            </div>
+            
+            <!-- Address Section -->
+            <div class="form-section2">
+                <h3 class="section-title2">Address</h3>
+                <div class="form-group2">
+                    <label for="id_location_address" class="form-label2">Location</label>
+                    <textarea id="id_location_address" name="location_address" class="form-control2" required>{{ page.location_address }}</textarea>
+                    <small style="color: var(--title-color);">Use Shift+Enter for line breaks</small>
+                </div>
+            </div>
+            
+            <!-- Contact Section -->
+            <div class="form-section2">
+                <h3 class="section-title2">Contact</h3>
+                <div class="form-group2">
+                    <label for="id_landline_phone" class="form-label2">Landline</label>
+                    <input type="text" id="id_landline_phone" name="landline_phone" class="form-control2" value="{{ page.landline_phone }}" required />
+                </div>
+                <div class="form-group2">
+                    <label for="id_mobile_phone" class="form-label2">Mobile</label>
+                    <input type="text" id="id_mobile_phone" name="mobile_phone" class="form-control2" value="{{ page.mobile_phone }}" required />
+                </div>
+                <div class="form-group2">
+                    <label for="id_primary_email" class="form-label2">Primary Email</label>
+                    <input type="email" id="id_primary_email" name="primary_email" class="form-control2" value="{{ page.primary_email }}" required />
+                </div>
+                <div class="form-group2">
+                    <label for="id_secondary_email" class="form-label2">Secondary Email</label>
+                    <input type="email" id="id_secondary_email" name="secondary_email" class="form-control2" value="{{ page.secondary_email }}" />
+                </div>
+            </div>
+            
+            <!-- Hours Section -->
+            <div class="form-section2">
+                <h3 class="section-title2">Hours</h3>
+                <div class="form-group2">
+                    <label for="id_weekdays_hours" class="form-label2">Weekdays</label>
+                    <input type="text" id="id_weekdays_hours" name="weekdays_hours" class="form-control2" value="{{ page.weekdays_hours }}" required />
+                </div>
+                <div class="form-group2">
+                    <label for="id_saturday_hours" class="form-label2">Saturday</label>
+                    <input type="text" id="id_saturday_hours" name="saturday_hours" class="form-control2" value="{{ page.saturday_hours }}" required />
+                </div>
+                <div class="form-group2">
+                    <label for="id_sunday_hours" class="form-label2">Sunday</label>
+                    <input type="text" id="id_sunday_hours" name="sunday_hours" class="form-control2" value="{{ page.sunday_hours }}" required />
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-primary2">Save Contact Page</button>
+        <div id="error-message-container2"></div>
+    </form>
+</div>

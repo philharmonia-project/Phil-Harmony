@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Login - Philippine Cultural Heritage</title>
+    <style>
+        /* Your existing CSS variables and styles */
+        :root {
+            --gold: #FFD700;
+            --gold-dark: #D4AF37;
+            --white: #FFFFFF;
+            --black: #121212;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a3a8f 0%, #2a5cb0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .oauth-container {
+            background: #F9E79F;
+            border: 3px solid #D4AC0D;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+        }
+        
+        .logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
+        .oauth-title {
+            color: #D4AC0D;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .oauth-subtitle {
+            color: #5D4037;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .google-oauth-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 2px solid #D4AC0D;
+            padding: 16px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #444;
+            text-decoration: none;
+            margin: 25px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 172, 13, 0.3);
+        }
+        
+        .google-oauth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 172, 13, 0.4);
+            background: #f8f9fa;
+        }
+        
+        .google-oauth-btn i {
+            margin-right: 12px;
+            font-size: 1.4rem;
+            color: #DB4437;
+        }
+        
+        .back-link {
+            color: #D4AC0D;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(212, 172, 13, 0.3);
+            border-radius: 50%;
+            border-top-color: #D4AC0D;
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="oauth-container">
+        <img src="{% static 'images/phil.png' %}" alt="Logo" class="logo">
+        <h1 class="oauth-title">Continue with Google</h1>
+        <p class="oauth-subtitle">Connect your Google account to access Philippine Cultural Heritage</p>
+        
+        <a href="/accounts/google/login/" class="google-oauth-btn">
+            <i class="fab fa-google"></i> Sign in with Google
+        </a>
+        
+        <div class="loading-spinner"></div>
+        <p style="color: #5D4037; font-size: 0.9rem;">Redirecting to Google...</p>
+        
+        <a href="javascript:history.back()" class="back-link">← Back to Login</a>
+    </div>
+    
+    <!-- Auto-redirect after 3 seconds -->
+    <script>
+        setTimeout(function() {
+            window.location.href = "/accounts/google/login/";
+        }, 3000);
+
+        // Add to your existing JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const googleBtn = document.querySelector('.google-login-btn');
+    
+    if (googleBtn) {
+        googleBtn.addEventListener('click', function(e) {
+            // Add loading state
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting to Google...';
+            this.style.opacity = '0.7';
+            this.style.pointerEvents = 'none';
+            
+            // Restore after 3 seconds if still on page
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.style.opacity = '1';
+                this.style.pointerEvents = 'auto';
+            }, 3000);
+        });
+    }
+});
+    </script>
+</body>
+</html>

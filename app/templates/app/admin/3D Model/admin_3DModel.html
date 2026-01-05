@@ -1,0 +1,701 @@
+{% load static %}
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    /* New styles for 3D model gallery */
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+    }
+
+    /* 3D Model Preview Styles */
+    .model-preview-container {
+        position: relative;
+        height: 220px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .model-preview {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .model-preview img, .model-preview model-viewer {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        border-radius: 4px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.5s ease;
+    }
+
+    .model-preview:hover img, .model-preview:hover model-viewer {
+        transform: scale(1.05);
+    }
+
+    .model-preview .placeholder {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 48px;
+        text-align: center;
+    }
+
+    .model-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .model-preview:hover .model-overlay {
+        opacity: 1;
+    }
+
+    .view-3d-btn {
+        background: rgba(255, 255, 255, 0.9);
+        color: #4361ee;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .view-3d-btn:hover {
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Enhanced action buttons for 3D models */
+    .model-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .action-btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        text-decoration: none;
+    }
+
+    .update-btn {
+        background: #48c78e;
+        color: white;
+        border: none;
+    }
+
+    .update-btn:hover {
+        background: #3db37f;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(72, 199, 142, 0.3);
+    }
+
+    .delete-btn {
+        background: #f14668;
+        color: white;
+        border: none;
+    }
+
+    .delete-btn:hover {
+        background: #e03256;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(241, 70, 104, 0.3);
+    }
+
+    /* 3D Model Viewer Styles */
+    .model-viewer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 2000;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .viewer-header {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+    }
+
+    .viewer-content {
+        flex-grow: 1;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .viewer-image, .viewer-model {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .viewer-controls {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .control-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .gallery-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        #header-section {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .text-end {
+            text-align: center !important;
+            width: 100%;
+        }
+    }
+
+       .create-model {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-model span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-model::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-model:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-model:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-model:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-model:active {
+        transform: scale(0.98);
+    }
+    
+    .create-model:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-model {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-model::before {
+            content: '+ 3D Model';
+            font-size: 1.1rem;
+        }
+        
+        .create-model span {
+            display: none;
+        }
+        
+        .create-model::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-model {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-model:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+
+</style>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-model btn-style" id="create-model-btn">
+                <span>3D Model</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="model-search" placeholder="Search for 3D Models...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if threeD %}
+            <!-- 3D Models Gallery -->
+            <div class="gallery-grid">
+                {% for model in threeD %}
+                <div class="instrument-card">
+                    <div class="card-header">
+                        <div class="instrument-title">
+                            <h3>{{ model.instrument.name }}</h3>
+                            <p>3D Model</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- 3D Model Preview -->
+                        <div class="model-preview-container">
+                            <div class="model-preview">
+                                {% if model.file %}
+                                    <!-- Display actual 3D model -->
+                                    <model-viewer 
+                                        src="{{ model.file.url }}"
+                                        alt="3D Model of {{ model.instrument.name }}"
+                                        camera-controls 
+                                        auto-rotate 
+                                        style="width:100%; height:100%; border-radius: inherit;"
+                                        data-model-url="{{ model.file.url }}">
+                                    </model-viewer>
+                                  
+                                    <div class="model-overlay">
+                                        <button class="view-3d-btn" data-model-url="{{ model.file.url }}" data-model-name="{{ model.instrument.name }}">
+                                            <i class="fas fa-cube"></i>
+                                            View in 3D
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    <div class="placeholder">
+                                        <i class="fas fa-cube"></i>
+                                        <p>No 3D Model</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="instrument-detail">
+                            <span class="detail-label">Instrument:</span>
+                            <span class="detail-value">{{ model.instrument.name }}</span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">File Type:</span>
+                            <span class="detail-value">
+                                {% if model.file %}
+                                    {{ model.file.name|slice:"-4:"|upper }}
+                                {% else %}
+                                    No file
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="instrument-detail">
+                            <span class="detail-label">Uploaded:</span>
+                            <span class="detail-value">{{ model.date_uploaded|date:"M d, Y" }}</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="model-actions">
+                            <a class="action-btn update-btn edit-model" href="" data-model-id="{{ model.pk }}">
+                                <i class="fas fa-edit"></i>
+                                Update
+                            </a>
+                            <a class="action-btn delete-btn delete-model" href="" data-model-id2="{{ model.pk }}">
+                                <i class="fas fa-trash"></i>
+                                Delete
+                            </a>
+                        </div>
+                        
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center">No 3D models found. Start by creating a new 3D model!</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 3D Model Viewer -->
+<div id="model-viewer" class="model-viewer">
+    <div class="viewer-header">
+        <h3 id="viewer-title">3D Model Viewer</h3>
+        <button id="close-viewer" class="control-btn">
+            <i class="fas fa-times"></i>
+            Close
+        </button>
+    </div>
+    <div class="viewer-content" id="viewer-content">
+        <!-- Content will be dynamically populated -->
+    </div>
+    <div class="viewer-controls" id="image-controls">
+
+    </div>
+</div>
+
+
+ <!-- Modal Dialogs -->
+    <div id="Create-model-Modal" class="Create-model-Modal">
+        <div class="Create-model-modal-content">
+            <span class="close-btn2d">&times;</span>
+            <div id="Create-model-modal-form-container">
+                <!-- Dynamic form content will load here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="Edit-model-Modal" class="Edit-model-Modal">
+        <div class="Edit-model-modal-content">
+            <span class="close-btn2d">&times;</span>
+            <div id="Edit-model-modal-form-container">
+                <!-- Dynamic form content will load here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="Delete-model-Modal" class="Delete-model-Modal">
+        <div class="Delete-model-modal-content">
+            <div id="Delete-model-modal-form-container">
+                <!-- Dynamic form content will load here -->
+            </div>
+        </div>
+    </div>
+
+
+
+
+<script>
+    // create model
+document.addEventListener("DOMContentLoaded", () => {
+    const addmodelmodal = document.getElementById("Create-model-Modal");
+    const closeBtn = addmodelmodal.querySelector(".close-btn2d");
+    const addmodelmodalFormContainer = document.getElementById("Create-model-modal-form-container");
+    const addmodelLinks = document.querySelectorAll(".create-model");
+
+    // Handle clicking on the edit link
+    addmodelLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_threeD/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addmodelmodalFormContainer.innerHTML = data;
+                    addmodelmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addmodelmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addmodelmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete model
+document.addEventListener("DOMContentLoaded", () => {
+    const delmodelmodal = document.getElementById("Delete-model-Modal");
+    const closeBtn = delmodelmodal.querySelector(".close-btn2d");
+    const delmodelmodalFormContainer = document.getElementById("Delete-model-modal-form-container");
+    const delmodelLinks = document.querySelectorAll(".delete-model");
+
+    // Handle clicking on the edit link
+    delmodelLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const modelId = link.getAttribute("data-model-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_threeD/${modelId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delmodelmodalFormContainer.innerHTML = data;
+                    delmodelmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delmodelmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delmodelmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Update model
+document.addEventListener("DOMContentLoaded", () => {
+    const updatemodelmodal = document.getElementById("Edit-model-Modal");
+    const closeBtn = updatemodelmodal.querySelector(".close-btn2d");
+    const modelmodalFormContainer = document.getElementById("Edit-model-modal-form-container");
+    const editmodelLinks = document.querySelectorAll(".edit-model");
+
+    // Handle clicking on the edit link
+    editmodelLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const modelId = link.getAttribute("data-model-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_threeD/${modelId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    modelmodalFormContainer.innerHTML = data;
+                    updatemodelmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    modelmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updatemodelmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Search functionality for 3D Models
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputModel = document.querySelector(".model-search"); // Input field - using the correct class
+    const modelCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputModel.addEventListener("input", () => {
+        const query = searchInputModel.value.toLowerCase().trim();
+
+        // Search in model cards
+        modelCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const modelViewer = document.getElementById('model-viewer');
+        const closeViewerBtn = document.getElementById('close-viewer');
+        const viewerContent = document.getElementById('viewer-content');
+        const viewerTitle = document.getElementById('viewer-title');
+        const imageControls = document.getElementById('image-controls');
+        
+        // View 3D model functionality - FIXED VERSION
+        const viewButtons = document.querySelectorAll('.view-3d-btn');
+        viewButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const modelUrl = this.getAttribute('data-model-url');
+                const modelName = this.getAttribute('data-model-name');
+                
+                if (modelUrl) {
+                    // Clear previous content
+                    viewerContent.innerHTML = '';
+                    
+                    // Check if it's a 3D model file
+                    const is3DModel = modelUrl.toLowerCase().endsWith('.glb') || modelUrl.toLowerCase().endsWith('.gltf');
+                    
+                    if (is3DModel) {
+                        // Create model-viewer for 3D models
+                        const modelViewerElement = document.createElement('model-viewer');
+                        modelViewerElement.src = modelUrl;
+                        modelViewerElement.alt = `3D Model: ${modelName}`;
+                        modelViewerElement.setAttribute('camera-controls', '');
+                        modelViewerElement.setAttribute('auto-rotate', '');
+                        modelViewerElement.setAttribute('style', 'width: 100%; height: 100%; max-width: 800px; max-height: 600px;');
+                        modelViewerElement.classList.add('viewer-model');
+                        
+                        viewerContent.appendChild(modelViewerElement);
+                        imageControls.style.display = 'none'; // Hide image controls for 3D models
+                    } else {
+                        // Create image element for regular images
+                        const imgElement = document.createElement('img');
+                        imgElement.src = modelUrl;
+                        imgElement.alt = `Model: ${modelName}`;
+                        imgElement.classList.add('viewer-image');
+                        imgElement.id = 'viewer-image';
+                        
+                        viewerContent.appendChild(imgElement);
+                        imageControls.style.display = 'flex'; // Show image controls for images
+                        
+                        // Initialize image controls
+                        initImageControls();
+                    }
+                    
+                    viewerTitle.textContent = `3D Model: ${modelName}`;
+                    modelViewer.style.display = 'flex';
+                }
+            });
+        });
+        
+        // Close 3D model viewer
+        closeViewerBtn.addEventListener('click', function() {
+            modelViewer.style.display = 'none';
+        });
+        
+        // Image controls (only for regular images)
+        function initImageControls() {
+            const viewerImage = document.getElementById('viewer-image');
+            if (!viewerImage) return;
+            
+            const rotateLeftBtn = document.getElementById('rotate-left');
+            const rotateRightBtn = document.getElementById('rotate-right');
+            const zoomInBtn = document.getElementById('zoom-in');
+            const zoomOutBtn = document.getElementById('zoom-out');
+            
+            let rotation = 0;
+            let scale = 1;
+            
+            // Remove existing event listeners by cloning and replacing
+            const newRotateLeft = rotateLeftBtn.cloneNode(true);
+            const newRotateRight = rotateRightBtn.cloneNode(true);
+            const newZoomIn = zoomInBtn.cloneNode(true);
+            const newZoomOut = zoomOutBtn.cloneNode(true);
+            
+            rotateLeftBtn.parentNode.replaceChild(newRotateLeft, rotateLeftBtn);
+            rotateRightBtn.parentNode.replaceChild(newRotateRight, rotateRightBtn);
+            zoomInBtn.parentNode.replaceChild(newZoomIn, zoomInBtn);
+            zoomOutBtn.parentNode.replaceChild(newZoomOut, zoomOutBtn);
+            
+            // Add new event listeners
+            newRotateLeft.addEventListener('click', function() {
+                rotation -= 15;
+                viewerImage.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+            });
+            
+            newRotateRight.addEventListener('click', function() {
+                rotation += 15;
+                viewerImage.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+            });
+            
+            newZoomIn.addEventListener('click', function() {
+                scale *= 1.2;
+                viewerImage.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+            });
+            
+            newZoomOut.addEventListener('click', function() {
+                scale /= 1.2;
+                viewerImage.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+            });
+        }
+       
+    });
+    
+</script>

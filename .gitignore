@@ -1,0 +1,32 @@
+# Media files - DON'T upload large files
+/images/
+*.mp4
+*.mp3
+*.wav
+*.glb
+*.gltf
+*.fbx
+*.mov
+*.avi
+
+# Database
+*.sqlite3
+db.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+env/
+venv/
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+
+# Logs
+*.log
+
+.env
+*.env

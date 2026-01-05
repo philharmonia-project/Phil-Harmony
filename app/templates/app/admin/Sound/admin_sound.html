@@ -1,0 +1,369 @@
+{% load static %}
+<style>
+       .create-Sound {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Sound span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Sound::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Sound:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Sound:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Sound:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Sound:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Sound:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Sound {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Sound::before {
+            content: '+ Sound';
+            font-size: 1.1rem;
+        }
+        
+        .create-Sound span {
+            display: none;
+        }
+        
+        .create-Sound::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Sound {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Sound:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Sound btn-style" id="create-service-btn">
+                <span>Sound</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Sound" placeholder="Search for Sound...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if Sounds %}
+        
+                <!-- Mobile Card View -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for sound in Sounds %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>{{ sound.instrument.name }}</h3>
+                                <p>{{ sound.title }}</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if sound.sound_sample %}
+                            <audio controls>
+                                <source src="{{ sound.sound_sample.url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            {% else %}
+                            <span>No audio available</span>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Sound" href="" data-Sound-id="{{ sound.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Sound"></i>
+                                </a>
+                                <a class="action-link delete-Sound" href="" data-Sound-id2="{{ sound.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Sound"></i>
+                                </a>
+                            </div>
+                            <div class="instrument-date">
+                                Added: {{ sound.uploaded_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <!-- Desktop Table View -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Audio</th>
+                                <th>Instrument Name</th>
+                                <th>Title</th>
+                                <th>Date Upload</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Sound1">
+                            {% for sound in Sounds %}
+                            <tr>
+                                <td>
+                                    {% if sound.sound_sample %}
+                                    <audio controls>
+                                        <source src="{{ sound.sound_sample.url }}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                    {% else %}
+                                    <span>No audio available</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ sound.instrument.name }}</td>
+                                <td>{{ sound.title }}</td>
+                                <td>{{ sound.uploaded_at }}</td>
+                                <td>
+                                    <a class="action-link edit-Sound" href="" data-Sound-id="{{ sound.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Sound"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Sound" href="" data-Sound-id2="{{ sound.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Sound"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+           
+        {% else %}
+        <p class="text-center">No sound files found. Start by adding a new one!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<!-- Modal Dialogs -->
+<div id="Edit-Sound-Modal" class="Edit-Sound-Modal">
+    <div class="Edit-Sound-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Sound-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Delete-Sound-Modal" class="Delete-Sound-Modal">
+    <div class="Delete-Sound-modal-content">
+        <div id="Delete-Sound-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Create-Sound-Modal" class="Create-Sound-Modal">
+    <div class="Create-Sound-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Sound-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+
+<script>
+// create Sound
+document.addEventListener("DOMContentLoaded", () => {
+    const addSoundmodal = document.getElementById("Create-Sound-Modal");
+    const closeBtn = addSoundmodal.querySelector(".close-btn1");
+    const addSoundmodalFormContainer = document.getElementById("Create-Sound-modal-form-container");
+    const addSoundLinks = document.querySelectorAll(".create-Sound");
+
+    // Handle clicking on the edit link
+    addSoundLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Sound/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addSoundmodalFormContainer.innerHTML = data;
+                    addSoundmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addSoundmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addSoundmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Instrument
+document.addEventListener("DOMContentLoaded", () => {
+    const delSoundmodal = document.getElementById("Delete-Sound-Modal");
+    const closeBtn = delSoundmodal.querySelector(".close-btn1");
+    const delSoundmodalFormContainer = document.getElementById("Delete-Sound-modal-form-container");
+    const delSoundLinks = document.querySelectorAll(".delete-Sound");
+
+    // Handle clicking on the edit link
+    delSoundLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const SoundId = link.getAttribute("data-Sound-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Sound/${SoundId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delSoundmodalFormContainer.innerHTML = data;
+                    delSoundmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delSoundmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delSoundmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Sound
+document.addEventListener("DOMContentLoaded", () => {
+    const updateSoundmodal = document.getElementById("Edit-Sound-Modal");
+    const closeBtn = updateSoundmodal.querySelector(".close-btn1");
+    const SoundmodalFormContainer = document.getElementById("Edit-Sound-modal-form-container");
+    const editSoundLinks = document.querySelectorAll(".edit-Sound");
+
+    // Handle clicking on the edit link
+    editSoundLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const SoundId = link.getAttribute("data-Sound-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Sound/${SoundId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    SoundmodalFormContainer.innerHTML = data;
+                    updateSoundmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    SoundmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateSoundmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputSound = document.querySelector(".Sound"); // Input field
+    const SoundTableRows = document.querySelectorAll(".Sound1 tr"); // Desktop table rows
+    const SoundCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputSound.addEventListener("input", () => {
+        const query = searchInputSound.value.toLowerCase().trim();
+
+        // Search in desktop table
+        SoundTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        SoundCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

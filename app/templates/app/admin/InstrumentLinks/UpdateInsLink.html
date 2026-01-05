@@ -1,0 +1,55 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateInsLink' link.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Instrument Selection -->
+                <div class="form-group">
+                    <select id="id_instrument" name="instrument" class="form-control" required>
+                        {% for instrument in Instruments %}
+                        <option value="{{ instrument.pk }}" {% if instrument.pk == FunFact.instrument.pk %}selected{% endif %}>
+                            {{ instrument.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_instrument" class="floating-label">Select Instrument</label>
+                </div>
+
+                <!-- Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_title" name="title" class="form-control" value="{{ link.title }}" placeholder=" " required />
+                    <label for="id_title" class="floating-label">Link Title</label>
+                </div>
+                
+                <!-- URL Field -->
+                <div class="form-group floating-label-group">
+                    <input type="url" id="id_url" name="url" class="form-control" value="{{ link.url }}" placeholder=" " required />
+                    <label for="id_url" class="floating-label">URL</label>
+                </div>
+                
+                <!-- Link Type Field -->
+                <div class="form-group">
+                    <label for="id_link_type">Link Type</label>
+                    <select id="id_link_type" name="link_type" class="form-control" required>
+                        <option value="info">Information Source</option>
+                        <option value="video">Video</option>
+                        <option value="audio">Audio Sample</option>
+                        <option value="image">Image Source</option>
+                        <option value="research">Research Paper</option>
+                        <option value="museum">Museum Link</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Update Link</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

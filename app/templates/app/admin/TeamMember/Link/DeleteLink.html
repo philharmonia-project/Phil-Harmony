@@ -1,0 +1,40 @@
+{% load static %}
+
+<div id="delete-form" class="delete-container1">
+    <form method="POST" action="{% url 'DeleteLink' Link.pk %}" class="admin-form1">
+        {% csrf_token %}
+
+        
+        <div class="delete-card1">
+            <!-- Image Preview -->
+            <div class="image-section1">
+         
+            </div>
+
+            <!-- Delete Confirmation -->
+            <div class="delete-content1">
+                <h1 class="delete-title1">Are you sure you want to delete "<span>{{ Link.member.name }}</span>"?</h1>
+                <p class="delete-warning1">This action cannot be undone. All related data will be permanently removed.</p>
+
+                <!-- Instrument Details (Read-Only) -->
+                <div class="form-group1">
+                    <label for="id_platform" class="floating-label1">Link Platform</label>
+                    <input type="text" id="id_platform" name="platform" class="form-control1" value="{{ Link.platform }}" readonly />
+                </div>
+
+                <!-- Instrument Details (Read-Only) -->
+                <div class="form-group1">
+                    <label for="id_url" class="floating-label1">Link Platform</label>
+                    <input type="text" id="id_url" name="url" class="form-control1" value="{{ Link.url }}" readonly />
+                </div>
+
+                <!-- Buttons: Delete & Cancel -->
+                <div class="button-group1">
+                    <button type="submit" class="btn-danger1">Delete</button>
+                    <a href="{% url 'admin_main' %}" class="btn-secondary1">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

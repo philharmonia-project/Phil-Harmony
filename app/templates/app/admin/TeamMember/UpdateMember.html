@@ -1,0 +1,54 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateMember' Member.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Left Section: Image -->
+            <div class="form-left-section">
+                
+                <!-- Image Section -->
+                <div class="form-image">
+                    <label for="id_image" class="form-label">Team Member Photo</label>
+                    {% if Member.image %}
+                    <img src="{{ Member.image.url }}" class="img-fluid instrument-image" alt="{{ Member.name }}">
+                    {% else %}
+                    <img src="{% static 'images/phil.png' %}" class="img-fluid instrument-image" alt="Default Team Member">
+                    {% endif %}
+                    <div class="file-input-wrapper">
+                        <label for="id_image" class="file-label-ins">Add Team Photo</label>
+                        <input type="file" id="id_image" name="image" class="file-input">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Name Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_name" name="name" class="form-control" placeholder=" " value="{{ Member.name }}" required />
+                    <label for="id_name" class="floating-label">Full Name</label>
+                </div>
+
+                <!-- Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_title" name="title" class="form-control" placeholder=" " value="{{ Member.title }}" required />
+                    <label for="id_title" class="floating-label">Position/Title</label>
+                </div>                
+                
+                <!-- Back Description Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_back_description" name="back_description" class="form-control" placeholder=" " required>{{ Member.back_description }}</textarea>
+                    <label for="id_back_description" class="floating-label">Background Description</label>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Update Team Member</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

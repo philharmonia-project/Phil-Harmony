@@ -1,0 +1,49 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" action="{% url 'UpdatePage' pages.pk %}" class="admin-form">
+        <div class="form-layout">
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_instrument" class="form-label">Instrument</label>
+                    <select id="id_instrument" name="instrument" class="form-control" required>
+                        {% for instrument in Instruments %}
+                        <option value="{{ instrument.id }}" {% if instrument.id == pages.instrument.id %}selected{% endif %}>{{ instrument.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_title" name="title" class="form-control" placeholder=" " value="{{ pages.title }}" required />
+                    <label for="id_title" class="floating-label">Page Title</label>
+                </div>
+
+                <!-- Order Field -->
+                <div class="form-group">
+                    <label for="id_order" class="form-label">Display Order</label>
+                    <select name="order" id="id_order" class="form-control">
+                        {% for i in "x"|rjust:max_order %}
+                            {% with order_num=forloop.counter %}
+                            <option value="{{ order_num }}" {% if pages.order == order_num %}selected{% endif %}>
+                                Position {{ order_num }}
+                            </option>
+                            {% endwith %}
+                        {% endfor %}
+                    </select>
+                    <small class="form-text text-muted">
+                        <i class="fa-solid fa-circle-info" style="color: #007bff;"></i>
+                        Change order to rearrange pages (1 = first position)
+                    </small>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Save Page</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

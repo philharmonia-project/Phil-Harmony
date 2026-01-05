@@ -1,0 +1,426 @@
+{% load static %}
+<!-- Search Section -->
+<div id="search-section">
+    <h1>Admin Dashboard</h1>
+</div>
+
+<div id="dashboard-stats" class="stats-grid">
+    <div class="stat-card">
+        <i class="fa-solid fa-users-between-lines" id="icon"></i>
+        <div>
+            <h3>{{ users|length }}</h3>
+            <p>Total Accounts</p>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <i class="fa-solid fa-comment-dots"  id="icon"></i>
+        <div>
+            <h3>{{ Feedbacks|length }}</h3>
+            <p>Total Feedbacks</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-comment-dots"  id="icon"></i>
+        <div>
+            <h3>{{ Testimonials|length }}</h3>
+            <p>Total Testimonials</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-comment-dots"  id="icon"></i>
+        <div>
+            <h3>{{ ContactMessages|length }}</h3>
+            <p>Total Contact Messages</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-drum"  id="icon"></i>
+        <div>
+            <h3>{{ Instruments|length }}</h3>
+            <p>Total Instruments</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-list" id="icon"></i>
+        <div>
+            <h3>{{ categorys|length }}</h3>
+            <p>Total Categories</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-recycle" id="icon"></i>
+        <div>
+            <h3>{{ Materials|length }}</h3>
+            <p>Total Materials</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-people-group" id="icon"></i>
+        <div>
+            <h3>{{ regions|length }}</h3>
+            <p>Total Regions</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-comment-dots"  id="icon"></i>
+        <div>
+            <h3>{{ Sounds|length }}</h3>
+            <p>Total Sounds</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-video"  id="icon"></i>
+        <div>
+            <h3>{{ Tutorials|length }}</h3>
+            <p>Total Tutorials</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-comment-dots"  id="icon"></i>
+        <div>
+            <h3>{{ Members|length }}</h3>
+            <p>Total Members</p>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <i class="fa-solid fa-comment-dots"  id="icon"></i>
+        <div>
+            <h3>{{ funfacts|length }}</h3>
+            <p>Total Fun Fact</p>
+        </div>
+    </div>
+
+
+
+</div>
+
+<div class="charts-box">
+    <h2>Most Viewed Instruments</h2>
+    <canvas id="viewsChart"></canvas>
+</div>
+
+<div class="charts-container">
+    <div class="chart-box">
+        <h2>Top Instrument Categories</h2>
+        <canvas id="categoryChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h2>User Engagement (Daily Logins)</h2>
+        <canvas id="userLoginChart"></canvas>
+    </div>
+</div>
+
+<!-- Search Section -->
+<div id="search-section">
+    <h1>All User Accounts</h1>
+    <input
+        type="text"
+        class="user"
+        id="search-input"
+        placeholder="Search users..."
+    />
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if users %}
+        <!-- Users List - Mobile Cards -->
+        <div id="services-list" class="list-section mobile-cards">
+            {% for user in users %}
+            <div class="instrument-card">
+                <div class="card-header">
+                    <div class="instruments-image">
+                        {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="{{ user.last_name }}">
+                        {% else %}
+                        <span>No image available</span>
+                        {% endif %}
+                    </div>
+                    <div class="instrument-title">
+                        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                        <p>{{ user.username }}</p>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="instrument-detail">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">{{ user.email }}</span>
+                    </div>
+                    <div class="instrument-detail">
+                        <span class="detail-label">Role:</span>
+                        <span class="detail-value">
+                            {% if user.role == 'admin' %}Admin{% else %}User{% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="instrument-actions">
+                       {% if user.role == 'user' %}
+                        <a class="action-link make-admin-link" href="{% url 'set_admin' user.id %}" data-user-id="{{ user.id }}">
+                        <i class="fa-solid fa-user-plus" title="Make Admin"></i>
+                        </a>
+                        {% else %}
+                        <a class="action-link remove-admin-link" href="{% url 'remove_admin' user.id %}" data-user-id="{{ user.id }}">
+                        <i class="fa-solid fa-user-minus" title="Remove Admin"></i>
+                        </a>
+                        {% endif %}
+                        |
+                        <a class="action-link delete-link {% if user == request.user %}disabled{% endif %}"
+                           href="#" data-user-id1="{{ user.id }}">
+                            <i class="fa-solid fa-trash" title="Delete User"></i>
+                        </a>
+                        |
+                        <a class="action-link edit-profile" href="#" data-user-id="{{ user.id }}">
+                            <i class="fa-solid fa-pen" title="Edit User"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Users Table - Desktop -->
+        <div id="services-table" class="table-section">
+            <table id="user-table" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-tbody" class="user1">
+                    {% for user in users %}
+                    <tr>
+                        <td>
+                            {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" class="img-fluid rounded" alt="{{ user.last_name }}">
+                            {% else %}
+                            <span>No image available</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{% if user.role == 'admin' %}Admin{% else %}User{% endif %}</td>
+                        <td>
+                          <!-- Your existing admin toggle links (modified) -->
+                            {% if user.role == 'user' %}
+                            <a class="action-link make-admin-link" href="{% url 'set_admin' user.id %}" data-user-id="{{ user.id }}">
+                            <i class="fa-solid fa-user-plus" title="Make Admin"></i>
+                            </a>
+                            {% else %}
+                            <a class="action-link remove-admin-link" href="{% url 'remove_admin' user.id %}" data-user-id="{{ user.id }}">
+                            <i class="fa-solid fa-user-minus" title="Remove Admin"></i>
+                            </a>
+                            {% endif %}
+                            |
+                            <a class="action-link delete-link {% if user == request.user %}disabled{% endif %}"
+                               href="#" data-user-id1="{{ user.id }}">
+                                <i class="fa-solid fa-trash" title="Delete User"></i>
+                            </a>
+                            |
+                            <a class="action-link edit-profile" href="#" data-user-id="{{ user.id }}">
+                                <i class="fa-solid fa-pen" title="Edit User"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">No users found. Start by adding a new user!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+
+<!-- Admin Toggle Modal -->
+<div id="adminToggleModal" class="admin-modal">
+  <div class="admin-modal-content">
+    <div class="admin-modal-header">
+      <i class="ri-shield-user-fill admin-modal-icon"></i>
+      <h3 class="admin-modal-title" id="adminModalTitle">Confirm Admin Change</h3>
+    </div>
+    <div class="admin-modal-body">
+      <p id="adminModalMessage">You're about to change admin privileges for this user.</p>
+    </div>
+    <div class="admin-modal-footer admin-modal-buttons">
+      <button id="adminToggleCancel" class="admin-modal-btn admin-cancel-btn">
+        <i class="ri-close-line"></i> Cancel
+      </button>
+      <a id="adminToggleConfirm" href="#" class="admin-logout-link">
+        <button class="admin-modal-btn admin-confirm-btn">
+          <i class="ri-check-line"></i> Confirm
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const adminToggleModal = document.getElementById('adminToggleModal');
+    const adminModalTitle = document.getElementById('adminModalTitle');
+    const adminModalMessage = document.getElementById('adminModalMessage');
+    const adminToggleConfirm = document.getElementById('adminToggleConfirm');
+    const adminToggleCancel = document.getElementById('adminToggleCancel');
+    let currentActionLink = null;
+
+    // Set up event listeners for all admin toggle links
+    document.querySelectorAll('.make-admin-link, .remove-admin-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentActionLink = this;
+            
+            if (this.classList.contains('make-admin-link')) {
+                adminModalTitle.textContent = 'Make User Admin';
+                adminModalMessage.textContent = 'You\'re about to grant admin privileges to this user. Are you sure you want to continue?';
+            } else {
+                adminModalTitle.textContent = 'Remove Admin Privileges';
+                adminModalMessage.textContent = 'You\'re about to remove admin privileges from this user. Are you sure you want to continue?';
+            }
+            
+            // Update confirm button link
+            adminToggleConfirm.href = this.href;
+            
+            adminToggleModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    // Handle confirm button
+    adminToggleConfirm.addEventListener('click', function() {
+        adminToggleModal.classList.remove('show');
+        document.body.style.overflow = '';
+    });
+
+    // Handle cancel button
+    adminToggleCancel.addEventListener('click', function() {
+        adminToggleModal.classList.remove('show');
+        document.body.style.overflow = '';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === adminToggleModal) {
+            adminToggleModal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && adminToggleModal.classList.contains('show')) {
+            adminToggleModal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    });
+});
+</script>
+
+<!-- Modal HTML -->
+<div id="profileModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div id="modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!-- delete user Modal -->
+<div id="deleteModal" class="delete-modal hidden">
+    <div class="delete-modal-content">
+        <div id="delete-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!-- Load Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    fetch("/get_chart_data/")
+      .then(response => response.json())
+      .then(data => {
+          // Create the bar chart
+          new Chart(document.getElementById("viewsChart"), {
+              type: "bar",
+              data: {
+                  labels: data.instrument_names,
+                  datasets: [{
+                      label: "Views",
+                      data: data.instrument_views,
+                      backgroundColor: "rgba(54, 162, 235, 0.6)"
+                  }]
+              }
+          });
+      });
+
+
+      fetch("/get_category_chart_data/")
+  .then(response => response.json())
+  .then(data => {
+      // Create the pie chart
+      new Chart(document.getElementById("categoryChart"), {
+          type: "pie",
+          data: {
+              labels: data.category_labels,
+              datasets: [{
+                  label: "Instrument Categories",
+                  data: data.category_counts,
+                  backgroundColor: [
+                      "rgba(255, 99, 132, 0.6)",
+                      "rgba(54, 162, 235, 0.6)",
+                      "rgba(255, 206, 86, 0.6)",
+                      "rgba(75, 192, 192, 0.6)",
+                      "rgba(153, 102, 255, 0.6)",
+                      "rgba(255, 159, 64, 0.6)"
+                  ]
+              }]
+          }
+      });
+  });
+
+    fetch("/get_login_chart_data/")
+      .then(response => response.json())
+      .then(data => {
+          // Create the line chart
+          new Chart(document.getElementById("userLoginChart"), {
+              type: "line",
+              data: {
+                  labels: data.labels,
+                  datasets: [{
+                      label: "User Logins",
+                      data: data.data,
+                      backgroundColor: "rgba(75, 192, 192, 0.2)",
+                      borderColor: "rgba(75, 192, 192, 1)",
+                      borderWidth: 2
+                  }]
+              }
+          });
+      });
+
+    </script>
+

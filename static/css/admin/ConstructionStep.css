@@ -1,0 +1,148 @@
+
+
+/*=============== CREATE MODAL FOR Step ===============*/
+.Create-Step-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+  }
+  
+  /* Show modal when triggered */
+  .Create-Step-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+  }
+  
+  /* Modal Content Styling */
+  .Create-Step-modal-content {
+    background: var(--body-color); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+  }
+  
+  /* Show modal content with transition */
+  .Create-Step-Modal.show .Create-Step-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+  }
+
+/*=============== UPDATE MODAL FOR Step ===============*/
+.Edit-Step-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Edit-Step-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Edit-Step-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Edit-Step-Modal.show .Edit-Step-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+/*=============== DELETE MODAL FOR Step ===============*/
+.Delete-Step-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Delete-Step-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Delete-Step-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Delete-Step-Modal.show .Delete-Step-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+/*=============== Enhanced Close Button ===============*/
+.close-btn1 {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #ff4500; /* Vibrant red */
+    cursor: pointer;
+    z-index: 1050;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .close-btn1:hover {
+    color: #b41727; /* Darker red on hover */
+    transform: rotate(90deg) scale(1.1); /* Slight rotation and enlarge */
+  }
+  

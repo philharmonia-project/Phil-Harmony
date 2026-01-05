@@ -1,0 +1,363 @@
+{% load static %}
+<style>
+       .create-Importance {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Importance span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Importance::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Importance:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Importance:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Importance:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Importance:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Importance:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Importance {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Importance::before {
+            content: '+ Importance';
+            font-size: 1.1rem;
+        }
+        
+        .create-Importance span {
+            display: none;
+        }
+        
+        .create-Importance::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Importance {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Importance:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Importance btn-style" id="create-service-btn">
+                <span>Cultural Importance</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Importance" placeholder="Search for Cultural Importance Items...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if Importances %}
+           
+                <!-- Cultural Importance List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for item in Importances %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>{{ item.title }}</h3>
+                                <p>Cultural Importance</p>
+                            </div>
+                            <i class="{{ item.get_full_icon_class }}"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">{{ item.description|truncatewords:12 }}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Importance" href="" data-Importance-id="{{ item.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Item"></i>
+                                </a>
+                                <a class="action-link delete-Importance" href="" data-Importance-id2="{{ item.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Item"></i>
+                                </a>
+                            </div>
+                            <div class="instrument-date">
+                                Added: {{ item.created_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <!-- Cultural Importance Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Icon</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Date Added</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Importance1">
+                            {% for item in Importances %}
+                            <tr>
+                                <td><i class="{{ item.get_full_icon_class }}"></i></td>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.description|truncatewords:10 }}</td>
+                                <td>{{ item.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a class="action-link edit-Importance" href="" data-Importance-id="{{ item.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Item"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Importance" href="" data-Importance-id2="{{ item.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Item"></i>
+                                    </a>
+                                    <!-- |
+                                    <a class="action-link View-Importance" href="">
+                                        <i class="fa-solid fa-eye" title="View Item"></i>
+                                    </a> -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+         {% else %}       
+        <p class="text-center">No Cultural Importance Items found. Start by adding a new one!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<!--UPDATE Importance-->
+<div id="Edit-Importance-Modal" class="Edit-Importance-Modal">
+    <div class="Edit-Importance-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Importance-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--DELETE Importance-->
+<div id="Delete-Importance-Modal" class="Delete-Importance-Modal">
+    <div class="Delete-Importance-modal-content">
+
+        <div id="Delete-Importance-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<!--CREATE Importance-->
+ <div id="Create-Importance-Modal" class="Create-Importance-Modal">
+    <div class="Create-Importance-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Importance-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // create Importance
+document.addEventListener("DOMContentLoaded", () => {
+    const addImportancemodal = document.getElementById("Create-Importance-Modal");
+    const closeBtn = addImportancemodal.querySelector(".close-btn1");
+    const addImportancemodalFormContainer = document.getElementById("Create-Importance-modal-form-container");
+    const addImportanceLinks = document.querySelectorAll(".create-Importance");
+
+    // Handle clicking on the edit link
+    addImportanceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Importance/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addImportancemodalFormContainer.innerHTML = data;
+                    addImportancemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addImportancemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addImportancemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Importance
+document.addEventListener("DOMContentLoaded", () => {
+    const delImportancemodal = document.getElementById("Delete-Importance-Modal");
+    const closeBtn = delImportancemodal.querySelector(".close-btn1");
+    const delImportancemodalFormContainer = document.getElementById("Delete-Importance-modal-form-container");
+    const delImportanceLinks = document.querySelectorAll(".delete-Importance");
+
+    // Handle clicking on the edit link
+    delImportanceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const ImportanceId = link.getAttribute("data-Importance-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Importance/${ImportanceId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delImportancemodalFormContainer.innerHTML = data;
+                    delImportancemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delImportancemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delImportancemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Importance
+document.addEventListener("DOMContentLoaded", () => {
+    const updateImportancemodal = document.getElementById("Edit-Importance-Modal");
+    const closeBtn = updateImportancemodal.querySelector(".close-btn1");
+    const ImportancemodalFormContainer = document.getElementById("Edit-Importance-modal-form-container");
+    const editImportanceLinks = document.querySelectorAll(".edit-Importance");
+
+    // Handle clicking on the edit link
+    editImportanceLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const ImportanceId = link.getAttribute("data-Importance-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Importance/${ImportanceId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    ImportancemodalFormContainer.innerHTML = data;
+                    updateImportancemodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    ImportancemodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateImportancemodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputImportance = document.querySelector(".Importance"); // Input field
+    const ImportanceTableRows = document.querySelectorAll(".Importance1 tr"); // Desktop table rows
+    const ImportanceCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputImportance.addEventListener("input", () => {
+        const query = searchInputImportance.value.toLowerCase().trim();
+
+        // Search in desktop table
+        ImportanceTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        ImportanceCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

@@ -1,0 +1,1494 @@
+{% extends 'app/user/user_main.html' %}
+{% load static %}
+{% block content %}
+  <style>
+      :root {
+        --primary1: #ff6b00;
+        --primary-light1: #ff8b33;
+        --secondary1: #00a8e8;
+        --secondary-light1: #33b9ed;
+        --dark1: #121212;
+        --darker1: #0a0a0a;
+        --dark-light1: #1e1e1e;
+        --light1: #f8f9fa;
+        --lighter1: #ffffff;
+        --accent1: #ffc107;
+        --accent-light1: #ffd54f;
+        --text1: rgba(255, 255, 255, 0.9);
+        --text-light1: rgba(255, 255, 255, 0.7);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      .AboutUs {
+        font-family: 'Poppins', 'Segoe UI', sans-serif;
+        background-color: var(--dark1);
+        color: var(--text1);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* Hero with parallax effect */
+      .about-hero {
+        height: 80vh;
+        min-height: 500px;
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(13, 13, 13, 0.9)), 
+                    url('/static/images/ABOUT.jpg') center center / cover no-repeat fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .about-hero-content {
+        text-align: center;
+        z-index: 2;
+        padding: 0 2rem;
+      }
+
+      .about-hero h1 {
+        font-size: 2.8rem;
+        color: var(--lighter1);
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        animation: fadeInDown 1s ease-in-out;
+        position: relative;
+        display: inline-block;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      .about-hero h1::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: var(--primary1);
+        border-radius: 2px;
+      }
+
+      .about-hero p {
+        font-size: 1rem;
+        color: var(--text-light1);
+        margin-bottom: 1.5rem;
+        animation: fadeInUp 1s ease-in-out 0.3s both;
+        line-height: 1.6;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .about-cta-button {
+        display: inline-block;
+        background: var(--primary1);
+        color: var(--lighter1);
+        padding: 10px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 2px solid var(--primary1);
+        box-shadow: 0 4px 10px rgba(255, 107, 0, 0.3);
+        margin-top: 15px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+      }
+
+      .about-cta-button:hover {
+        background: transparent;
+        color: var(--primary1);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(255, 107, 0, 0.4);
+      }
+
+      .about-cta-button i {
+        margin-left: 8px;
+        transition: transform 0.3s ease;
+        font-size: 0.8rem;
+      }
+
+      .about-cta-button:hover i {
+        transform: translateX(3px);
+      }
+
+      .about-scroll-down {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: var(--lighter1);
+        font-size: 1.8rem;
+        animation: bounce 2s infinite;
+        cursor: pointer;
+        z-index: 3;
+        background: rgba(0, 0, 0, 0.3);
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--primary1);
+        transition: all 0.3s ease;
+      }
+
+      .about-scroll-down:hover {
+        background: var(--primary1);
+        color: var(--darker1);
+        animation: none;
+        transform: translateX(-50%) scale(1.1);
+      }
+
+      .about-section {
+        padding: 4rem 1.5rem;
+        margin: 0 auto;
+        max-width: 1200px;
+        position: relative;
+      }
+
+      .about-section-header {
+        margin-bottom: 2.5rem;
+        text-align: center;
+      }
+
+      .about-section-header h2 {
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+        color: var(--primary1);
+        position: relative;
+        display: inline-block;
+        font-weight: 600;
+      }
+
+      .about-section-header h2::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: var(--secondary1);
+        border-radius: 2px;
+      }
+
+      .about-section-header p {
+        font-size: 0.95rem;
+        color: var(--text-light1);
+        line-height: 1.6;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* Carousel Base Styles */
+      .about-carousel {
+        position: relative;
+        overflow: hidden;
+        margin-top: 2.5rem;
+      }
+      
+      .about-carousel-container {
+        display: flex;
+        transition: transform 0.5s ease;
+        width: 100%;
+      }
+      
+      .about-carousel-item {
+        flex: 0 0 33.333%;
+        max-width: 33.333%;
+        padding: 0 15px;
+      }
+      
+      /* Carousel Navigation */
+      .about-carousel-nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2rem;
+        gap: 1rem;
+      }
+      
+      .about-carousel-prev, .about-carousel-next {
+        background: var(--primary1);
+        color: var(--lighter1);
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 10px rgba(255, 107, 0, 0.3);
+      }
+      
+      .about-carousel-prev:hover, .about-carousel-next:hover {
+        background: var(--primary-light1);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(255, 107, 0, 0.4);
+      }
+      
+      .about-carousel-prev:disabled, .about-carousel-next:disabled {
+        background: rgba(255, 107, 0, 0.3);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      
+      .about-carousel-dots {
+        display: flex;
+        gap: 0.5rem;
+      }
+      
+      .about-carousel-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .about-carousel-dot.active {
+        background: var(--primary1);
+        transform: scale(1.2);
+      }
+
+      /* Card Styles */
+      .about-card {
+        background: rgba(30, 30, 30, 0.7);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+      }
+
+      .about-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--primary1);
+        transition: height 0.3s ease;
+      }
+
+      .about-card:hover::before {
+        height: 6px;
+      }
+
+      .about-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        border-color: var(--primary1);
+      }
+
+      .about-card h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+        color: var(--accent1);
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding-bottom: 8px;
+      }
+
+      .about-card h3::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: var(--primary1);
+      }
+
+      .about-card h3 i {
+        margin-right: 8px;
+        color: var(--primary1);
+        font-size: 1.1rem;
+        width: 25px;
+        text-align: center;
+      }
+
+      .about-card p {
+        color: var(--text-light1);
+        line-height: 1.6;
+        margin-top: 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      /* Team Carousel Specific Styles */
+      .about-team-member {
+        text-align: center;
+        transition: all 0.3s ease;
+        perspective: 1000px;
+        cursor: pointer;
+        height: 100%;
+      }
+      
+      .about-team-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+      }
+      
+      .about-team-member.flipped .about-team-inner {
+        transform: rotateY(180deg);
+      }
+      
+      .about-team-front, .about-team-back {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        background: rgba(30, 30, 30, 0.7);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .about-team-back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: rotateY(180deg);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .about-team-back p {
+        color: var(--text-light1);
+        margin-bottom: 1.2rem;
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      
+      .about-team-img {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 4px solid var(--primary1);
+        object-fit: cover;
+        margin: 0 auto 1rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+      
+      .about-team-member h3 {
+        margin-top: 0.5rem;
+        font-size: 1.2rem;
+        color: var(--lighter1);
+        font-weight: 600;
+      }
+      
+      .about-team-member p.member-title {
+        color: var(--secondary1);
+        font-weight: 500;
+        font-size: 0.85rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .about-team-member .click-hint {
+        color: var(--text-light1);
+        font-size: 0.75rem;
+        margin-top: 0.5rem;
+        opacity: 0.7;
+        transition: all 0.3s ease;
+      }
+      
+      .about-team-member:hover .click-hint {
+        opacity: 1;
+        color: var(--primary1);
+      }
+      
+      .about-team-social-links {
+        display: flex;
+        justify-content: center;
+        gap: 0.8rem;
+        margin-top: 0.8rem;
+      }
+      
+      .about-team-social-links a {
+        color: var(--text-light1);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .about-team-social-links a:hover {
+        color: var(--primary1);
+        background: rgba(255, 107, 0, 0.1);
+        border-color: var(--primary1);
+        transform: translateY(-2px);
+      }
+
+      /* Original Offerings Styles (unchanged) */
+      .about-offerings {
+        margin: 4rem 0;
+      }
+      
+      .about-offering-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+      }
+      
+      .about-offering-icon {
+        font-size: 1.5rem;
+        color: var(--primary1);
+        margin-right: 1rem;
+        min-width: 30px;
+      }
+      
+      .about-offering-content h4 {
+        color: var(--accent1);
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+      }
+      
+      .about-offering-content p {
+        color: var(--text-light1);
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      /* Audience/Benefits Styles */
+      .about-audience-item {
+        text-align: center;
+        padding: 1.5rem;
+        background: rgba(30, 30, 30, 0.5);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        height: 100%;
+        transition: all 0.3s ease;
+      }
+
+      .about-audience-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        border-color: var(--primary1);
+      }
+      
+      .about-audience-icon {
+        font-size: 2rem;
+        color: var(--primary1);
+        margin-bottom: 1rem;
+      }
+      
+      .about-audience-item h4 {
+        color: var(--lighter1);
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+      }
+      
+      .about-audience-item p {
+        color: var(--text-light1);
+        font-size: 0.8rem;
+      }
+
+      /* Mission & Vision */
+      .about-mission-vision {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+      }
+      
+      .about-mission-card, .about-vision-card {
+        background: rgba(30, 30, 30, 0.7);
+        border-radius: 12px;
+        padding: 1.5rem;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .about-mission-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--primary1);
+      }
+      
+      .about-vision-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--secondary1);
+      }
+
+      /* Testimonials */
+      .about-testimonials {
+        margin: 4rem 0;
+      }
+
+      .about-testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .about-testimonial-card {
+        background: var(--dark-light1);
+        border-radius: 12px;
+        padding: 1.5rem;
+        position: relative;
+        border-left: 3px solid var(--primary1);
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        overflow: hidden;
+      }
+
+      .about-testimonial-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,107,0,0.05), rgba(0,168,232,0.05));
+        z-index: -1;
+      }
+
+      .about-testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        border-left-width: 5px;
+      }
+
+      .about-testimonial-text {
+        font-style: italic;
+        margin-bottom: 1.2rem;
+        color: var(--text1);
+        position: relative;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .about-testimonial-text::before {
+        content: '"';
+        font-size: 3rem;
+        color: var(--primary1);
+        opacity: 0.2;
+        position: absolute;
+        top: -30px;
+        right: -10px;
+        font-family: serif;
+      }
+
+      .about-testimonial-author {
+        display: flex;
+        align-items: center;
+      }
+
+      .about-author-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 12px;
+        border: 2px solid var(--primary1);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .about-author-info h4 {
+        color: var(--lighter1);
+        margin-bottom: 0.2rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .about-author-info p {
+        color: var(--secondary1);
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      /* Back to top button */
+      .about-back-to-top {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        width: 45px;
+        height: 45px;
+        background: var(--primary1);
+        color: var(--lighter1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 999;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .about-back-to-top.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .about-back-to-top:hover {
+        background: var(--primary-light1);
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeInDown {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+          transform: translateY(0) translateX(-50%);
+        }
+        40% {
+          transform: translateY(-15px) translateX(-50%);
+        }
+        60% {
+          transform: translateY(-7px) translateX(-50%);
+        }
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 992px) {
+        .about-hero h1 {
+          font-size: 2.4rem;
+        }
+        
+        .about-section-header h2 {
+          font-size: 1.8rem;
+        }
+        
+        .about-carousel-item {
+          flex: 0 0 50%;
+          max-width: 50%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .about-hero {
+          min-height: 450px;
+          height: 70vh;
+        }
+        
+        .about-hero h1 {
+          font-size: 2rem;
+        }
+        
+        .about-hero p {
+          font-size: 0.9rem;
+        }
+        
+        .about-section {
+          padding: 3rem 1.5rem;
+        }
+        
+        .about-team-img {
+          width: 120px;
+          height: 120px;
+        }
+        
+        .about-carousel-item {
+          flex: 0 0 100%;
+          max-width: 100%;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .about-hero h1 {
+          font-size: 1.8rem;
+        }
+        
+        .about-testimonial-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+  </style>
+
+<section class="AboutUs">
+  <!-- Hero Section -->
+  <div class="about-hero">
+    <div class="about-hero-content">
+      <h1>Kultura at Kamalayan Project</h1>
+      <p>Preserving Filipino heritage through digital innovation and education. We bridge the past and future by making cultural treasures accessible to all generations.</p>
+      <a href="#about" class="about-cta-button">Explore Our Mission <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="about-scroll-down" onclick="document.querySelector('.about-section').scrollIntoView({ behavior: 'smooth' })">
+      <i class="fas fa-chevron-down"></i>
+    </div>
+  </div>
+
+<!-- Mission & Vision Section -->
+<section id="about" class="about-section">
+  <div class="about-section-header">
+    <h2>Our Mission & Vision</h2>
+    <p>What drives us to preserve and promote Filipino musical heritage</p>
+  </div>
+
+  <div class="about-mission-vision">
+    {% for card in guiding_principles.cards.all %}
+      {% if card.card_type == "Mission" %}
+        <div class="about-mission-card">
+          <h3>
+          <i class="fa-solid {{ card.icon }}">
+          </i> Our Mission</h3>
+          <p>{{ card.description }}</p>
+        </div>
+      {% elif card.card_type == "Vision" %}
+        <div class="about-vision-card">
+          <h3>
+          <i class="fa-solid {{ card.icon }}">
+          </i> Our Vision</h3>
+          <p>{{ card.description }}</p>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+  <!-- What We Offer Section (Original Layout - Unchanged) -->
+  <section class="about-section">
+    <div class="about-section-header">
+      <h2>What We Offer</h2>
+      <p>Explore the cultural treasures available on our platform</p>
+    </div>
+
+    <div class="about-offerings">
+        {% for offering in Offerings %}
+        <div class="about-offering-item">
+            <div class="about-offering-icon">
+                <i class="fas {{ offering.icon }}"></i>
+            </div>
+            <div class="about-offering-content">
+                <h4>{{ offering.title }}</h4>
+                <p>{{ offering.description }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+  </section>
+
+  <!-- Cultural Importance Section -->
+  <section class="about-section">
+    <div class="about-section-header">
+      <h2>Cultural Importance</h2>
+      <p>Why preserving traditional instruments matters</p>
+    </div>
+
+    <div class="about-carousel" id="culturalCarousel">
+        <div class="about-carousel-container" id="culturalContainer">
+            {% for item in CulturalImportances %}
+            <div class="about-carousel-item">
+                <div class="about-card">
+                    <h3><i class="fas {{ item.icon }}"></i> {{ item.title }}</h3>
+                    <p>{{ item.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="about-carousel-nav">
+            <button class="about-carousel-prev" id="culturalPrev" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="about-carousel-dots" id="culturalDots">
+                <!-- Dots will be generated by JavaScript -->
+            </div>
+            
+            <button class="about-carousel-next" id="culturalNext">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+  </section>
+
+  <!-- Target Audience/Benefits Section -->
+  <section class="about-section">
+    <div class="about-section-header">
+      <h2>Who Benefits</h2>
+      <p>Our platform serves diverse audiences with a shared interest in cultural preservation</p>
+    </div>
+
+    <div class="about-carousel" id="audienceCarousel">
+        <div class="about-carousel-container" id="audienceContainer">
+            {% for audience in TargetAudiences %}
+            <div class="about-carousel-item">
+                <div class="about-audience-item">
+                    <div class="about-audience-icon">
+                        <i class="fas {{ audience.icon }}"></i>
+                    </div>
+                    <h4>{{ audience.title }}</h4>
+                    <p>{{ audience.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="about-carousel-nav">
+            <button class="about-carousel-prev" id="audiencePrev" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="about-carousel-dots" id="audienceDots">
+                <!-- Dots will be generated by JavaScript -->
+            </div>
+            
+            <button class="about-carousel-next" id="audienceNext">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section id="team" class="about-section">
+    <div class="about-section-header">
+      <h2>Meet Our Team</h2>
+      <p>The passionate individuals behind the Kultura at Kamalayan Project</p>
+    </div>
+    
+    <div class="about-carousel" id="teamCarousel">
+        <div class="about-carousel-container" id="teamContainer">
+            {% for member in TeamMembers %}
+            <div class="about-carousel-item">
+                <div class="about-team-member" onclick="this.classList.toggle('flipped')">
+                    <div class="about-team-inner">
+                        <div class="about-team-front">
+                            {% if member.image %}
+                            <img src="{{ member.image.url }}" class="about-team-img" alt="{{ member.name }}">
+                            {% else %}
+                            <img src="{% static 'images/phil.png' %}" class="about-team-img" alt="Default Team Member">
+                            {% endif %}
+                            <h3>{{ member.name }}</h3>
+                            <p class="member-title">{{ member.title }}</p>
+                            <div class="about-team-social-links">
+                                {% for link in member.social_links.all %}
+                                <a href="{{ link.url }}"><i class="{{ link.icon_class }}"></i></a>
+                                {% endfor %}
+                            </div>
+                            <p class="click-hint">Click to see more info</p>
+                        </div>
+                        <div class="about-team-back">
+                            <p>{{ member.back_description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="about-carousel-nav">
+            <button class="about-carousel-prev" id="teamPrev" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="about-carousel-dots" id="teamDots">
+                <!-- Dots will be generated by JavaScript -->
+            </div>
+            
+            <button class="about-carousel-next" id="teamNext">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="about-section">
+    <div class="about-section-header">
+      <h2>What People Say</h2>
+      <p>Hear from our community about the impact of our work</p>
+    </div>
+
+    <div class="about-testimonial-grid">
+        {% for testimonial in testimonials|slice:":3" %}
+        <div class="about-testimonial-card">
+            <div class="about-testimonial-text">
+                {{ testimonial.message }}
+                <div class="testimonial-rating">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= testimonial.rating %}
+                            <i class="fas fa-star"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="about-testimonial-author">
+                {% if testimonial.user.profile.image %}
+                    <img src="{{ testimonial.user.profile.image.url }}" alt="{{ testimonial.user.get_full_name }}" class="about-author-img">
+                {% else %}
+                    <img src="{% static 'images/phil.png' %}" alt="{{ testimonial.user.get_full_name }}" class="about-author-img">
+                {% endif %}
+                <div class="about-author-info">
+                    <h4>{{ testimonial.user.get_full_name }}</h4>
+                    <p>{{ testimonial.role|default:"Community Member" }}</p>
+                    {% if testimonial.duration %}
+                    <p class="member-duration">{{ testimonial.duration }} with us</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+  </section>
+
+  <!-- Back to Top Button -->
+  <div class="about-back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <!-- Loading animation -->
+  <div class="loading-overlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+</section>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Generic Carousel Function
+        function initializeCarousel(carouselId, itemsPerPage = 3) {
+            const container = document.getElementById(carouselId + 'Container');
+            const prevBtn = document.getElementById(carouselId + 'Prev');
+            const nextBtn = document.getElementById(carouselId + 'Next');
+            const dotsContainer = document.getElementById(carouselId + 'Dots');
+            
+            const items = container.querySelectorAll('.about-carousel-item');
+            const totalItems = items.length;
+            let currentPage = 0;
+            
+            // Calculate items per page based on screen size
+            function getItemsPerPage() {
+                const width = window.innerWidth;
+                if (width <= 768) {
+                    return 1; // 1 item on mobile
+                } else if (width <= 992) {
+                    return 2; // 2 items on tablet
+                } else {
+                    return 3; // 3 items on desktop
+                }
+            }
+            
+            let currentItemsPerPage = getItemsPerPage();
+            let totalPages = Math.ceil(totalItems / currentItemsPerPage);
+            
+            // Generate dots
+            function generateDots() {
+                dotsContainer.innerHTML = '';
+                for (let i = 0; i < totalPages; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('about-carousel-dot');
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => goToPage(i));
+                    dotsContainer.appendChild(dot);
+                }
+            }
+            
+            // Update item widths based on current items per page
+            function updateItemWidths() {
+                const percentage = 100 / currentItemsPerPage;
+                items.forEach(item => {
+                    item.style.flex = `0 0 ${percentage}%`;
+                    item.style.maxWidth = `${percentage}%`;
+                });
+            }
+            
+            // Update navigation buttons
+            function updateNavigation() {
+                prevBtn.disabled = currentPage === 0;
+                nextBtn.disabled = currentPage === totalPages - 1;
+                
+                // Update dots
+                const dots = dotsContainer.querySelectorAll('.about-carousel-dot');
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentPage);
+                });
+            }
+            
+            // Go to specific page
+            function goToPage(page) {
+                currentPage = page;
+                const translateX = -currentPage * 100;
+                container.style.transform = `translateX(${translateX}%)`;
+                updateNavigation();
+            }
+            
+            // Handle window resize
+            function handleResize() {
+                const newItemsPerPage = getItemsPerPage();
+                if (newItemsPerPage !== currentItemsPerPage) {
+                    currentItemsPerPage = newItemsPerPage;
+                    totalPages = Math.ceil(totalItems / currentItemsPerPage);
+                    
+                    // Adjust current page if it's out of bounds
+                    if (currentPage >= totalPages) {
+                        currentPage = totalPages - 1;
+                    }
+                    
+                    updateItemWidths();
+                    generateDots();
+                    goToPage(currentPage);
+                }
+            }
+            
+            // Initialize
+            updateItemWidths();
+            generateDots();
+            updateNavigation();
+            
+            // Event listeners for navigation
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 0) {
+                    goToPage(currentPage - 1);
+                }
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < totalPages - 1) {
+                    goToPage(currentPage + 1);
+                }
+            });
+            
+            window.addEventListener('resize', handleResize);
+        }
+        
+        // Initialize all carousels
+        initializeCarousel('cultural');
+        initializeCarousel('audience');
+        initializeCarousel('team');
+        
+        // Back to top button
+        const backToTopButton = document.querySelector('.about-back-to-top');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('active');
+            } else {
+                backToTopButton.classList.remove('active');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Animate elements when they come into view
+        const animateOnScroll = function() {
+            const elements = document.querySelectorAll('.about-card, .about-team-member, .about-testimonial-card, .about-audience-item, .about-offering-item');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementPosition < windowHeight - 100) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        
+        // Set initial state
+        document.querySelectorAll('.about-card, .about-team-member, .about-testimonial-card, .about-audience-item, .about-offering-item').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'all 0.6s ease';
+        });
+        
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+    });
+
+    // Loading animation
+    window.addEventListener('load', () => {
+        document.querySelector('.loading-overlay').classList.add('loaded');
+        setTimeout(() => {
+            document.querySelector('.loading-overlay').style.display = 'none';
+        }, 500);
+    });
+</script>
+
+
+<footer class="footer7">
+  <div class="footer-container7">
+    <div class="footer-section7 brand7">
+      <h2><span class="logo7">✦ Philharmonia</span></h2>
+      <p>{{ homepages.description|safe }}</p>
+    </div>
+  
+<div class="footer-section7 office7">
+  <h3><i class="fas fa-building"></i> Office</h3>
+  <div class="contact-item7">
+    <i class="fas fa-map-marker-alt"></i>
+    <p>{{ contact.location_address|linebreaksbr }}</p>
+  </div>
+  <div class="contact-item7">
+    <i class="fas fa-envelope"></i>
+    <p>{{ contact.primary_email }}</p>
+  </div>
+  <div class="contact-item7">
+    <i class="fas fa-phone-alt"></i>
+    <p>{{ contact.landline_phone }}</p>
+  </div>
+</div>
+    
+    <div class="footer-section7 links7">
+      <h3><i class="fas fa-link"></i> Quick Links</h3>
+      <ul>
+        <li><a href="{% url 'frontpage' %}"><i class="fas fa-chevron-right"></i> Home</a></li>
+        <li><a href="{% url 'video' %}"><i class="fas fa-chevron-right"></i> Instrument Tutorials</a></li>
+        <!-- <li><a href="{% url '3dModel' %}"><i class="fas fa-chevron-right"></i> 3D Model</a></li> -->
+        <li><a href="{% url 'about' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+        <li><a href="{% url 'contact' %}"><i class="fas fa-chevron-right"></i> Contacts</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section7 newsletter7">
+      <h3><i class="fas fa-share-alt"></i> {{ footer_settings.follow_us_title }}</h3>
+      <p>{{ footer_settings.follow_us_description }}</p>
+      <div class="social-icons7">
+        {% for link in social_links %}
+          {% if link.is_active %}
+            <a href="{{ link.url }}" aria-label="{{ link.get_platform_display }}">
+              <i class="{{ link.icon_class }}"></i>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-bottom7">
+    <div class="footer-bottom-container7">
+      <p>© 2025 Philharmonia Musical Heritage. All Rights Reserved.</p>
+      <div class="instrument-icons7">
+        {% for instrument in Instruments|slice:":6"  %}
+        {% if instrument.image %}
+          <img src="{{ instrument.image.url }}" title="{{ instrument.name }}" alt="{{ instrument.name }}">
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+/* FontAwesome for icons */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+
+.footer7 {
+  background-color: var(--darks);
+  color: var(--light);
+  padding: 60px 0 0;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+.footer-container7 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.footer-section7 {
+  margin-bottom: 40px;
+}
+
+.footer-section7 h3 {
+  color: var(--lighter);
+  font-size: 1.3rem;
+  margin-bottom: 25px;
+  position: relative;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.footer-section7 h3 i {
+  margin-right: 10px;
+  color: var(--primary);
+}
+
+.footer-section7 h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 2px;
+  background-color: var(--primary);
+}
+
+.footer-section7 p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.logo7 {
+  font-size: 2rem;
+  color: var(--primary);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Office Section */
+.contact-item7 {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.contact-item7 i {
+  color: var(--primary);
+  margin-right: 15px;
+  margin-top: 5px;
+  font-size: 1.1rem;
+}
+
+.contact-item7 p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+}
+
+/* Links Section */
+.footer-section7.links7 ul {
+  padding-left: 0;
+}
+
+.footer-section7.links7 ul li {
+  margin-bottom: 12px;
+  list-style: none;
+}
+
+.footer-section7.links7 ul li a {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+}
+
+.footer-section7.links7 ul li a i {
+  margin-right: 10px;
+  font-size: 0.8rem;
+  color: var(--primary);
+}
+
+.footer-section7.links7 ul li a:hover {
+  color: var(--primary);
+  padding-left: 5px;
+}
+
+/* Social Icons */
+.social-icons7 {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.social-icons7 a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--light);
+  transition: var(--transition);
+  font-size: 1.1rem;
+}
+
+.social-icons7 a:hover {
+  background-color: var(--primary);
+  color: var(--light);
+  transform: translateY(-3px);
+}
+
+/* Footer Bottom */
+.footer-bottom7 {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 25px 0;
+  margin-top: 50px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom-container7 {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer-bottom7 p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.instrument-icons7 {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.instrument-icons7 img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  transition: var(--transition);
+ 
+}
+
+.instrument-icons7 img:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .footer-container7 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer7 {
+    padding: 50px 0 0;
+  }
+  
+  .footer-container7 {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 0 20px;
+  }
+  
+  .footer-section7 {
+    margin-bottom: 30px;
+  }
+  
+  .footer-bottom-container7 {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .instrument-icons7 img {
+    width: 24px;
+    height: 24px;
+  }
+}
+</style>
+
+
+
+
+{% endblock %}

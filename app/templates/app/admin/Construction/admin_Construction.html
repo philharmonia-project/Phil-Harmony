@@ -1,0 +1,360 @@
+{% load static %}
+<style>
+       .create-Step {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Step span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Step::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Step:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Step:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Step:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Step:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Step:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Step {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Step::before {
+            content: '+ Steps';
+            font-size: 1.1rem;
+        }
+        
+        .create-Step span {
+            display: none;
+        }
+        
+        .create-Step::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Step {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Step:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Step btn-style" id="create-step-btn">
+                <span>Step</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Step" placeholder="Search for Construction Steps...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if ConstructionSteps %}
+            
+                <!-- Construction Steps List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for step in ConstructionSteps %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>{{ step.instrument.name }}</h3>
+                                <p>{{ step.title }}</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="instrument-detail">
+                                <span class="detail-label">Order:</span>
+                                <span class="detail-value">{{ step.order }}</span>
+                            </div>
+                            <div class="instrument-detail">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">{{ step.description|truncatewords:12 }}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Step" href="" data-step-id="{{ step.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Step"></i>
+                                </a>
+                                <a class="action-link delete-Step" href="" data-step-id2="{{ step.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Step"></i>
+                                </a>
+                            </div>
+                            <div class="instrument-date">
+                                Added: {{ step.created_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+           
+                <!-- Construction Steps Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Instrument</th>
+                                <th>Title</th>
+                                <th>Order</th>
+                                <th>Description</th>
+                                <th>Date Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Step1">
+                            {% for step in ConstructionSteps %}
+                            <tr>
+                                <td>{{ step.instrument.name }}</td>
+                                <td>{{ step.title }}</td>
+                                <td>{{ step.order }}</td>
+                                <td>{{ step.description|truncatewords:9 }}</td>
+                                <td>{{ step.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a class="action-link edit-Step" href="" data-step-id="{{ step.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Step"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Step" href="" data-step-id2="{{ step.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Step"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+           
+        {% else %}
+        <p class="text-center">No construction steps found. Start by adding a new step!</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal Dialogs -->
+<div id="Create-Step-Modal" class="Create-Step-Modal">
+    <div class="Create-Step-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Step-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Edit-Step-Modal" class="Edit-Step-Modal">
+    <div class="Edit-Step-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Step-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Delete-Step-Modal" class="Delete-Step-Modal">
+    <div class="Delete-Step-modal-content">
+        <div id="Delete-Step-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<script>
+// create Step
+document.addEventListener("DOMContentLoaded", () => {
+    const addStepmodal = document.getElementById("Create-Step-Modal");
+    const closeBtn = addStepmodal.querySelector(".close-btn1");
+    const addStepmodalFormContainer = document.getElementById("Create-Step-modal-form-container");
+    const addStepLinks = document.querySelectorAll(".create-Step");
+
+    // Handle clicking on the edit link
+    addStepLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Step/create/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    addStepmodalFormContainer.innerHTML = data;
+                    addStepmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    addStepmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        addStepmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+// Delete Instrument
+document.addEventListener("DOMContentLoaded", () => {
+    const delStepmodal = document.getElementById("Delete-Step-Modal");
+    const closeBtn = delStepmodal.querySelector(".close-btn1");
+    const delStepmodalFormContainer = document.getElementById("Delete-Step-modal-form-container");
+    const delStepLinks = document.querySelectorAll(".delete-Step");
+
+    // Handle clicking on the edit link
+    delStepLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const StepId = link.getAttribute("data-Step-id2");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Step/${StepId}/delete/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    delStepmodalFormContainer.innerHTML = data;
+                    delStepmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    delStepmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        delStepmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+
+
+// Update Step
+document.addEventListener("DOMContentLoaded", () => {
+    const updateStepmodal = document.getElementById("Edit-Step-Modal");
+    const closeBtn = updateStepmodal.querySelector(".close-btn1");
+    const StepmodalFormContainer = document.getElementById("Edit-Step-modal-form-container");
+    const editStepLinks = document.querySelectorAll(".edit-Step");
+
+    // Handle clicking on the edit link
+    editStepLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const StepId = link.getAttribute("data-Step-id");
+
+            // Load the form dynamically via fetch
+            fetch(`/admin_Step/${StepId}/edit/`)
+                .then((response) => response.text())
+                .then((data) => {
+                    StepmodalFormContainer.innerHTML = data;
+                    updateStepmodal.classList.add("show"); // Show the modal
+                })
+                .catch((error) => {
+                    StepmodalFormContainer.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    // Close modal using the close button
+    closeBtn.addEventListener("click", () => {
+        updateStepmodal.classList.remove("show"); // Close the modal
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputStep = document.querySelector(".Step"); // Input field
+    const StepTableRows = document.querySelectorAll(".Step1 tr"); // Desktop table rows
+    const Steps = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputStep.addEventListener("input", () => {
+        const query = searchInputStep.value.toLowerCase().trim();
+
+        // Search in desktop table
+        StepTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+        Steps.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

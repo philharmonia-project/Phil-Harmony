@@ -1,0 +1,52 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateStep' step.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Instrument Display (read-only) -->
+                <div class="form-group">
+                    <select id="id_instrument_display" class="form-control" disabled>
+                        <option value="{{ step.instrument.pk }}" selected>{{ step.instrument.name }}</option>
+                    </select>
+                    <input type="hidden" name="instrument" value="{{ step.instrument.pk }}">
+                    <label for="id_instrument_display" class="floating-label">Related Instrument</label>
+                </div>
+                
+                <!-- Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_title" name="title" class="form-control" placeholder=" " 
+                           value="{{ step.title }}" maxlength="100" required />
+                    <label for="id_title" class="floating-label">Title</label>
+                </div>
+                
+                <!-- Description Field -->
+                <div class="form-group floating-label-group">
+                    <textarea id="id_description" name="description" class="form-control" 
+                              placeholder=" " required>{{ step.description }}</textarea>
+                    <label for="id_description" class="floating-label">Description</label>
+                </div>
+                
+                <!-- Order Field -->
+                <div class="form-group">
+                    <select id="id_order" name="order" class="form-control" required>
+                        {% for i in step_range %}
+                            <option value="{{ i }}" {% if i == step.order %}selected{% endif %}>
+                                {% if i == step.order %}Current Position: {% endif %}{{ i }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <label for="id_order" class="floating-label">Step Position</label>
+                </div>
+                                
+                <!-- Action Buttons -->
+                <button type="submit" class="btn btn-primary">Update Construction Step</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

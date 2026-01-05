@@ -1,0 +1,590 @@
+{% load static %}
+
+<style>
+
+</style>
+
+<div class="profile-tabs-container">
+    <!-- Radio Buttons -->
+    <input type="radio" name="tab" id="tab-account" checked>
+    <input type="radio" name="tab" id="tab-appointments">
+
+    <!-- Tab Labels -->
+    <div class="tabs">
+        <label for="tab-account" class="tab-btn">Account Settings</label>
+        <label for="tab-appointments" class="tab-btn">Appointments</label>
+    </div>
+
+    <!-- Account Settings -->
+    <div class="tab-content" id="account">
+        <div id="UpdateUserProfile1" class="profile-container1">
+            <form method="POST" enctype="multipart/form-data" action="{% url 'update_Profile' user.id %}" class="profile-form1">
+                <div class="profile-layout1">
+                    <!-- Left Column - Profile Image -->
+                    <div class="profile-image-column1">
+                        <div class="avatar-container1">
+                            {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" class="profile-picture1" alt="{{ user.last_name }}">
+                            {% else %}
+                            <img src="{% static 'default_profile.png' %}" class="profile-picture1" alt="Default Profile">
+                            {% endif %}
+                            <button type="button" class="change-photo-btn1">
+                                <label for="id_profile_picture1" class="file-label1">
+                                    <i class="icon-camera1">📷</i> Change
+                                </label>
+                            </button>
+                            <input type="file" id="id_profile_picture1" name="profile_picture" class="file-input1">
+                        </div>
+                        <h3 class="profile-name1">{{ user.first_name }} {{ user.last_name }}</h3>
+                    </div>
+
+                    <!-- Right Column - Form Fields -->
+                    <div class="profile-form-column1">
+                        {% csrf_token %}
+                        <div class="form-group1">
+                            <label class="form-label1">First Name</label>
+                            <input type="text" name="first_name" class="form-control1" value="{{ user.first_name }}" required>
+                        </div>
+                        <div class="form-group1">
+                            <label class="form-label1">Last Name</label>
+                            <input type="text" name="last_name" class="form-control1" value="{{ user.last_name }}" required>
+                        </div>
+                        <div class="form-group1">
+                            <label class="form-label1">Username</label>
+                            <input type="text" name="username" class="form-control1" value="{{ user.username }}" required>
+                        </div>
+                        <div class="form-group1">
+                            <label class="form-label1">Email</label>
+                            <input type="email" name="email" class="form-control1" value="{{ user.email }}" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="submit-button">Update Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<!-- Appointments -->
+<div class="tab-content" id="appointments">
+    <div class="appointment-status-summary">
+        <h4>My Appointments</h4>
+        
+        <!-- Performance Appointments -->
+        <div class="status-category">
+            <h5>Performance Appointments</h5>
+            {% if performance_appointments %}
+                {% for appointment in performance_appointments %}
+                <div class="appointment-card {% if appointment.status == 'Declined' %}declined-appointment{% endif %}" 
+                     id="appointment-card-{{ appointment.id }}">
+                    
+                    <div class="appointment-header">
+                        <strong id="event-name-display-{{ appointment.id }}">{{ appointment.event_name }}</strong>
+                        <span class="status-badge status-{{ appointment.status|lower }}">{{ appointment.status }}</span>
+                    </div>
+                    
+                    <!-- View Mode (Read-only) -->
+                    <div class="appointment-details view-mode" id="view-mode-{{ appointment.id }}">
+                        <div class="appointment-detail">
+                            <span class="detail-label">Event Name:</span> 
+                            <span class="detail-value">{{ appointment.event_name }}</span>
+                        </div>
+                        <div class="appointment-detail">
+                            <span class="detail-label">Type:</span> 
+                            <span class="detail-value">{{ appointment.event_type|default:"Not specified" }}</span>
+                        </div>
+                        <div class="appointment-detail">
+                            <span class="detail-label">Location:</span> 
+                            <span class="detail-value">{{ appointment.event_location }}</span>
+                        </div>
+                        <div class="appointment-detail">
+                            <span class="detail-label">Date:</span> 
+                            <span class="detail-value">{{ appointment.event_date }}</span>
+                        </div>
+                        <div class="appointment-detail">
+                            <span class="detail-label">Time:</span> 
+                            <span class="detail-value">{{ appointment.event_time }}</span>
+                        </div>
+                        
+                        <!-- Display decline reason if appointment is declined -->
+                        {% if appointment.status == 'Declined' and appointment.decline_reason %}
+                        <div class="decline-reason-container">
+                            <div class="decline-reason-header">
+                                <span class="detail-label" style="color: #dc3545;">
+                                    <i class="fa-solid fa-circle-exclamation"></i> Reason for Decline:
+                                </span>
+                            </div>
+                            <div class="decline-reason-message">
+                                <p>{{ appointment.decline_reason }}</p>
+                                <small class="text-muted">From: Admin</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if appointment.message %}
+                        <div class="appointment-detail">
+                            <span class="detail-label">Your Message:</span> 
+                            <span class="detail-value">{{ appointment.message|truncatewords:20 }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Edit Mode (Hidden by default) -->
+                    <div class="appointment-details edit-mode" id="edit-mode-{{ appointment.id }}" style="display: none;">
+                        <form method="POST" action="{% url 'update_performance' appointment.id %}" 
+                              class="edit-appointment-form" 
+                              id="edit-form-{{ appointment.id }}"
+                              onsubmit="return validatePerformanceForm({{ appointment.id }})">
+                            {% csrf_token %}
+                            
+                            <div class="edit-form-row">
+                                <div class="edit-form-group">
+                                    <label>Event Name:</label>
+                                    <input type="text" name="event_name" 
+                                           value="{{ appointment.event_name }}" 
+                                           class="edit-input" required>
+                                </div>
+                                
+                                <div class="edit-form-group">
+                                    <label>Type:</label>
+                                    <input type="text" name="event_type" 
+                                           value="{{ appointment.event_type|default:'' }}" 
+                                           class="edit-input">
+                                </div>
+                                
+                                <div class="edit-form-group">
+                                    <label>Location:</label>
+                                    <input type="text" name="event_location" 
+                                           value="{{ appointment.event_location }}" 
+                                           class="edit-input" required>
+                                </div>
+                                
+                                <div class="edit-form-group">
+                                    <label>Date:</label>
+                                    <input type="date" name="event_date" 
+                                           value="{{ appointment.event_date|date:'Y-m-d' }}" 
+                                           class="edit-input" required>
+                                </div>
+                                
+                                <div class="edit-form-group">
+                                    <label>Time:</label>
+                                    <input type="time" name="event_time" 
+                                           value="{{ appointment.event_time|time:'H:i' }}" 
+                                           class="edit-input" required>
+                                </div>
+                                
+                                <div class="edit-form-group full-width">
+                                    <label>Message:</label>
+                                    <textarea name="message" 
+                                              class="edit-textarea">{{ appointment.message|default:'' }}</textarea>
+                                </div>
+                                
+                                <div class="edit-form-buttons">
+                                    <button type="submit" class="btn-save">Save Changes</button>
+                                    <button type="button" class="btn-cancel" 
+                                            onclick="cancelEdit({{ appointment.id }})">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="appointment-footer">
+                        <small>Created: {{ appointment.created_at|date:"M d, Y" }}</small>
+                        <div class="appointment-actions">
+                            {% if appointment.status == 'Pending' %}
+                            <!-- Update button (only for pending) -->
+                            <button type="button" class="action-button update-performance" 
+                                    onclick="enableEditMode({{ appointment.id }})"
+                                    title="Edit Appointment">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                            
+                            <!-- Cancel button (only for pending) -->
+                            <form method="POST" action="{% url 'cancel_performance' appointment.id %}" 
+                                style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="action-button delete-performance" 
+                                        onclick="return confirm('Are you sure you want to cancel this appointment?');"
+                                        title="Cancel Appointment">
+                                    <i class="fa-solid fa-trash"></i> Cancel
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-appointments">No performance appointments</p>
+            {% endif %}
+        </div>
+
+        <!-- Lesson Appointments -->
+        <div class="status-category">
+            <h5>Lesson Appointments</h5>
+            {% if lesson_appointments %}
+                {% for appointment in lesson_appointments %}
+                <div class="appointment-card {% if appointment.status == 'Declined' %}declined-appointment{% endif %}" 
+                     id="appointment-card-{{ appointment.id }}">
+                    
+                    <div class="appointment-header">
+                        <strong id="school-name-display-{{ appointment.id }}">{{ appointment.school_name }}</strong>
+                        <span class="status-badge status-{{ appointment.status|lower }}">{{ appointment.status }}</span>
+                    </div>
+                    
+                    <!-- View Mode (Read-only) -->
+                    <div class="appointment-details view-mode" id="view-mode-{{ appointment.id }}">
+                        <div class="appointment-detail">
+                            <span class="detail-label">School Name:</span> 
+                            <span class="detail-value">{{ appointment.school_name }}</span>
+                        </div>
+                        <div class="appointment-detail">
+                            <span class="detail-label">Class Size:</span> 
+                            <span class="detail-value">{{ appointment.class_size }} students</span>
+                        </div>
+                        <div class="appointment-detail">
+                            <span class="detail-label">Location:</span> 
+                            <span class="detail-value">{{ appointment.location }}</span>
+                        </div>
+                        <div class="appointment-detail">
+                            <span class="detail-label">Date:</span> 
+                            <span class="detail-value">{{ appointment.lesson_date }}</span>
+                        </div>
+                        <div class="appointment-detail">
+                            <span class="detail-label">Time:</span> 
+                            <span class="detail-value">{{ appointment.lesson_time }}</span>
+                        </div>
+                        
+                        <!-- Display decline reason if appointment is declined -->
+                        {% if appointment.status == 'Declined' and appointment.decline_reason %}
+                        <div class="decline-reason-container">
+                            <div class="decline-reason-header">
+                                <span class="detail-label" style="color: #dc3545;">
+                                    <i class="fa-solid fa-circle-exclamation"></i> Reason for Decline:
+                                </span>
+                            </div>
+                            <div class="decline-reason-message">
+                                <p>{{ appointment.decline_reason }}</p>
+                                <small class="text-muted">From: Admin</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if appointment.message %}
+                        <div class="appointment-detail">
+                            <span class="detail-label">Your Message:</span> 
+                            <span class="detail-value">{{ appointment.message|truncatewords:20 }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Edit Mode (Hidden by default) -->
+                    <div class="appointment-details edit-mode" id="edit-mode-{{ appointment.id }}" style="display: none;">
+                        <form method="POST" action="{% url 'update_lesson' appointment.id %}" 
+                              class="edit-appointment-form" 
+                              id="edit-form-{{ appointment.id }}"
+                              onsubmit="return validateLessonForm({{ appointment.id }})">
+                            {% csrf_token %}
+                            
+                            <div class="edit-form-row">
+                                <div class="edit-form-group">
+                                    <label>School Name:</label>
+                                    <input type="text" name="school_name" 
+                                           value="{{ appointment.school_name }}" 
+                                           class="edit-input" required>
+                                </div>
+                                
+                                <div class="edit-form-group">
+                                    <label>Class Size:</label>
+                                    <input type="number" name="class_size" 
+                                           value="{{ appointment.class_size }}" 
+                                           class="edit-input" min="1" max="100" required>
+                                </div>
+                                
+                                <div class="edit-form-group">
+                                    <label>Location:</label>
+                                    <input type="text" name="location" 
+                                           value="{{ appointment.location }}" 
+                                           class="edit-input" required>
+                                </div>
+                                
+                                <div class="edit-form-group">
+                                    <label>Date:</label>
+                                    <input type="date" name="lesson_date" 
+                                           value="{{ appointment.lesson_date|date:'Y-m-d' }}" 
+                                           class="edit-input" required>
+                                </div>
+                                
+                                <div class="edit-form-group">
+                                    <label>Time:</label>
+                                    <input type="time" name="lesson_time" 
+                                           value="{{ appointment.lesson_time|time:'H:i' }}" 
+                                           class="edit-input" required>
+                                </div>
+                                
+                                <div class="edit-form-group full-width">
+                                    <label>Message:</label>
+                                    <textarea name="message" 
+                                              class="edit-textarea">{{ appointment.message|default:'' }}</textarea>
+                                </div>
+                                
+                                <div class="edit-form-buttons">
+                                    <button type="submit" class="btn-save">Save Changes</button>
+                                    <button type="button" class="btn-cancel" 
+                                            onclick="cancelEdit({{ appointment.id }})">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="appointment-footer">
+                        <small>Created: {{ appointment.created_at|date:"M d, Y" }}</small>
+                        <div class="appointment-actions">
+                            {% if appointment.status == 'Pending' %}
+                            <!-- Update button (only for pending) -->
+                            <button type="button" class="action-button update-lesson" 
+                                    onclick="enableEditMode({{ appointment.id }})"
+                                    title="Edit Appointment">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                            
+                            <!-- Cancel button (only for pending) -->
+                            <form method="POST" action="{% url 'cancel_lesson' appointment.id %}" 
+                                style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="action-button delete-lesson" 
+                                        onclick="return confirm('Are you sure you want to cancel this appointment?');"
+                                        title="Cancel Appointment">
+                                    <i class="fa-solid fa-trash"></i> Cancel
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-appointments">No lesson appointments</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+     /* Styles for declined appointments */
+    .declined-appointment {
+        border-left: 4px solid #dc3545;
+        background-color: #f8f9fa;
+    }
+    
+    .decline-reason-container {
+        margin: 15px 0;
+        padding: 12px;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 6px;
+    }
+    
+    .decline-reason-header {
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+    
+    .decline-reason-header i {
+        margin-right: 8px;
+    }
+    
+    .decline-reason-message {
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        border-left: 3px solid #dc3545;
+    }
+    
+    .decline-reason-message p {
+        margin: 0 0 5px 0;
+        color: #721c24;
+    }
+    
+    .decline-reason-message small {
+        display: block;
+        text-align: right;
+        font-style: italic;
+    }
+    
+    /* Make the status badge more prominent for declined */
+    .status-declined {
+        background-color: #dc3545 !important;
+        color: white !important;
+        font-weight: bold;
+    }
+    /* Edit Mode Styles */
+    .edit-mode {
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        margin: 10px 0;
+        border: 1px solid #dee2e6;
+    }
+    
+    .edit-form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .edit-form-group {
+        flex: 1 1 calc(50% - 15px);
+        min-width: 200px;
+    }
+    
+    .edit-form-group.full-width {
+        flex: 1 1 100%;
+    }
+    
+    .edit-form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #495057;
+    }
+    
+    .edit-input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.15s ease-in-out;
+    }
+    
+    .edit-input:focus {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    .edit-textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 14px;
+        min-height: 80px;
+        resize: vertical;
+    }
+    
+    .edit-form-buttons {
+        flex: 1 1 100%;
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #dee2e6;
+    }
+    
+    .btn-save {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-save:hover {
+        background-color: #218838;
+    }
+    
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-cancel:hover {
+        background-color: #5a6268;
+    }
+    
+    /* Action buttons */
+    .appointment-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .action-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .action-button i {
+        font-size: 12px;
+    }
+    
+    .action-button.update-performance,
+    .action-button.update-lesson {
+        background-color: #17a2b8;
+        color: white;
+    }
+    
+    .action-button.update-performance:hover,
+    .action-button.update-lesson:hover {
+        background-color: #138496;
+    }
+    
+    .action-button.delete-performance,
+    .action-button.delete-lesson {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .action-button.delete-performance:hover,
+    .action-button.delete-lesson:hover {
+        background-color: #c82333;
+    }
+    
+    /* Highlight editing card */
+    .appointment-card.editing {
+        border: 2px solid #17a2b8;
+        box-shadow: 0 0 10px rgba(23, 162, 184, 0.2);
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+    }
+    
+    /* Hide action buttons in edit mode */
+    .appointment-card.editing .appointment-actions {
+        display: none;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .edit-form-group {
+            flex: 1 1 100%;
+        }
+        
+        .appointment-actions {
+            flex-direction: column;
+        }
+        
+        .action-button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>

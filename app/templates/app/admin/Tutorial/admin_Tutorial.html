@@ -1,0 +1,388 @@
+{% load static %}
+<style>
+       .create-Tutorial {
+        /* Base Styles */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 1.5rem);
+        background: var(--text-color1);
+        color: white;
+        text-decoration: none;
+        border-radius: clamp(6px, 1vw, 8px);
+        border: none;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        min-width: 120px;
+        min-height: 44px; /* Better touch target */
+        
+        /* Accessibility */
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+    
+    /* Text Elements */
+    .create-Tutorial span {
+        display: inline-block;
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    .create-Tutorial::before {
+        content: 'Add New';
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        will-change: transform, opacity;
+    }
+    
+    /* Hover States */
+    .create-Tutorial:hover {
+        background: var(--text-color1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .create-Tutorial:hover span {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .create-Tutorial:hover::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Active/Focus States */
+    .create-Tutorial:active {
+        transform: scale(0.98);
+    }
+    
+    .create-Tutorial:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    
+    /* Mobile Adaptations */
+    @media (hover: none) {
+        .create-Tutorial {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+        }
+        
+        .create-Tutorial::before {
+            content: '+ Tutorial';
+            font-size: 1.1rem;
+        }
+        
+        .create-Tutorial span {
+            display: none;
+        }
+        
+        .create-Tutorial::before {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        .create-Tutorial {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .create-Tutorial:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+    }
+</style>
+<!-- Search Section -->
+<div id="search-section">
+    <div id="header-section">
+        <div class="text-end">
+            <a href="javascript:void(0);" class="create-Tutorial btn-style" id="create-service-btn">
+                <span>Tutorial</span>
+            </a>
+        </div>
+    </div>
+    <input type="text" id="search-input" class="Tutorial" placeholder="Search for Tutorial...">
+</div>
+
+<div id="dashboard-container" class="container main main-content">
+    <div id="users-section">
+        {% if Tutorials %}
+           
+                <!-- Tutorials List - Mobile Cards Only -->
+                <div id="services-list" class="list-section mobile-cards">
+                    {% for tutorial in Tutorials %}
+                    <div class="instrument-card">
+                        <div class="card-header">
+                            <div class="instrument-title">
+                                <h3>{{ tutorial.instrument.name }}</h3>
+                                <p>{{ tutorial.title }}</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if tutorial.video_file %}
+                            <div class="video-placeholder" data-video-url="{{ tutorial.video_file.url }}">
+                                <i class="fa-solid fa-play"></i> Click to play
+                            </div>
+                            {% else %}
+                            <span>No video available</span>
+                            {% endif %}
+                            <div class="instrument-detail">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">{{ tutorial.description|truncatewords:15 }}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="instrument-actions">
+                                <a class="action-link edit-Tutorial" href="" data-Tutorial-id="{{ tutorial.pk }}">
+                                    <i class="fa-solid fa-pen" title="Edit Tutorial"></i>
+                                </a>
+                                <a class="action-link delete-Tutorial" href="" data-Tutorial-id2="{{ tutorial.pk }}">
+                                    <i class="fa-solid fa-trash" title="Delete Tutorial"></i>
+                                </a>
+                            </div>
+                            <div class="instrument-date">
+                                Added: {{ tutorial.uploaded_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <!-- Tutorials Table - Desktop Only -->
+                <div id="services-table" class="table-section">
+                    <table id="user-table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Video</th>
+                                <th>Instrument Name</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Date Upload</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-tbody" class="Tutorial1">
+                            {% for tutorial in Tutorials %}
+                            <tr>
+                                <td>
+                                    {% if tutorial.video_file %}
+                                    <div class="video-placeholder" data-video-url="{{ tutorial.video_file.url }}">
+                                        <i class="fa-solid fa-play"></i> Click to play
+                                    </div>
+                                    {% else %}
+                                    <span>No video available</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ tutorial.instrument.name }}</td>
+                                <td>{{ tutorial.title }}</td>
+                                <td>{{ tutorial.description|truncatewords:10 }}</td>
+                                <td>{{ tutorial.uploaded_at }}</td>
+                                <td>
+                                    <a class="action-link edit-Tutorial" href="" data-Tutorial-id="{{ tutorial.pk }}">
+                                        <i class="fa-solid fa-pen" title="Edit Tutorial"></i>
+                                    </a>
+                                    |
+                                    <a class="action-link delete-Tutorial" href="" data-Tutorial-id2="{{ tutorial.pk }}">
+                                        <i class="fa-solid fa-trash" title="Delete Tutorial"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            
+        {% else %}
+        <p class="text-center">No video tutorials found. Start by adding a new tutorial!</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal Dialogs -->
+<div id="Edit-Tutorial-Modal" class="Edit-Tutorial-Modal">
+    <div class="Edit-Tutorial-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Edit-Tutorial-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Delete-Tutorial-Modal" class="Delete-Tutorial-Modal">
+    <div class="Delete-Tutorial-modal-content">
+        <div id="Delete-Tutorial-modal-form-container">
+            <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<div id="Create-Tutorial-Modal" class="Create-Tutorial-Modal">
+    <div class="Create-Tutorial-modal-content">
+        <span class="close-btn1">&times;</span>
+        <div id="Create-Tutorial-modal-form-container">
+             <!-- Dynamic form content will load here -->
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Add smooth modal transitions */
+    .Edit-Tutorial-Modal,
+    .Delete-Tutorial-Modal,
+    .Create-Tutorial-Modal {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        opacity: 0;
+        transform: translateY(-20px);
+        pointer-events: none;
+    }
+    
+    .Edit-Tutorial-Modal.show,
+    .Delete-Tutorial-Modal.show,
+    .Create-Tutorial-Modal.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+    
+</style>
+
+<script>
+// Combined optimized JavaScript
+document.addEventListener("DOMContentLoaded", () => {
+    // Cache modal elements
+    const modals = {
+        create: {
+            element: document.getElementById("Create-Tutorial-Modal"),
+            container: document.getElementById("Create-Tutorial-modal-form-container"),
+            closeBtn: document.querySelector("#Create-Tutorial-Modal .close-btn1")
+        },
+        edit: {
+            element: document.getElementById("Edit-Tutorial-Modal"),
+            container: document.getElementById("Edit-Tutorial-modal-form-container"),
+            closeBtn: document.querySelector("#Edit-Tutorial-Modal .close-btn1")
+        },
+        delete: {
+            element: document.getElementById("Delete-Tutorial-Modal"),
+            container: document.getElementById("Delete-Tutorial-modal-form-container"),
+            closeBtn: document.querySelector("#Delete-Tutorial-Modal .close-btn1")
+        }
+    };
+
+    // Generic modal handler
+    function setupModal(modalConfig, triggerSelector, urlGenerator) {
+        const triggers = document.querySelectorAll(triggerSelector);
+        
+        triggers.forEach(trigger => {
+            trigger.addEventListener("click", async (e) => {
+                e.preventDefault();
+                const id = trigger.dataset.tutorialId || trigger.dataset.tutorialId2;
+                const url = typeof urlGenerator === 'function' ? urlGenerator(id) : urlGenerator;
+                
+                // Show loading state
+                modalConfig.container.innerHTML = '<div class="loading-spinner"></div>';
+                modalConfig.element.classList.add("show");
+                
+                try {
+                    const response = await fetch(url);
+                    modalConfig.container.innerHTML = await response.text();
+                } catch (error) {
+                    modalConfig.container.innerHTML = "<h2>Error loading form</h2>";
+                    console.error("Error:", error);
+                }
+            });
+        });
+        
+        // Close modal handler
+        if (modalConfig.closeBtn) {
+            modalConfig.closeBtn.addEventListener("click", () => {
+                modalConfig.element.classList.remove("show");
+            });
+        }
+    }
+
+    // Initialize all modals
+    setupModal(
+        modals.create,
+        ".create-Tutorial",
+        () => "/admin_tutorial/create/"
+    );
+    
+    setupModal(
+        modals.edit,
+        ".edit-Tutorial",
+        (id) => `/admin_tutorial/${id}/edit/`
+    );
+    
+    setupModal(
+        modals.delete,
+        ".delete-Tutorial",
+        (id) => `/admin_tutorial/${id}/delete/`
+    );
+
+    // Lazy load videos when clicked
+    document.addEventListener("click", (e) => {
+        if (e.target.closest(".video-placeholder")) {
+            const placeholder = e.target.closest(".video-placeholder");
+            const videoUrl = placeholder.getAttribute("data-video-url");
+            placeholder.innerHTML = `
+                <video width="100%" controls>
+                    <source src="${videoUrl}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            `;
+        }
+    });
+    
+    // Close modals when clicking outside
+    window.addEventListener("click", (e) => {
+        if (e.target.classList.contains("Edit-Tutorial-Modal") || 
+            e.target.classList.contains("Delete-Tutorial-Modal") || 
+            e.target.classList.contains("Create-Tutorial-Modal")) {
+            e.target.classList.remove("show");
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInputTutorial = document.querySelector(".Tutorial"); // Input field
+    const TutorialTableRows = document.querySelectorAll(".Tutorial1 tr"); // Desktop table rows
+    const TutorialCards = document.querySelectorAll(".instrument-card"); // Mobile cards
+
+    searchInputTutorial.addEventListener("input", () => {
+        const query = searchInputTutorial.value.toLowerCase().trim();
+
+        // Search in desktop table
+        TutorialTableRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const textContent = Array.from(cells)
+                .map((cell) => cell.textContent.toLowerCase())
+                .join(" ");
+
+            row.style.display = textContent.includes(query) ? "" : "none";
+        });
+
+        // Search in mobile cards
+       TutorialCards.forEach((card) => {
+            const textContent = card.textContent.toLowerCase();
+            card.style.display = textContent.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>

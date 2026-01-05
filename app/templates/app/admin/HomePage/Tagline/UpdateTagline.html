@@ -1,0 +1,30 @@
+{% load static %}
+
+<div id="Instrument">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'UpdateTagline' tagline.pk %}" class="admin-form">
+        <div class="form-layout">
+            
+            <!-- Right Section: Form Fields -->
+            <div class="form-right-section">
+                {% csrf_token %}
+                
+                <!-- Title Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_title" name="title" class="form-control" placeholder=" " value="{{ tagline.title }}" required />
+                    <label for="id_title" class="floating-label">Tagline Title</label>
+                </div>
+                
+                <!-- Icon Field -->
+                <div class="form-group floating-label-group">
+                    <input type="text" id="id_icon" name="icon" class="form-control" placeholder=" " value="{{ tagline.icon }}" />
+                    <label for="id_icon" class="floating-label">Icon Class</label>
+                    <small class="form-text text-muted">Use Font Awesome icon classes (default: music)</small>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Update Tagline</button>
+                <div id="error-message-container" style="color: red; display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </form>
+</div>

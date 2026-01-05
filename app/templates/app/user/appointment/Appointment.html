@@ -1,0 +1,630 @@
+{% load static %}
+
+<style>
+/* ================== Container ================== */
+#InstrumentAppointContainer {
+  width: 95%;
+  max-width: 1000px;
+  margin: 15px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  font-family: "Inter", "Poppins", sans-serif;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: row;
+}
+
+#InstrumentAppointContainer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+/* ================== Instructions Panel ================== */
+.appoint-instructions {
+  flex: 0 0 35%;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.appoint-instructions h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.appoint-instructions p {
+  margin-bottom: 12px;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.appoint-instructions ul {
+  margin: 12px 0;
+  padding-left: 18px;
+}
+
+.appoint-instructions li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+  font-size: 13px;
+}
+
+.appoint-instruction-image {
+  width: 100%;
+  height: 150px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.appoint-instruction-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ================== Form Panel ================== */
+.appoint-form-panel {
+  flex: 0 0 65%;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+
+/* ================== Tabs header ================== */
+.appoint-tabs-header {
+  display: flex;
+  gap: 0;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-bottom: 1px solid #e2e8f0;
+  position: relative;
+}
+
+.appoint-tab-label {
+  flex: 1;
+  padding: 12px 14px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  color: #64748b;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  font-size: 13px;
+}
+
+.appoint-tab-label::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: -1;
+}
+
+.appoint-tab-label:hover {
+  color: #4f46e5;
+}
+
+.appoint-tab-label:hover::before {
+  transform: translateY(0);
+  opacity: 0.1;
+}
+
+.appoint-tabs-header input[type="radio"] { display: none; }
+
+#appoint-tab-performance:checked ~ .appoint-tabs-header label[for="appoint-tab-performance"],
+#appoint-tab-lesson:checked ~ .appoint-tabs-header label[for="appoint-tab-lesson"] {
+  color: #fff;
+}
+
+#appoint-tab-performance:checked ~ .appoint-tabs-header label[for="appoint-tab-performance"]::before,
+#appoint-tab-lesson:checked ~ .appoint-tabs-header label[for="appoint-tab-lesson"]::before {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ================== Form Area ================== */
+.appoint-form-area {
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.appoint-form-section {
+  display: none;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#appoint-tab-performance:checked ~ .appoint-form-area #appoint-performanceForm,
+#appoint-tab-lesson:checked ~ .appoint-form-area #appoint-lessonForm {
+  display: block;
+}
+
+/* ================== Floating label ================== */
+.appoint-floating-label-group {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.appoint-form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1.5px solid #e2e8f0;
+  font-size: 13px;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.appoint-form-control:focus {
+  outline: none;
+  border-color: #4f46e5;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(79,70,229,0.12);
+  transform: translateY(-1px);
+}
+
+.appoint-floating-label {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  pointer-events: none;
+  font-size: 13px;
+  color: #94a3b8;
+  transition: all 0.3s ease;
+  background: transparent;
+  padding: 0 4px;
+}
+
+.appoint-form-control:focus + .appoint-floating-label,
+.appoint-form-control:not(:placeholder-shown) + .appoint-floating-label {
+  top: -8px;
+  font-size: 11px;
+  background: #fff;
+  padding: 0 6px;
+  color: #4f46e5;
+  font-weight: 600;
+  transform: scale(0.95);
+}
+
+.appoint-form-control textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ================== Buttons ================== */
+.appoint-btn-primary, .appoints-btn-cancel {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  margin-top: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.appoint-btn-primary {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(79,70,229,0.25);
+}
+
+.appoints-btn-cancel {
+  background: linear-gradient(135deg, #e63946 0%, #d90429 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(230,57,70,0.25);
+}
+
+.appoint-btn-primary::before, .appoints-btn-cancel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.appoint-btn-primary:hover, .appoints-btn-cancel:hover {
+  transform: translateY(-1px);
+}
+
+.appoint-btn-primary:hover::before, .appoints-btn-cancel:hover::before {
+  left: 100%;
+}
+
+.appoint-btn-primary:active, .appoints-btn-cancel:active {
+  transform: translateY(0);
+}
+
+/* ================== Form Header ================== */
+.appoint-form-header {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.appoint-form-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 5px;
+}
+
+.appoint-form-subtitle {
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* ================== Responsive ================== */
+@media (max-width: 992px) {
+  #InstrumentAppointContainer {
+    flex-direction: column;
+    max-width: 600px;
+  }
+  .appoint-instructions, .appoint-form-panel { flex: 0 0 auto; }
+  .appoint-instruction-image { height: 120px; }
+}
+
+@media (max-width: 768px) {
+  #InstrumentAppointContainer {
+    width: 97%;
+    margin: 10px auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .appoint-form-area {
+    padding: 15px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .appoint-tab-label { padding: 10px 8px; font-size: 12px; }
+  .appoint-form-title { font-size: 15px; }
+  .appoint-form-subtitle { font-size: 11px; }
+  .appoint-floating-label-group { margin-bottom: 12px; }
+  .appoint-form-control { padding: 9px 10px; font-size: 12px; }
+  .appoint-floating-label { font-size: 12px; left: 10px; top: 9px; }
+  .appoint-form-control:focus + .appoint-floating-label,
+  .appoint-form-control:not(:placeholder-shown) + .appoint-floating-label { top: -6px; font-size: 10px; }
+  .appoint-btn-primary, .appoints-btn-cancel { padding: 9px; font-size: 12px; margin-top: 6px; }
+  .appoint-form-control textarea { min-height: 70px; }
+  .appoint-instructions { padding: 15px; }
+  .appoint-instructions h2 { font-size: 18px; }
+  .appoint-instructions p, .appoint-instructions li { font-size: 12px; }
+  .appoint-instruction-image { height: 100px; margin-top: 12px; }
+}
+
+@media (max-width: 480px) {
+  #InstrumentAppointContainer {
+    flex-direction: column;       /* Stack vertically */
+    overflow-y: auto;             /* Enable vertical scroll if content overflows */
+    max-height: 90vh;             /* Limit height to viewport */
+    width: 100%;
+    margin: 8px auto;
+    border-radius: 6px;
+    padding: 10px 0;
+  }
+
+  .appoint-instructions, .appoint-form-panel {
+    flex: 0 0 auto;
+    width: 95%;                  /* Full width */
+    margin: 0 auto;
+  }
+
+  .appoint-form-area {
+    padding: 12px;
+    max-height: 70vh;             /* Scroll inside form if needed */
+    overflow-y: auto;
+  }
+
+  .appoint-tab-label { padding: 8px 6px; font-size: 11px; }
+  .appoint-form-header { margin-bottom: 12px; }
+  .appoint-form-title { font-size: 14px; }
+  .appoint-form-subtitle { font-size: 10px; }
+  .appoint-floating-label-group { margin-bottom: 10px; }
+  .appoint-form-control { padding: 8px 9px; font-size: 11px; }
+  .appoint-btn-primary, .appoints-btn-cancel { padding: 8px; font-size: 11px; }
+  .appoint-instructions { padding: 12px; }
+  .appoint-instructions h2 { font-size: 16px; margin-bottom: 10px; }
+  .appoint-instructions p, .appoint-instructions li { font-size: 11px; margin-bottom: 8px; }
+  .appoint-instruction-image { height: 80px; margin-top: 10px; }
+}
+/* ================== Error Message Styles ================== */
+.FrontLerror-message {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border: 1px solid #f87171;
+  color: #dc2626;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 13px;
+  font-weight: 500;
+  display: none;
+  animation: slideDown 0.3s ease-out;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+}
+
+.FrontLerror-message.show {
+  display: block;
+}
+
+.FrontLerror-message::before {
+  content: "⚠️";
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================== Date Conflict Message Styles ================== */
+.FrontLerror-message.date-conflict-message {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #d97706;
+  color: #92400e;
+}
+
+.FrontLerror-message.date-conflict-message::before {
+  content: "⏰";
+  margin-right: 8px;
+  font-size: 14px;
+}
+/* Add error state for form controls */
+.appoint-form-control.error {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+.appoint-form-control.error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.12);
+}
+
+/* ================== Smooth Modal Transitions ================== */
+#Create-Performances-Modal {
+  transition: opacity 0.5s ease;
+}
+
+/* ================== Success Message Styles ================== */
+.FrontLerror-message.success-message {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  border: 1px solid #22c55e;
+  color: #166534;
+  transition: all 0.3s ease;
+}
+
+.FrontLerror-message.success-message::before {
+  content: "✅ Appointment submitted successfully! Please wait for our response.";
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.FrontLerror-message.success-message small {
+  opacity: 0.8;
+  font-size: 0.9em;
+  margin-top: 5px;
+  display: block;
+}
+
+/* ================== Disabled Form State ================== */
+.appoint-form-control:disabled,
+.appoint-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.appoint-btn-primary:disabled:hover::before {
+  left: -100%;
+}
+/* Prevent horizontal scroll on body */
+html, body { max-width: 100%; overflow-x: hidden; }
+
+</style>
+
+<div id="InstrumentAppointContainer">
+  <!-- Instructions Panel -->
+  <div class="appoint-instructions">
+    <h2>Appointment Instructions</h2>
+    <p>Welcome to our appointment booking system. Please follow these instructions to schedule your appointment:</p>
+    
+    <ul>
+      <li><strong>Performance Appointments:</strong> Use this option if you need to schedule a musical performance for an event, concert, or special occasion.</li>
+      <li><strong>Lesson Appointments:</strong> Use this option if you want to schedule a music lesson for yourself or a group.</li>
+    </ul>
+    
+    <p>Simply select the appropriate tab and fill out all required information. Make sure to provide accurate details to ensure we can accommodate your request.</p>
+    
+    <p>After submitting your appointment request, our team will review it and contact you to confirm the details.</p>
+    
+    <div class="appoint-instruction-image">
+      <img src="{% static 'images/ghibli-style.jpg' %}" onerror="this.style.display='none'">
+    </div>
+  </div>
+  
+  <!-- Form Panel -->
+  <div class="appoint-form-panel">
+    <!-- radios (controls which tab is shown) -->
+    <input hidden type="radio" name="appoint-tab" id="appoint-tab-performance" checked>
+    <input hidden type="radio" name="appoint-tab" id="appoint-tab-lesson">
+
+    <div class="appoint-tabs-header" role="tablist" aria-label="Appointment tabs">
+      <label class="appoint-tab-label" for="appoint-tab-performance" role="tab">Performance</label>
+      <label class="appoint-tab-label" for="appoint-tab-lesson" role="tab">Lesson</label>
+    </div>
+
+    <div class="appoint-form-area">
+      <!-- PERFORMANCE -->
+      <section id="appoint-performanceForm" class="appoint-form-section" aria-labelledby="appoint-tab-performance">
+        <div class="appoint-form-header">
+          <h2 class="appoint-form-title">Performance Appointment</h2>
+          <p class="appoint-form-subtitle">Schedule your musical performance</p>
+        </div>
+
+        <!-- Error message container -->
+        <div id="performanceFormError" class="FrontLerror-message"></div>
+
+        <form id="performanceForm" method="POST" enctype="multipart/form-data" action="{% url 'Appointment' %}">
+          {% csrf_token %}
+          <div class="appoint-floating-label-group">
+            <input class="appoint-form-control" type="text" id="appoint_event_name_css" name="event_name" placeholder=" " required>
+            <label class="appoint-floating-label" for="appoint_event_name_css">Event Name</label>
+          </div>
+
+          <div class="appoint-floating-label-group">
+            <input class="appoint-form-control" type="text" id="appoint_event_type_css" name="event_type" placeholder=" ">
+            <label class="appoint-floating-label" for="appoint_event_type_css">Event Type</label>
+          </div>
+
+          <div class="appoint-floating-label-group">
+            <input class="appoint-form-control" type="text" id="appoint_event_location_css" name="event_location" placeholder=" " required>
+            <label class="appoint-floating-label" for="appoint_event_location_css">Event Location</label>
+          </div>
+
+          <div class="appoint-floating-label-group">
+            <input class="appoint-form-control" type="date" id="appoint_event_date_css" name="event_date" placeholder=" " required>
+            <label class="appoint-floating-label" for="appoint_event_date_css">Event Date</label>
+          </div>
+
+          <div class="appoint-floating-label-group">
+            <input class="appoint-form-control" type="time" id="appoint_event_time_css" name="event_time" placeholder=" " required>
+            <label class="appoint-floating-label" for="appoint_event_time_css">Event Time</label>
+          </div>
+
+          <div class="appoint-floating-label-group">
+            <textarea class="appoint-form-control" id="appoint_performance_message_css" name="message" rows="3" placeholder=" "></textarea>
+            <label class="appoint-floating-label" for="appoint_performance_message_css">Message</label>
+          </div>
+
+          <button class="appoint-btn-primary" type="submit">Save Performance</button>
+          <button type="button" class="appoints-btn-cancel appoint-cancel-btn">Cancel</button>
+        </form>
+      </section>
+
+      <!-- LESSON -->
+      <section id="appoint-lessonForm" class="appoint-form-section" aria-labelledby="appoint-tab-lesson">
+        <div class="appoint-form-header">
+          <h2 class="appoint-form-title">Lesson Appointment</h2>
+          <p class="appoint-form-subtitle">Schedule your music lesson</p>
+        </div>
+
+        <!-- Error message container -->
+        <div id="lessonFormError" class="FrontLerror-message"></div>
+
+        <form id="lessonForm" method="POST" enctype="multipart/form-data" action="{% url 'Appointment' %}">
+          {% csrf_token %}
+          <div class="appoint-floating-label-group">
+            <input class="appoint-form-control" type="text" id="appoint_school_name_css" name="school_name" placeholder=" " required>
+            <label class="appoint-floating-label" for="appoint_school_name_css">School Name</label>
+          </div>
+
+          <div class="appoint-floating-label-group">
+            <input class="appoint-form-control" type="number" id="appoint_class_size_css" name="class_size" min="1" placeholder=" " required>
+            <label class="appoint-floating-label" for="appoint_class_size_css">Class Size</label>
+          </div>
+
+          <div class="appoint-floating-label-group">
+            <input class="appoint-form-control" type="date" id="appoint_lesson_date_css" name="lesson_date" placeholder=" " required>
+            <label class="appoint-floating-label" for="appoint_lesson_date_css">Lesson Date</label>
+          </div>
+
+          <div class="appoint-floating-label-group">
+            <input class="appoint-form-control" type="time" id="appoint_lesson_time_css" name="lesson_time" placeholder=" " required>
+            <label class="appoint-floating-label" for="appoint_lesson_time_css">Lesson Time</label>
+          </div>
+
+          <div class="appoint-floating-label-group">
+            <input class="appoint-form-control" type="text" id="appoint_location_css" name="location" placeholder=" " required>
+            <label class="appoint-floating-label" for="appoint_location_css">Location</label>
+          </div>
+
+          <div class="appoint-floating-label-group">
+            <textarea class="appoint-form-control" id="appoint_lesson_message_css" name="message" rows="3" placeholder=" "></textarea>
+            <label class="appoint-floating-label" for="appoint_lesson_message_css">Message</label>
+          </div>
+
+          <button class="appoint-btn-primary" type="submit">Save Lesson</button>
+          <button type="button" class="appoints-btn-cancel appoint-cancel-btn">Cancel</button>
+        </form>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+// Add some interactive animations
+document.addEventListener('DOMContentLoaded', function() {
+  // Add animation to form sections when switching tabs
+  const tabInputs = document.querySelectorAll('input[name="appoint-tab"]');
+  
+  tabInputs.forEach(input => {
+    input.addEventListener('change', function() {
+      // Add a subtle animation to the active form
+      const activeForm = document.querySelector('.appoint-form-section[style*="display: block"]');
+      if (activeForm) {
+        activeForm.style.animation = 'none';
+        setTimeout(() => {
+          activeForm.style.animation = 'fadeIn 0.4s ease forwards';
+        }, 10);
+      }
+    });
+  });
+  
+  // Add success animation to submit buttons
+  const submitButtons = document.querySelectorAll('.appoint-btn-primary');
+  
+  submitButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      // Only add animation if form is valid
+      const form = this.closest('form');
+      if (form.checkValidity()) {
+        this.classList.add('success');
+        setTimeout(() => {
+          this.classList.remove('success');
+        }, 800);
+      }
+    });
+  });
+});
+</script>

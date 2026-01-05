@@ -1,0 +1,500 @@
+
+
+/*=============== CREATE MODAL FOR Instrument ===============*/
+.Create-Instrument-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+  }
+  
+  /* Show modal when triggered */
+  .Create-Instrument-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+  }
+  
+  /* Modal Content Styling */
+  .Create-Instrument-modal-content {
+    background: var(--body-color); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+  }
+  
+  /* Show modal content with transition */
+  .Create-Instrument-Modal.show .Create-Instrument-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+  }
+
+/*=============== UPDATE MODAL FOR Instrument ===============*/
+.Edit-Instrument-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Edit-Instrument-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Edit-Instrument-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 742px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Edit-Instrument-Modal.show .Edit-Instrument-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+/*=============== DELETE MODAL FOR Instrument ===============*/
+.Delete-Instrument-Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000;
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.3s ease-in-out; /* Fade-in effect for modal background */
+}
+
+/* Show modal when triggered */
+.Delete-Instrument-Modal.show {
+    display: flex;
+    opacity: 2; /* Fade in when the modal is shown */
+}
+
+/* Modal Content Styling */
+.Delete-Instrument-modal-content {
+    background: var(--body-color1); /* Modal content background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px; /* Adjust this to match the width of your other content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transform: scale(0.8); /* Initially scaled down */
+    opacity: 0; /* Initially invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth scaling and fading */
+}
+
+/* Show modal content with transition */
+.Delete-Instrument-Modal.show .Delete-Instrument-modal-content {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+}
+
+
+/*=============== Enhanced Close Button ===============*/
+.close-btn1 {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: var(--text-color); /* Vibrant red */
+    cursor: pointer;
+    z-index: 1050;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .close-btn1:hover {
+    color: var(--text-color1); /* Darker red on hover */
+    transform: rotate(90deg) scale(1.1); /* Slight rotation and enlarge */
+  }
+  
+
+/*=============== UPDATE AND CREATE DESIGN ===============*//*=============== UPDATE AND CREATE DESIGN ===============*/
+  /* Ensure the form is centered and wider */
+#Instrument {
+    background: var(--bg-color);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px hsl(228, 15%, 20%);
+    max-width: 1000px;
+    width: 100%;
+    color: var(--text-color);
+    margin: auto;
+}
+/* Image: Square border, no rounded corners */
+.instrument-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* Remove rounding */
+    background-color: aliceblue;
+    border: 2px solid var(--text-color);
+    box-shadow: 0 4px 10px hsl(228, 15%, 20%);
+}
+
+/* Form Layout */
+.form-layout {
+    display: flex;
+    justify-content: center; /* Center children horizontally */
+    align-items: center;     /* Center children vertically */
+    gap: 30px;
+    height: 100%;            /* Ensure it can stretch full height if needed */
+}
+
+/* Center the Left Section */
+.form-left-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Vertically center */
+    text-align: center;
+    max-width: 300px;
+}
+
+
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 10px;
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    
+}
+
+.file-label {
+    margin-bottom: 15px;
+    display: block;
+    background-color: var(--text-color1);
+    color: white;
+    text-align: center;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.file-label-ins {
+    display: inline-block;
+    background-color: var(--text-color1);
+    color: white;
+    text-align: center;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px; /* Set desired fixed width */
+    height: 40px; /* Set desired fixed height */
+    line-height: 25px; /* Optional: to center text vertically if needed */
+}
+
+
+/* Right Section (Form Fields) */
+.form-right-section {
+    flex: 2;
+    max-width: 600px;
+}
+
+/* Floating Label Effect */
+.form-group {
+    position: relative;
+    margin: 20px 0;
+    margin-bottom: 10px;
+}
+
+
+.form-label {
+    color: var(--text-color1);
+    font-weight: bold;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 5px;
+    border: 2px solid var(--text-color1);
+    background: var(--body-color);
+    color: var(--text-color);
+    outline: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+/* Floating Label */
+.floating-label {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    padding: 3px 6px;
+    font-size: 16px;
+    color: var(--text-color1);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+/* Move label up when input is focused or has text */
+input:focus + .floating-label,
+input:not(:placeholder-shown) + .floating-label,
+textarea:focus + .floating-label,
+textarea:not(:placeholder-shown) + .floating-label,
+select:focus + .floating-label,
+select:valid + .floating-label {
+    top: -6px;
+    left: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    background: var(--bg-color);
+    padding: 2px 6px;
+    color:var(--text-color1);
+}
+
+/* Prevent select label from dropping when choosing an option */
+select:valid + .floating-label {
+    top: -6px;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+
+/* Red Scrollbar */
+select::-webkit-scrollbar {
+    width: 8px;
+}
+
+select::-webkit-scrollbar-thumb {
+    background: var(--text-color1);
+    border-radius: 5px;
+}
+
+select::-webkit-scrollbar-thumb:hover {
+    background: var(--text-color1);
+}
+
+/* Select Multiple Style */
+select[multiple] {
+    height: auto;
+    min-height: 120px;
+    overflow-y: auto;
+}
+
+/* Custom Dropdown Arrow */
+.form-group::after {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color1);
+    pointer-events: none;
+}
+
+/* Default Button Style */
+.btn {
+    width: 95%;
+    padding: 12px;
+    border-radius: 5px;
+    text-align: center;
+    border: 2px solid var(--text-color1);
+    background: none;
+    color: var(--text-color1);
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover Effect: Background turns red, text turns white */
+.btn:hover {
+    background: var(--first-color);
+    color: white;
+    box-shadow: 0 0 10px var(--text-color1);
+}
+
+
+/*=============== UPDATE AND CREATE DESIGN ===============*//*=============== UPDATE AND CREATE DESIGN ===============*/
+
+
+
+/*=============== DELETE DESIGN ===============*//*=============== DELETE DESIGN ===============*/
+/* DELETE FORM */
+/* Delete Confirmation Container */
+.delete-container1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+
+    background: var(--bg-color);
+}
+
+/* Card Layout */
+.delete-card1 {
+    background: var(--bg-color);
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 4px 10px var(--title-color);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+}
+
+.smaller-video {
+    max-height: 400px;
+    width: 80%;
+}
+
+/* Image Section */
+.image-section1 {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+
+.instrument-image1 {
+    width: 120px;
+    height: 120px;
+    background-color: #f8f8f8;
+    border-radius: 50%;
+    border: 3px solid #ccc2c2;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Delete Confirmation Text */
+.delete-title1 {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.delete-title1 span {
+    color: var(--text-color1);
+}
+
+.delete-warning1 {
+    font-size: 14px;
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+/* Input Fields */
+.form-group1 {
+    position: relative;
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.form-group1 textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.floating-label1 {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text-color);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-control1 {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 2px solid var(--text-color1);
+    background: var(--body-color);
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+/* Button Group */
+.button-group1 {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Delete Button */
+.btn-danger1 {
+    background: #ff4d4d;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-danger1:hover {
+    background: darkred;
+}
+
+/* Cancel Button */
+.btn-secondary1 {
+    background: #555;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.btn-secondary1:hover {
+    background: black;
+}
+
+/*=============== DELETE DESIGN ===============*//*=============== DELETE DESIGN ===============*/
