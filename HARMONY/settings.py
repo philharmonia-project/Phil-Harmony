@@ -6,10 +6,6 @@ import dj_database_url
 from pathlib import Path
 import sys
 
-# Load .env for local development
-from dotenv import load_dotenv
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -17,27 +13,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ENVIRONMENT DETECTION
 # =====================
 IS_RENDER = os.environ.get('RENDER', False)
-IS_RAILWAY = os.environ.get('RAILWAY_ENVIRONMENT', False)
-IS_PRODUCTION = IS_RENDER or IS_RAILWAY
+IS_PRODUCTION = os.environ.get('RENDER') or os.environ.get('RAILWAY_ENVIRONMENT')
 
 # =====================
-# GET RENDER HOSTNAME (ADD THIS!)
-# =====================
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-
-# =====================
-# SECURITY SETTINGS - EMERGENCY FIXES
+# SECURITY SETTINGS
 # =====================
 SECRET_KEY = os.environ.get('SECRET_KEY')
 if not SECRET_KEY and IS_PRODUCTION:
     print("❌ ERROR: SECRET_KEY must be set in production!")
     sys.exit(1)
 
-# FORCE DEBUG TRUE TO SEE ERRORS - TEMPORARY FIX
-DEBUG = True  # Changed from: os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# ALLOW ALL HOSTS TEMPORARILY
-ALLOWED_HOSTS = ['*']  # Changed from conditional logic
+# Render provides RENDER_EXTERNAL_HOSTNAME
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+ALLOWED_HOSTS = []
+
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    ALLOWED_HOSTS.append('*')  # Temporary for testing
+
+# Add localhost for development
+if DEBUG:
+    ALLOWED_HOSTS.extend(['localhost', '127.0.0.1'])
 
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = []
@@ -45,22 +43,12 @@ if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
     CSRF_TRUSTED_ORIGINS.append(f'http://{RENDER_EXTERNAL_HOSTNAME}')
 
-# Add Railway origins if needed
-if IS_RAILWAY:
-    CSRF_TRUSTED_ORIGINS.extend([
-        "https://*.railway.app",
-    ])
-
-# HTTPS Settings - DISABLE TEMPORARILY FOR DEBUGGING
-if IS_PRODUCTION and DEBUG == False:  # Only if not in debug mode
+# HTTPS Settings
+if IS_PRODUCTION:
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-else:
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
 
 # =====================
 # APPLICATION DEFINITION
@@ -82,12 +70,12 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'storages',  # For Cloudflare R2 (MEDIA FILES ONLY)
+    'storages',  # For Cloudflare R2
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -140,7 +128,20 @@ else:
 # =====================
 # PASSWORD VALIDATION
 # =====================
-AUTH_PASSWORD_VALIDATORS = []
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 
 # =====================
 # INTERNATIONALIZATION
@@ -151,28 +152,13 @@ USE_I18N = True
 USE_TZ = True
 
 # =====================
-# STATIC FILES (CSS, JS) - FIXED!
+# FILE STORAGE (Cloudflare R2)
 # =====================
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# FIX: Use simpler WhiteNoise storage without manifest
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-WHITENOISE_MANIFEST_STRICT = False
-WHITENOISE_AUTOREFRESH = True
-
-# =====================
-# MEDIA FILES (Images/Uploads) - SERVED BY CLOUDFLARE R2
-# =====================
-MEDIA_URL = '/media/'  # Default for development
-MEDIA_ROOT = BASE_DIR / 'images'  # Local development only
-
-# Cloudflare R2 Configuration
+# R2 Configuration from environment
 R2_ACCOUNT_ID = os.environ.get('R2_ACCOUNT_ID')
 R2_ACCESS_KEY_ID = os.environ.get('R2_ACCESS_KEY_ID')
 R2_SECRET_ACCESS_KEY = os.environ.get('R2_SECRET_ACCESS_KEY')
-R2_BUCKET_NAME = os.environ.get('R2_BUCKET_NAME', 'phil-harmony')
+R2_BUCKET_NAME = os.environ.get('R2_BUCKET_NAME', 'philharmonia-media')
 
 # Check if R2 is configured
 R2_CONFIGURED = all([
@@ -182,14 +168,10 @@ R2_CONFIGURED = all([
     R2_BUCKET_NAME
 ])
 
-# =====================
-# CLOUDFLARE R2 STORAGE (PRODUCTION ONLY)
-# =====================
-if IS_PRODUCTION and R2_CONFIGURED:
-    print("✅ Production: Using Cloudflare R2 for MEDIA files only")
+if R2_CONFIGURED and IS_PRODUCTION:
+    # ✅ PRODUCTION WITH R2
+    print("✅ Using Cloudflare R2 for storage")
     
-    # Configure R2 for MEDIA files only
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     AWS_ACCESS_KEY_ID = R2_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY = R2_SECRET_ACCESS_KEY
     AWS_STORAGE_BUCKET_NAME = R2_BUCKET_NAME
@@ -197,10 +179,15 @@ if IS_PRODUCTION and R2_CONFIGURED:
     AWS_S3_REGION_NAME = 'auto'
     AWS_S3_CUSTOM_DOMAIN = f'pub-{R2_ACCOUNT_ID[:8]}.r2.dev'
     
-    # IMPORTANT: Media files go to R2, static files stay with Django
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+    # Static files
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
     
-    # S3/R2 settings
+    # Media files
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+    
+    # S3 settings
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
     }
@@ -208,12 +195,20 @@ if IS_PRODUCTION and R2_CONFIGURED:
     AWS_QUERYSTRING_AUTH = False
     AWS_S3_FILE_OVERWRITE = False
     
-    print(f"   Media URL: {MEDIA_URL}")
+    # Disable WhiteNoise when using R2
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    
 else:
-    if IS_PRODUCTION:
-        print("⚠️  Production: Using local storage (R2 not configured)")
-    else:
-        print("🛠️  Development: Using local file storage")
+    # 🛠️ DEVELOPMENT OR NO R2
+    print("⚠️ Using local file storage (development mode)")
+    STATIC_URL = '/static/'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'images'
+
+# Static files configuration
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
