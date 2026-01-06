@@ -48,6 +48,13 @@ from .views import (user_main, AboutPageView, Models3d ,ContactPageView ,VideoTu
 
 
 urlpatterns = [
+    # For FrontPage
+    path('', FrontPageView.as_view(), name='frontpage'),
+    path('about/', AboutPageView.as_view(), name='about'),
+    path('contact/create/', ContactPageView.as_view(), name='contact'),
+    path('video/', VideoTutorialPageView.as_view(), name='video'),
+    path('3dModel/', Models3d.as_view(), name='3dModel'),
+
 # GOOGLE ACCOUNT
     path('accounts/', include('allauth.urls')),
     path('health/', health_check, name='health_check'),  # ADD THIS LINE
@@ -78,12 +85,6 @@ urlpatterns = [
     path('api/instruments/province/', views.instruments_by_province, name='instruments_by_province'),
     
 
-# For FrontPage
-    path('', FrontPageView.as_view(), name='frontpage'),
-    path('about/', AboutPageView.as_view(), name='about'),
-    path('contact/create/', ContactPageView.as_view(), name='contact'),
-    path('video/', VideoTutorialPageView.as_view(), name='video'),
-    path('3dModel/', Models3d.as_view(), name='3dModel'),
 
 # For User 
     path('user_home/', user_main, name='user_home'),

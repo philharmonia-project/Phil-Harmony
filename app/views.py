@@ -2750,17 +2750,17 @@ class UserModels3d(TemplateView):
 
 
 
+
+# FrontPageView (for login and register modals)
 class FrontPageView(TemplateView):
     template_name = 'app/login/home.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        # Forms
         context['login_form'] = UserLoginForm()
         context['register_form'] = UserRegisterForm()
 
-        # Collections (safe even if empty)
+        # Add public data from database
         context['categorys'] = InstrumentCategory.objects.all()
         context['regions'] = Region.objects.all()
         context['Materials'] = Material.objects.all()
@@ -2770,19 +2770,18 @@ class FrontPageView(TemplateView):
         context['Tutorials'] = VideoTutorial.objects.all()
         context['popular_instruments'] = Instrument.objects.order_by('-views')[:4]
         context['section'] = DiscoverSection.objects.all()
+        context['guiding_principle'] = GuidingPrinciples.objects.prefetch_related('cards').first()
         context['Offerings'] = Offering.objects.all()
         context['CulturalImportances'] = CulturalImportance.objects.all()
         context['TargetAudiences'] = TargetAudience.objects.all()
         context['TeamMembers'] = TeamMember.objects.all()
         context['SocialLinks'] = SocialLink.objects.all()
+        context['contact'] = ContactPage.objects.first()
+        context['taglines'] = Tagline.objects.first()
+        context['homepages'] = HomePage.objects.first()
         context['social_links'] = SocialMediaLink.objects.all()
+        context['footer_settings'] = FooterSettings.objects.first()
 
-        # Single objects (use None if missing)
-        context['guiding_principle'] = GuidingPrinciples.objects.prefetch_related('cards').first() or None
-        context['contact'] = ContactPage.objects.first() or None
-        context['taglines'] = Tagline.objects.first() or None
-        context['homepages'] = HomePage.objects.first() or None
-        context['footer_settings'] = FooterSettings.objects.first() or None
 
         return context
 
