@@ -2219,33 +2219,37 @@ class DeleteInsLink(LoginRequiredMixin, DeleteView):
 
 
 
-
 @login_required
 def user_main(request):
     if request.user.role != 'user':
         return redirect('admin_main')
 
-    users = CustomUser.objects.all()
-    categorys = InstrumentCategory.objects.all()
-    regions = Region.objects.all()
-    Materials = Material.objects.all()
-    Instruments = Instrument.objects.all()
-    Feedbacks = Feedback.objects.all()
-    testimonials = Testimonial.objects.filter(approved=True).order_by('-date_submitted')[:5]
-    Tutorials = VideoTutorial.objects.all()
-    popular_instruments = Instrument.objects.order_by('-views')[:4]
-    contact = ContactPage.objects.first()
-    taglines = Tagline.objects.first()
-    homepages = HomePage.objects.first()
-    social_links = SocialMediaLink.objects.all()
-    footer_settings = FooterSettings.objects.first()
-    Performances = PerformanceAppointment.objects.all()
-    Lesson = LessonAppointment.objects.all()
+    # Users & other general objects
+    users = CustomUser.objects.all() or []
+    categorys = InstrumentCategory.objects.all() or []
+    regions = Region.objects.all() or []
+    Materials = Material.objects.all() or []
+    Instruments = Instrument.objects.all() or []
+    Feedbacks = Feedback.objects.all() or []
+    Testimonials = Testimonial.objects.filter(approved=True).order_by('-date_submitted')[:5] or []
+    Tutorials = VideoTutorial.objects.all() or []
+    popular_instruments = Instrument.objects.order_by('-views')[:4] or []
 
+    # Home page / sections
+    contact = ContactPage.objects.first() or ContactPage()
+    taglines = Tagline.objects.first() or Tagline()
+    homepages = HomePage.objects.first() or HomePage()
+    footer_settings = FooterSettings.objects.first() or FooterSettings()
+    social_links = SocialMediaLink.objects.all() or []
 
-    section = DiscoverSection.objects.all()
-    # ✅ Get the first GuidingPrinciples instance and related cards
-    guiding_principle = GuidingPrinciples.objects.prefetch_related('cards').first()
+    section = DiscoverSection.objects.all() or []
+
+    # Guiding principles with related cards
+    guiding_principle = GuidingPrinciples.objects.prefetch_related('cards').first() or GuidingPrinciples()
+
+    # Appointments
+    Performances = PerformanceAppointment.objects.all() or []
+    Lesson = LessonAppointment.objects.all() or []
 
     return render(request, 'app/user/home.html', {
         'users': users,
@@ -2254,19 +2258,20 @@ def user_main(request):
         'Materials': Materials,
         'Instruments': Instruments,
         'Feedbacks': Feedbacks,
-        'testimonials': testimonials,
+        'testimonials': Testimonials,
         'Tutorials': Tutorials,
         'popular_instruments': popular_instruments,
         'guiding_principle': guiding_principle,
-        'section' : section,
-        'contact' : contact,
-        'taglines' : taglines, 
-        'homepages' : homepages,
-        'social_links' : social_links,
-        'footer_settings' : footer_settings,
-        'Performances' : Performances,
-        'Lesson' : Lesson
+        'section': section,
+        'contact': contact,
+        'taglines': taglines,
+        'homepages': homepages,
+        'social_links': social_links,
+        'footer_settings': footer_settings,
+        'Performances': Performances,
+        'Lesson': Lesson,
     })
+
 
 class AppointmentView(LoginRequiredMixin, CreateView):
     template_name = 'app/user/appointment/Appointment.html'
