@@ -1,49 +1,42 @@
 """
-Django settings for HARMONY project.
+Django settings for HARMONY project
 """
-import os
-import dj_database_url
-from pathlib import Path
-import sys
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from pathlib import Path
+import os
+import sys
+import dj_database_url
+
+# =====================
+# BASE DIR
+# =====================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # =====================
-# ENVIRONMENT DETECTION
+# ENVIRONMENT
 # =====================
-IS_RENDER = os.environ.get('RENDER', False)
-IS_PRODUCTION = os.environ.get('RENDER') or os.environ.get('RAILWAY_ENVIRONMENT')
+IS_PRODUCTION = os.environ.get("RENDER") == "true"
 
 # =====================
-# SECURITY SETTINGS
+# SECURITY
 # =====================
-SECRET_KEY = os.environ.get('SECRET_KEY')
-if not SECRET_KEY and IS_PRODUCTION:
-    print("❌ ERROR: SECRET_KEY must be set in production!")
+SECRET_KEY = os.environ.get("SECRET_KEY")
+if IS_PRODUCTION and not SECRET_KEY:
+    print("❌ SECRET_KEY missing in production")
     sys.exit(1)
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-# Render provides RENDER_EXTERNAL_HOSTNAME
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-    ALLOWED_HOSTS.append('*')  # Temporary for testing
 
-# Add localhost for development
-if DEBUG:
-    ALLOWED_HOSTS.extend(['localhost', '127.0.0.1'])
-
-# CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = []
 if RENDER_EXTERNAL_HOSTNAME:
-    CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
-    CSRF_TRUSTED_ORIGINS.append(f'http://{RENDER_EXTERNAL_HOSTNAME}')
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
 
-# HTTPS Settings
 if IS_PRODUCTION:
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -51,7 +44,7 @@ if IS_PRODUCTION:
     CSRF_COOKIE_SECURE = True
 
 # =====================
-# APPLICATION DEFINITION
+# APPLICATIONS
 # =====================
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -61,18 +54,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    
-    # Your app
+
+    # Apps
     'app.apps.AppConfig',
-    
+
     # Third-party
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'storages',  # For Cloudflare R2
+    'storages',
 ]
 
+# =====================
+# MIDDLEWARE
+# =====================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -85,8 +81,15 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
+# =====================
+# URLS / WSGI
+# =====================
 ROOT_URLCONF = 'HARMONY.urls'
+WSGI_APPLICATION = 'HARMONY.wsgi.application'
 
+# =====================
+# TEMPLATES
+# =====================
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -103,48 +106,39 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'HARMONY.wsgi.application'
-
 # =====================
 # DATABASE
 # =====================
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
 if DATABASE_URL:
     DATABASES = {
-        'default': dj_database_url.config(
+        "default": dj_database_url.config(
             default=DATABASE_URL,
             conn_max_age=600,
-            ssl_require=True
+            ssl_require=True,
         )
     }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 
 # =====================
-# PASSWORD VALIDATION
+# AUTH PASSWORD
 # =====================
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 # =====================
-# INTERNATIONALIZATION
+# I18N
 # =====================
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -152,92 +146,79 @@ USE_I18N = True
 USE_TZ = True
 
 # =====================
-# FILE STORAGE (Cloudflare R2)
+# STATIC FILES (GitHub → WhiteNoise)
 # =====================
-# R2 Configuration from environment
-R2_ACCOUNT_ID = os.environ.get('R2_ACCOUNT_ID')
-R2_ACCESS_KEY_ID = os.environ.get('R2_ACCESS_KEY_ID')
-R2_SECRET_ACCESS_KEY = os.environ.get('R2_SECRET_ACCESS_KEY')
-R2_BUCKET_NAME = os.environ.get('R2_BUCKET_NAME', 'philharmonia-media')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Check if R2 is configured
+STATICFILES_STORAGE = (
+    'whitenoise.storage.CompressedManifestStaticFilesStorage'
+)
+
+# =====================
+# MEDIA FILES (Cloudflare R2)
+# =====================
+R2_ACCOUNT_ID = os.environ.get("R2_ACCOUNT_ID")
+R2_ACCESS_KEY_ID = os.environ.get("R2_ACCESS_KEY_ID")
+R2_SECRET_ACCESS_KEY = os.environ.get("R2_SECRET_ACCESS_KEY")
+R2_BUCKET_NAME = os.environ.get("R2_BUCKET_NAME")
+
 R2_CONFIGURED = all([
     R2_ACCOUNT_ID,
     R2_ACCESS_KEY_ID,
     R2_SECRET_ACCESS_KEY,
-    R2_BUCKET_NAME
+    R2_BUCKET_NAME,
 ])
 
 if R2_CONFIGURED and IS_PRODUCTION:
-    # ✅ PRODUCTION WITH R2
-    print("✅ Using Cloudflare R2 for storage")
-    
+    print("✅ Media storage: Cloudflare R2")
+
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
     AWS_ACCESS_KEY_ID = R2_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY = R2_SECRET_ACCESS_KEY
     AWS_STORAGE_BUCKET_NAME = R2_BUCKET_NAME
-    AWS_S3_ENDPOINT_URL = f'https://{R2_ACCOUNT_ID}.r2.cloudflarestorage.com'
-    AWS_S3_REGION_NAME = 'auto'
-    AWS_S3_CUSTOM_DOMAIN = f'pub-{R2_ACCOUNT_ID[:8]}.r2.dev'
-    
-    # Static files
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
-    
-    # Media files
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
-    
-    # S3 settings
-    AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
-    }
-    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_ENDPOINT_URL = f"https://{R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
+    AWS_S3_REGION_NAME = "auto"
     AWS_QUERYSTRING_AUTH = False
-    AWS_S3_FILE_OVERWRITE = False
-    
-    # Disable WhiteNoise when using R2
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    
+    AWS_DEFAULT_ACL = "public-read"
+
+    AWS_S3_OBJECT_PARAMETERS = {
+        "CacheControl": "max-age=31536000",
+    }
+
+    MEDIA_URL = f"https://pub-{R2_ACCOUNT_ID[:8]}.r2.dev/"
 else:
-    # 🛠️ DEVELOPMENT OR NO R2
-    print("⚠️ Using local file storage (development mode)")
-    STATIC_URL = '/static/'
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = BASE_DIR / 'images'
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "images"
 
-# Static files configuration
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# Default primary key field type
+# =====================
+# DEFAULT PK
+# =====================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # =====================
-# AUTHENTICATION
+# AUTH
 # =====================
 AUTH_USER_MODEL = 'app.CustomUser'
+SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-# Site ID - IMPORTANT: Change this if needed
-SITE_ID = int(os.environ.get('SITE_ID', 1))
-
-# Login/Logout URLs
 LOGIN_REDIRECT_URL = '/user_home/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
 
 # =====================
-# ALLAUTH SETTINGS
+# ALLAUTH
 # =====================
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_LOGOUT_ON_GET = True
 
@@ -247,8 +228,6 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
             'secret': os.environ.get('GOOGLE_SECRET'),
             'key': ''
-        },
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'},
+        }
     }
 }
