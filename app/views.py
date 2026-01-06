@@ -2224,54 +2224,76 @@ def user_main(request):
     if request.user.role != 'user':
         return redirect('admin_main')
 
-    # Users & other general objects
-    users = CustomUser.objects.all() or []
-    categorys = InstrumentCategory.objects.all() or []
-    regions = Region.objects.all() or []
-    Materials = Material.objects.all() or []
-    Instruments = Instrument.objects.all() or []
-    Feedbacks = Feedback.objects.all() or []
-    Testimonials = Testimonial.objects.filter(approved=True).order_by('-date_submitted')[:5] or []
-    Tutorials = VideoTutorial.objects.all() or []
-    popular_instruments = Instrument.objects.order_by('-views')[:4] or []
+    try:
+        users = CustomUser.objects.all()
+        categorys = InstrumentCategory.objects.all()
+        regions = Region.objects.all()
+        Materials = Material.objects.all()
+        Instruments = Instrument.objects.all()
+        Feedbacks = Feedback.objects.all()
+        testimonials = Testimonial.objects.filter(approved=True).order_by('-date_submitted')[:5]
+        Tutorials = VideoTutorial.objects.all()
+        popular_instruments = Instrument.objects.order_by('-views')[:4]
+        
+        # Use get_or_create to ensure these exist
+        contact, _ = ContactPage.objects.get_or_create(
+            pk=1,
+            defaults={'title': 'Contact Us', 'content': 'Default contact information'}
+        )
+        
+        taglines, _ = Tagline.objects.get_or_create(
+            pk=1, 
+            defaults={'text': 'Welcome to Philharmonia'}
+        )
+        
+        homepages, _ = HomePage.objects.get_or_create(
+            pk=1,
+            defaults={'title': 'Home', 'content': 'Welcome to our site'}
+        )
+        
+        footer_settings, _ = FooterSettings.objects.get_or_create(
+            pk=1,
+            defaults={'copyright_text': '© 2024 Philharmonia'}
+        )
+        
+        social_links = SocialMediaLink.objects.all()
+        Performances = PerformanceAppointment.objects.all()
+        Lesson = LessonAppointment.objects.all()
+        section = DiscoverSection.objects.all()
+        
+        # Guiding principle might not exist
+        guiding_principle = GuidingPrinciples.objects.prefetch_related('cards').first()
 
-    # Home page / sections
-    contact = ContactPage.objects.first() or ContactPage()
-    taglines = Tagline.objects.first() or Tagline()
-    homepages = HomePage.objects.first() or HomePage()
-    footer_settings = FooterSettings.objects.first() or FooterSettings()
-    social_links = SocialMediaLink.objects.all() or []
-
-    section = DiscoverSection.objects.all() or []
-
-    # Guiding principles with related cards
-    guiding_principle = GuidingPrinciples.objects.prefetch_related('cards').first() or GuidingPrinciples()
-
-    # Appointments
-    Performances = PerformanceAppointment.objects.all() or []
-    Lesson = LessonAppointment.objects.all() or []
-
-    return render(request, 'app/user/home.html', {
-        'users': users,
-        'categorys': categorys,
-        'regions': regions,
-        'Materials': Materials,
-        'Instruments': Instruments,
-        'Feedbacks': Feedbacks,
-        'testimonials': Testimonials,
-        'Tutorials': Tutorials,
-        'popular_instruments': popular_instruments,
-        'guiding_principle': guiding_principle,
-        'section': section,
-        'contact': contact,
-        'taglines': taglines,
-        'homepages': homepages,
-        'social_links': social_links,
-        'footer_settings': footer_settings,
-        'Performances': Performances,
-        'Lesson': Lesson,
-    })
-
+        return render(request, 'app/user/home.html', {
+            'users': users,
+            'categorys': categorys,
+            'regions': regions,
+            'Materials': Materials,
+            'Instruments': Instruments,
+            'Feedbacks': Feedbacks,
+            'testimonials': testimonials,
+            'Tutorials': Tutorials,
+            'popular_instruments': popular_instruments,
+            'guiding_principle': guiding_principle,
+            'section': section,
+            'contact': contact,
+            'taglines': taglines, 
+            'homepages': homepages,
+            'social_links': social_links,
+            'footer_settings': footer_settings,
+            'Performances': Performances,
+            'Lesson': Lesson
+        })
+        
+    except Exception as e:
+        # Log the error and show a simple page
+        print(f"Error in user_main: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        # Return a simple error page or redirect
+        from django.http import HttpResponse
+        return HttpResponse(f"Error loading page: {str(e)}. Please contact admin.")
 
 class AppointmentView(LoginRequiredMixin, CreateView):
     template_name = 'app/user/appointment/Appointment.html'
