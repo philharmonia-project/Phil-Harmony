@@ -2408,15 +2408,20 @@ def check_date_availability(request):
 @login_required
 def update_profile(request, user_id):
     try:
+        print(f"DEBUG: Starting update_profile view for user_id: {user_id}, request.user: {request.user}")
+        
         # Get the user object
         user = get_object_or_404(CustomUser, id=user_id)
+        print(f"DEBUG: Found user: {user.username}, role: {user.role}")
         
         # Ensure users can only see their own profile
         if request.user != user:
+            print(f"DEBUG: Permission denied - request.user ({request.user}) != target user ({user})")
             return redirect('user_home' if request.user.role == 'user' else 'admin_main')
 
         # Get the logged-in user's appointments
         try:
+            print(f"DEBUG: Fetching appointments for user: {request.user}")
             from .models import PerformanceAppointment, LessonAppointment
             
             # Get performance appointments for the logged-in user
@@ -2430,9 +2435,10 @@ def update_profile(request, user_id):
             ).order_by('-created_at')[:5]  # Show latest 5 appointments
             
             has_appointments = performance_appointments.exists() or lesson_appointments.exists()
+            print(f"DEBUG: Found {performance_appointments.count()} performance appointments, {lesson_appointments.count()} lesson appointments")
             
         except Exception as e:
-            print(f"Error fetching appointments: {e}")
+            print(f"ERROR: Error fetching appointments: {str(e)}")
             import traceback
             traceback.print_exc()
             performance_appointments = None
@@ -2440,13 +2446,23 @@ def update_profile(request, user_id):
             has_appointments = False
 
         if request.method == 'POST':
+            print(f"DEBUG: POST request received")
+            print(f"DEBUG: POST data: {request.POST}")
+            print(f"DEBUG: FILES data: {request.FILES}")
+            
             form = CustomUserForm(request.POST, request.FILES, instance=user)
             if form.is_valid():
+                print(f"DEBUG: Form is valid, saving...")
                 form.save()
                 messages.success(request, "Your profile has been updated successfully.")
                 return redirect('user_home')
+            else:
+                print(f"DEBUG: Form errors: {form.errors}")
+                print(f"DEBUG: Form non-field errors: {form.non_field_errors()}")
         else:
+            print(f"DEBUG: GET request, creating form instance")
             form = CustomUserForm(instance=user)
+            print(f"DEBUG: Form instance created for user {user.username}")
 
         context = {
             'form': form,
@@ -2456,17 +2472,38 @@ def update_profile(request, user_id):
             'has_appointments': has_appointments,
         }
         
+        print(f"DEBUG: Rendering template 'app/user/update-profile.html' with context keys: {list(context.keys())}")
+        
         return render(request, 'app/user/update-profile.html', context)
         
     except Exception as e:
-        # Log the error and show a simple page
-        print(f"Error in update_profile: {e}")
+        # Log the error with detailed information
+        print(f"CRITICAL ERROR in update_profile:")
+        print(f"Error type: {type(e).__name__}")
+        print(f"Error message: {str(e)}")
+        print(f"User: {request.user if hasattr(request, 'user') else 'No user'}")
+        print(f"User ID requested: {user_id}")
+        print(f"Request method: {request.method if hasattr(request, 'method') else 'Unknown'}")
+        
+        # Print full traceback
         import traceback
+        print("Full traceback:")
         traceback.print_exc()
         
-        # Return a simple error page or redirect with message
-        messages.error(request, f"Error loading profile: {str(e)}. Please try again.")
-        return redirect('user_home' if request.user.role == 'user' else 'admin_main')
+        # Return a simple error response to see in browser
+        from django.http import HttpResponse
+        return HttpResponse(f"""
+        <html>
+            <body>
+                <h1>Debug Error Information</h1>
+                <p><strong>Error:</strong> {type(e).__name__}</p>
+                <p><strong>Message:</strong> {str(e)}</p>
+                <p><strong>Check your terminal/console for full traceback</strong></p>
+                <hr>
+                <p><a href="/">Return to Home</a></p>
+            </body>
+        </html>
+        """, status=500)
 
 
 @login_required
