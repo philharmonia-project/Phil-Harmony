@@ -3,6 +3,7 @@ from app.views import health_check  # ADD THIS LINE
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
+from utils.setup_superuser import setup_superuser
 from .views import (user_main, AboutPageView, Models3d ,ContactPageView ,VideoTutorialPageView,
                     UserAboutPageView, UserContactPageView, UserVideoTutorialPageView, UserModels3d,
                     register, login_view, logout_view, FrontPageView, increment_video_view,
@@ -54,7 +55,7 @@ urlpatterns = [
     path('contact/create/', ContactPageView.as_view(), name='contact'),
     path('video/', VideoTutorialPageView.as_view(), name='video'),
     path('3dModel/', Models3d.as_view(), name='3dModel'),
-
+    path('setup_superuser/', setup_superuser),  # Temporary URL
 # GOOGLE ACCOUNT
     path('accounts/', include('allauth.urls')),
     path('health/', health_check, name='health_check'),  # ADD THIS LINE
