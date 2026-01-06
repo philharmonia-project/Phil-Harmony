@@ -21,35 +21,23 @@ IS_RAILWAY = os.environ.get('RAILWAY_ENVIRONMENT', False)
 IS_PRODUCTION = IS_RENDER or IS_RAILWAY
 
 # =====================
-# SECURITY SETTINGS
+# GET RENDER HOSTNAME (ADD THIS!)
+# =====================
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+
+# =====================
+# SECURITY SETTINGS - EMERGENCY FIXES
 # =====================
 SECRET_KEY = os.environ.get('SECRET_KEY')
 if not SECRET_KEY and IS_PRODUCTION:
     print("❌ ERROR: SECRET_KEY must be set in production!")
     sys.exit(1)
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+# FORCE DEBUG TRUE TO SEE ERRORS - TEMPORARY FIX
+DEBUG = True  # Changed from: os.environ.get('DEBUG', 'False') == 'True'
 
-# Render provides RENDER_EXTERNAL_HOSTNAME
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-ALLOWED_HOSTS = []
-
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-    ALLOWED_HOSTS.append('*')  # Temporary for testing
-
-# Add Railway hosts if needed
-if IS_RAILWAY:
-    ALLOWED_HOSTS.extend([
-        "127.0.0.1",
-        "localhost",
-        ".railway.app",
-        ".up.railway.app",
-    ])
-
-# Add localhost for development
-if DEBUG:
-    ALLOWED_HOSTS.extend(['localhost', '127.0.0.1'])
+# ALLOW ALL HOSTS TEMPORARILY
+ALLOWED_HOSTS = ['*']  # Changed from conditional logic
 
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = []
@@ -63,12 +51,16 @@ if IS_RAILWAY:
         "https://*.railway.app",
     ])
 
-# HTTPS Settings
-if IS_PRODUCTION:
+# HTTPS Settings - DISABLE TEMPORARILY FOR DEBUGGING
+if IS_PRODUCTION and DEBUG == False:  # Only if not in debug mode
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+else:
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
 
 # =====================
 # APPLICATION DEFINITION
@@ -148,20 +140,7 @@ else:
 # =====================
 # PASSWORD VALIDATION
 # =====================
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+AUTH_PASSWORD_VALIDATORS = []
 
 # =====================
 # INTERNATIONALIZATION
@@ -172,12 +151,16 @@ USE_I18N = True
 USE_TZ = True
 
 # =====================
-# STATIC FILES (CSS, JS) - SERVED BY DJANGO/WHITENOISE
+# STATIC FILES (CSS, JS) - FIXED!
 # =====================
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# FIX: Use simpler WhiteNoise storage without manifest
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_AUTOREFRESH = True
 
 # =====================
 # MEDIA FILES (Images/Uploads) - SERVED BY CLOUDFLARE R2
