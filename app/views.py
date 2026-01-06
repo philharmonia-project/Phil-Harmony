@@ -2404,57 +2404,71 @@ def check_date_availability(request):
     except Exception as e:
         print(f"Error checking date availability: {e}")
         return JsonResponse({'available': True})  # Default to available on error
-
 # Update user profile (including photo)
 @login_required
 def update_profile(request, user_id):
-    # Get the user object
-    user = get_object_or_404(CustomUser, id=user_id)
-    
-    # Ensure users can only see their own profile
-    if request.user != user:
-        return redirect('user_home' if request.user.role == 'user' else 'admin_main')
-
-    # Get the logged-in user's appointments
     try:
-        from .models import PerformanceAppointment, LessonAppointment
+        # Get the user object
+        user = get_object_or_404(CustomUser, id=user_id)
         
-        # Get performance appointments for the logged-in user
-        performance_appointments = PerformanceAppointment.objects.filter(
-            user=request.user  # Use request.user instead of user parameter
-        ).order_by('-created_at')[:5]  # Show latest 5 appointments
+        # Ensure users can only see their own profile
+        if request.user != user:
+            return redirect('user_home' if request.user.role == 'user' else 'admin_main')
+
+        # Get the logged-in user's appointments
+        try:
+            from .models import PerformanceAppointment, LessonAppointment
+            
+            # Get performance appointments for the logged-in user
+            performance_appointments = PerformanceAppointment.objects.filter(
+                user=request.user  # Use request.user instead of user parameter
+            ).order_by('-created_at')[:5]  # Show latest 5 appointments
+            
+            # Get lesson appointments for the logged-in user
+            lesson_appointments = LessonAppointment.objects.filter(
+                user=request.user  # Use request.user instead of user parameter
+            ).order_by('-created_at')[:5]  # Show latest 5 appointments
+            
+            has_appointments = performance_appointments.exists() or lesson_appointments.exists()
+            
+        except Exception as e:
+            print(f"Error fetching appointments: {e}")
+            import traceback
+            traceback.print_exc()
+            performance_appointments = None
+            lesson_appointments = None
+            has_appointments = False
+
+        if request.method == 'POST':
+            form = CustomUserForm(request.POST, request.FILES, instance=user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Your profile has been updated successfully.")
+                return redirect('user_home')
+        else:
+            form = CustomUserForm(instance=user)
+
+        context = {
+            'form': form,
+            'user': user,
+            'performance_appointments': performance_appointments,
+            'lesson_appointments': lesson_appointments,
+            'has_appointments': has_appointments,
+        }
         
-        # Get lesson appointments for the logged-in user
-        lesson_appointments = LessonAppointment.objects.filter(
-            user=request.user  # Use request.user instead of user parameter
-        ).order_by('-created_at')[:5]  # Show latest 5 appointments
-        
-        has_appointments = performance_appointments.exists() or lesson_appointments.exists()
+        return render(request, 'app/user/update-profile.html', context)
         
     except Exception as e:
-        print(f"Error fetching appointments: {e}")
-        performance_appointments = None
-        lesson_appointments = None
-        has_appointments = False
+        # Log the error and show a simple page
+        print(f"Error in update_profile: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        # Return a simple error page or redirect with message
+        messages.error(request, f"Error loading profile: {str(e)}. Please try again.")
+        return redirect('user_home' if request.user.role == 'user' else 'admin_main')
 
-    if request.method == 'POST':
-        form = CustomUserForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Your profile has been updated successfully.")
-            return redirect('user_home')
-    else:
-        form = CustomUserForm(instance=user)
 
-    context = {
-        'form': form,
-        'user': user,
-        'performance_appointments': performance_appointments,
-        'lesson_appointments': lesson_appointments,
-        'has_appointments': has_appointments,
-    }
-    
-    return render(request, 'app/user/update-profile.html', context)
 @login_required
 def update_performance(request, pk):
     """Update a performance appointment (user only)"""
