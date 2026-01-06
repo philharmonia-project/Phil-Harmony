@@ -1,0 +1,26 @@
+# ⚠️ WARNING: Do NOT change indentation - YAML is sensitive!
+services:
+  - type: web
+    name: philharmonia
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn HARMONY.wsgi:application
+    healthCheckPath: /health/
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: WEB_CONCURRENCY
+        value: 4
+
+databases:
+  - name: philharmonia-db
+    plan: free
+    region: oregon
+    databaseName: philharmonia
+    user: philharmonia_user

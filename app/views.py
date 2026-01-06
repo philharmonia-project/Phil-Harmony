@@ -2906,3 +2906,22 @@ class Models3d(TemplateView):
             context['vision'] = vision
             
             return context
+    
+
+# =====================
+# HEALTH CHECK (for Render)
+# =====================
+import time
+import os
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+
+@require_GET
+def health_check(request):
+    """Simple health check endpoint for Render"""
+    return JsonResponse({
+        'status': 'healthy',
+        'service': 'philharmonia',
+        'timestamp': time.time(),
+        'environment': 'production' if os.environ.get('RENDER') else 'development'
+    })

@@ -1,4 +1,5 @@
 from django.urls import path, include
+from app.views import health_check  # ADD THIS LINE
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
@@ -49,7 +50,7 @@ from .views import (user_main, AboutPageView, Models3d ,ContactPageView ,VideoTu
 urlpatterns = [
 # GOOGLE ACCOUNT
     path('accounts/', include('allauth.urls')),
-
+    path('health/', health_check, name='health_check'),  # ADD THIS LINE
     path('check-auth-status/', check_auth_status, name='check_auth_status'),
     path('get-user-info/', get_user_info, name='get_user_info'),
 
