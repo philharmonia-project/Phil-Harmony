@@ -261,12 +261,31 @@
     }
   }
   
+  /* Horizontal scrollbar */
+::-webkit-scrollbar {
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #121212;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ff6b00;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b84d02;
+}
 </style>
 <div class="front">
     <!-- Video with poster -->
       <video class="bg-video" autoplay muted loop id="bgVideo"
             poster="{% static 'images/contact.JPG' %}">
-         
+          <source src="{{ MEDIA_URL }}images/videos/front.mp4" type="video/mp4">
+          Your browser does not support the video tag.
       </video>
 
   
@@ -279,6 +298,9 @@
         </p>
         <div class="button-group" data-aos="fade-right" data-aos-duration="800" data-aos-delay="400">
             <button class="read-btn pulse" id="exploreBtn">Start Learning</button>
+            <button class="#" onclick="toggleSound()" id="soundBtn">
+            <span class="sound-icon"></span> <span class="sound-text"></span>
+            </button>
         </div>
         </div>
     </div>
