@@ -307,4 +307,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         pagesDetail[0].classList.add('active-detail');
     }
+    // Add this to your existing JavaScript - place it after your other event listeners
+bookDetailModal.addEventListener('click', function(e) {
+    if (e.target === this) {
+        // Close the book
+        bookDetailModal.style.display = 'none';
+        document.querySelector('.book-detail-cover').style.display = 'block';
+        bookDetailContent.style.display = 'none';
+        currentDetailPage = 0;
+        resetDetailPages();
+    }
+});
 });

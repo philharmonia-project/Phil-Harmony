@@ -773,4 +773,48 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+function toggleImageSection() {
+    const sectionTypeSelect = document.getElementById('id_section_type');
+    const imageSection = document.getElementById('image-section-container');
+    const contentField = document.getElementById('content-field-container');
+
+    if (!sectionTypeSelect || !imageSection || !contentField) return;
+
+    const value = sectionTypeSelect.value.toLowerCase();
+    const text = sectionTypeSelect.options[sectionTypeSelect.selectedIndex].text.toLowerCase();
+
+    // Show image section only if section type contains 'image', 'img', or 'picture'
+    const isImageType = value.includes('image') || value.includes('img') || value.includes('picture') ||
+                        text.includes('image') || text.includes('img') || text.includes('picture');
+
+    imageSection.style.display = isImageType ? 'block' : 'none';
+    contentField.style.display = isImageType ? 'none' : 'block';
+}
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', () => {
+    toggleImageSection();
+
+    // Add event listener to select
+    const sectionTypeSelect = document.getElementById('id_section_type');
+    if (sectionTypeSelect) {
+        sectionTypeSelect.addEventListener('change', toggleImageSection);
+    }
+
+    // Image preview
+    const imageInput = document.getElementById('id_image');
+    const imagePreview = document.querySelector('.instrument-image8');
+    if (imageInput && imagePreview) {
+        imageInput.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imagePreview.src = event.target.result;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+    }
+});
 </script>

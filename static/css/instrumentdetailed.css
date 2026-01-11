@@ -1751,6 +1751,24 @@ button:focus-visible {
         font-size: 1em;
     }
 }
+  /* Horizontal scrollbar */
+::-webkit-scrollbar {
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #d0c8b0;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #8B4513;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #8B4513;
+}
 
 /* Keep all your existing CSS styles below this point */
 /* Your existing CSS variables and styles... */
