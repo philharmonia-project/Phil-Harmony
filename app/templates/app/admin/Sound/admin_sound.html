@@ -154,9 +154,6 @@
                                     <i class="fa-solid fa-trash" title="Delete Sound"></i>
                                 </a>
                             </div>
-                            <div class="instrument-date">
-                                Added: {{ sound.uploaded_at|date:"M d, Y" }}
-                            </div>
                         </div>
                     </div>
                     {% endfor %}
@@ -170,7 +167,6 @@
                                 <th>Audio</th>
                                 <th>Instrument Name</th>
                                 <th>Title</th>
-                                <th>Date Upload</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -189,7 +185,6 @@
                                 </td>
                                 <td>{{ sound.instrument.name }}</td>
                                 <td>{{ sound.title }}</td>
-                                <td>{{ sound.uploaded_at }}</td>
                                 <td>
                                     <a class="action-link edit-Sound" href="" data-Sound-id="{{ sound.pk }}">
                                         <i class="fa-solid fa-pen" title="Edit Sound"></i>
