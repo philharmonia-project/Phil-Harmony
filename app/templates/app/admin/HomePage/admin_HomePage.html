@@ -178,7 +178,7 @@
                                     <a class="action-link edit-Tagline" href="" data-Tagline-id="{{ tagline.pk }}">
                                         <i class="fa-solid fa-pen" title="Edit Tagline"></i>
                                     </a>
-                                    |
+                                    
                                     <a class="action-link delete-Tagline" href="" data-Tagline-id2="{{ tagline.pk }}">
                                         <i class="fa-solid fa-trash" title="Delete Tagline"></i>
                                     </a>
@@ -550,12 +550,12 @@ document.addEventListener("DOMContentLoaded", () => {
                             <tr>
                                 <td>{{ homepage.main_heading }}</td>
                                 <td>{{ homepage.highlight_word }}</td>
-                                <td>{{ homepage.description|truncatewords:15 }}</td>
+                                <td>{{ homepage.description|truncatewords:5 }}</td>
                                 <td>
                                     <a class="action-link edit-HomePage" href="" data-HomePage-id="{{ homepage.pk }}">
                                         <i class="fa-solid fa-pen" title="Edit Home Page"></i>
                                     </a>
-                                    |
+                                    
                                     <a class="action-link delete-HomePage" href="" data-HomePage-id2="{{ homepage.pk }}">
                                         <i class="fa-solid fa-trash" title="Delete Home Page"></i>
                                     </a>

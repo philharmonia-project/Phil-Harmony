@@ -175,8 +175,8 @@
                 <thead>
                     <tr>
                         <th>Image</th>
-                        <th>Hero Title</th>
-                        <th>Hero Description</th>
+                        <th>Content Title</th>
+                        
                         <th>About Title</th>
                         <th>Actions</th>
                     </tr>
@@ -192,13 +192,13 @@
                         {% endif %}
                         </td>
                         <td>{{ content.hero_title }}</td>
-                        <td>{{ content.hero_description|truncatewords:10 }}</td>
+                        
                         <td>{{ content.about_title|truncatewords:8 }}</td>
                         <td>
                             <a class="action-link edit-Site3DContent" href="" data-Site3DContent-id="{{ content.pk }}">
                                 <i class="fa-solid fa-pen" title="Edit Site Content"></i>
                             </a>
-                            |
+                            
                             <a class="action-link delete-Site3DContent" href="" data-Site3DContent-id2="{{ content.pk }}">
                                 <i class="fa-solid fa-trash" title="Delete Site Content"></i>
                             </a>

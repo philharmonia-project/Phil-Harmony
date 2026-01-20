@@ -137,7 +137,7 @@
                         <div class="card-body">
                             <div class="instrument-detail">
                                 <span class="detail-label">Description:</span>
-                                <span class="detail-value">{{ step.description|truncatewords:12 }}</span>
+                                <span class="detail-value">{{ step.description }}</span>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -162,7 +162,7 @@
                                 <th>Step Number</th>
                                 <th>Video Tutorial</th>
                                 <th>Title</th>
-                                <th>Description</th>
+                                
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -172,12 +172,12 @@
                                 <td>{{ step.step_number }}</td>
                                 <td>{{ step.video_tutorial.title }}</td>
                                 <td>{{ step.title }}</td>
-                                <td>{{ step.description|truncatewords:12 }}</td>
+                                
                                 <td>
                                     <a class="action-link edit-Technique" href="" data-Technique-id="{{ step.pk }}">
                                         <i class="fa-solid fa-pen" title="Edit Technique Step"></i>
                                     </a>
-                                    |
+                                    
                                     <a class="action-link delete-Technique" href="" data-Technique-id2="{{ step.pk }}">
                                         <i class="fa-solid fa-trash" title="Delete Technique Step"></i>
                                     </a>

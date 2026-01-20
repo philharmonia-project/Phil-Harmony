@@ -3003,3 +3003,40 @@ def health_check(request):
         'timestamp': time.time(),
         'environment': 'production' if os.environ.get('RENDER') else 'development'
     })
+
+
+class LoginInstrumentDetail(DetailView):
+    model = Instrument
+    template_name = "app/login/login_insdetailed.html"
+    context_object_name = "instrument"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        instrument = self.get_object()
+
+        # Your existing context data
+        ins_materials = InstrumentMaterial.objects.filter(instrument=instrument)
+        material_set = set()
+        for insmat in ins_materials:
+            material_set.update(insmat.materials.all())
+
+        context['insmaterials'] = ins_materials 
+        context['materials'] = material_set
+        context['tutorials'] = VideoTutorial.objects.filter(instrument=instrument)
+        context['video'] = instrument.video_tutorials.first()
+        context['region'] = instrument.region
+        context['technique_steps'] = TechniqueStep.objects.all()
+        context['construction_steps'] = ConstructionStep.objects.filter(instrument=instrument).order_by('order')
+        context['cultural_significance'] = CulturalSignificance.objects.all()
+        context['funfact'] = Funfact.objects.all()
+        context['popular_instruments'] = Instrument.objects.order_by('-views')[:4]
+        context['sound_samples'] = instrument.sound_set.all()
+
+        return context  # ← Missing this line!
+
+    def get_object(self):
+        instrument = super().get_object()
+        instrument.views += 1
+        instrument.save()
+        return instrument
+    

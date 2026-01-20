@@ -137,7 +137,7 @@
                 <div class="card-body">
                     <div class="instrument-detail">
                         <span class="detail-label">Header Description:</span>
-                        <span class="detail-value">{{ page.header_description|truncatewords:12 }}</span>
+                        <span class="detail-value">{{ page.header_description }}</span>
                     </div>
                     <div class="instrument-detail">
                         <span class="detail-label">Address:</span>
@@ -187,8 +187,8 @@
                     <tr>
                         <th>Header Title</th>
                         <th>Address</th>
-                        <th>Phone</th>
-                        <th>Email</th>
+                        <!-- <th>Phone</th>
+                        <th>Email</th> -->
                         <th>Operating Hours</th>
                         <th>Actions</th>
                     </tr>
@@ -201,14 +201,14 @@
                             <small>{{ page.header_description|truncatewords:8 }}</small>
                         </td>
                         <td>{{ page.location_address|linebreaks }}</td>
-                        <td>
+                        <!-- <td>
                             <strong>Landline:</strong> {{ page.landline_phone }}<br>
                             <strong>Mobile:</strong> {{ page.mobile_phone }}
                         </td>
                         <td>
                             <strong>Primary:</strong> {{ page.primary_email }}<br>
                             <strong>Secondary:</strong> {{ page.secondary_email }}
-                        </td>
+                        </td> -->
                         <td>
                             {{ page.weekdays_hours }}<br>
                             {{ page.saturday_hours }}<br>
@@ -218,7 +218,7 @@
                             <a class="action-link edit-ContactPage" href="" data-ContactPage-id="{{ page.pk }}">
                                 <i class="fa-solid fa-pen" title="Edit Contact Page"></i>
                             </a>
-                            |
+                            
                             <a class="action-link delete-ContactPage" href="" data-ContactPage-id2="{{ page.pk }}">
                                 <i class="fa-solid fa-trash" title="Delete Contact Page"></i>
                             </a>

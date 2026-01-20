@@ -903,7 +903,8 @@ class FooterSettings(models.Model):
         return obj
         
 
-#Performance Appointment (for events)
+
+# Performance Appointment (for events)
 class PerformanceAppointment(models.Model):
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
@@ -912,7 +913,20 @@ class PerformanceAppointment(models.Model):
         ('Completed', 'Completed'),
     ]
 
-    #Connect appointment to the logged-in user
+    EVENT_TYPE_CHOICES = [
+        ('Cultural Program', 'Cultural Program'),
+        ('School Program', 'School Program'),
+        ('Festival', 'Festival'),
+        ('Community Event', 'Community Event'),
+        ('Traditional Ceremony', 'Traditional Ceremony'),
+        ('Workshop', 'Workshop'),
+        ('Lecture-Demonstration', 'Lecture-Demonstration'),
+        ('Music Lesson', 'Music Lesson'),
+        ('Private Event', 'Private Event'),
+        ('Other', 'Other'),
+    ]
+
+    # Connect appointment to the logged-in user
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -920,13 +934,21 @@ class PerformanceAppointment(models.Model):
     )
 
     event_name = models.CharField(max_length=200)
-    event_type = models.CharField(max_length=100, blank=True, null=True)
+    event_type = models.CharField(
+        max_length=100,
+        choices=EVENT_TYPE_CHOICES,
+        default='Concert'
+    )
     event_location = models.CharField(max_length=255)
     event_date = models.DateField()
     event_time = models.TimeField()
     message = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
-    decline_reason = models.TextField(blank=True, null=True, help_text="Reason for declining the appointment")
+    decline_reason = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Reason for declining the appointment"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

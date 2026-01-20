@@ -623,7 +623,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
           <!-- Register Form -->
           <div id="registerForm" class="FrontLform-container">
-              <img style="height: 50px; width: 150px;" src="{% static 'images/phil.png' %}" alt="Logo">
               <form method="post" action="{% url 'register' %}" id="registerFormElement">
                   {% csrf_token %}
                   <div class="FrontLinput-group">

@@ -178,12 +178,12 @@
                         <i class="fa-solid fa-user-minus" title="Remove Admin"></i>
                         </a>
                         {% endif %}
-                        |
+                        
                         <a class="action-link delete-link {% if user == request.user %}disabled{% endif %}"
                            href="#" data-user-id1="{{ user.id }}">
                             <i class="fa-solid fa-trash" title="Delete User"></i>
                         </a>
-                        |
+                        
                         <a class="action-link edit-profile" href="#" data-user-id="{{ user.id }}">
                             <i class="fa-solid fa-pen" title="Edit User"></i>
                         </a>
@@ -231,12 +231,12 @@
                             <i class="fa-solid fa-user-minus" title="Remove Admin"></i>
                             </a>
                             {% endif %}
-                            |
+                            
                             <a class="action-link delete-link {% if user == request.user %}disabled{% endif %}"
                                href="#" data-user-id1="{{ user.id }}">
                                 <i class="fa-solid fa-trash" title="Delete User"></i>
                             </a>
-                            |
+                            
                             <a class="action-link edit-profile" href="#" data-user-id="{{ user.id }}">
                                 <i class="fa-solid fa-pen" title="Edit User"></i>
                             </a>

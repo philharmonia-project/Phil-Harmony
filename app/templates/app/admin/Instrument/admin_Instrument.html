@@ -148,7 +148,7 @@
                         <div class="card-body">
                             <div class="instrument-detail">
                                 <span class="detail-label">Description:</span>
-                                <span class="detail-value">{{ instrument.description|truncatewords:10 }}</span>
+                                <span class="detail-value">{{ instrument.description }}</span>
                             </div>
                             <div class="instrument-detail">
                                 <span class="detail-label">Origin:</span>
@@ -180,7 +180,6 @@
                             <tr>
                                 <th>Image</th>
                                 <th>Name</th>
-                                <th>Description</th>
                                 <th>Category</th>
                                 <th>Origin</th>
                                 <th>Province</th>
@@ -199,7 +198,6 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ instrument.name }}</td>
-                                <td>{{ instrument.description|truncatewords:5 }}</td>
                                 <td>{{ instrument.category }}</td>
                                 <td>{{ instrument.region }}</td>
                                 <td>{{ instrument.province }}</td>
@@ -208,7 +206,7 @@
                                     <a class="action-link edit-Instrument" href="" data-Instrument-id="{{ instrument.pk }}">
                                         <i class="fa-solid fa-pen" title="Edit Instrument"></i>
                                     </a>
-                                    |
+                                    
                                     <a class="action-link delete-Instrument" href="" data-Instrument-id2="{{ instrument.pk }}">
                                         <i class="fa-solid fa-trash" title="Delete Instrument"></i>
                                     </a>

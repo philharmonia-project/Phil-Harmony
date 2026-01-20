@@ -179,7 +179,7 @@
                             <a class="action-link edit-Page" href="" data-page-id="{{ page.pk }}">
                                 <i class="fa-solid fa-pen" title="Edit Page"></i>
                             </a>
-                            |
+                            
                             <a class="action-link delete-Page" href="" data-page-id2="{{ page.pk }}">
                                 <i class="fa-solid fa-trash" title="Delete Page"></i>
                             </a>
@@ -553,7 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <tr>
                         <th>Title</th>
                         <th>Type</th>
-                        <th>Content Preview</th>
+                        <!-- <th>Content Preview</th> -->
                         <th>Page</th>
                         <th>Actions</th>
                     </tr>
@@ -561,9 +561,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <tbody id="user-tbody" class="Section1">
                     {% for section in sections %}
                     <tr>
-                        <td>{{ section.title|default:"No Title" }}</td>
+                        <td>{{ section.title|truncatewords:5|default:"No Title" }}</td>
                         <td>{{ section.get_section_type_display }}</td>
-                        <td>
+                        <!-- <td>
                             {% if section.section_type == 'image' %}
                                 {% if section.image %}
                                 <img src="{{ section.image.url }}" alt="{{ section.title }}" class="img-fluid rounded" style="max-height: 100px;">
@@ -581,13 +581,13 @@ document.addEventListener("DOMContentLoaded", () => {
                             {% else %}
                             {{ section.content|truncatewords:10|default:"No content" }}
                             {% endif %}
-                        </td>
+                        </td> -->
                         <td>{{ section.page.title }}</td>
                         <td>
                             <a class="action-link edit-Section" href="" data-section-id="{{ section.pk }}">
                                 <i class="fa-solid fa-pen" title="Edit Section"></i>
                             </a>
-                            |
+                            
                             <a class="action-link delete-Section" href="" data-section-id2="{{ section.pk }}">
                                 <i class="fa-solid fa-trash" title="Delete Section"></i>
                             </a>

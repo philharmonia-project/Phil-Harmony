@@ -100,7 +100,7 @@
                                 <a class="action-link edit-Performance" href="" data-Performance-id="{{ Performance.pk }}">
                                     <i class="fa-solid fa-eye" title="Edit Performance"></i>
                                 </a>
-                                |
+                                
                                 <a class="action-link delete-Performance" href="" data-Performance-id2="{{ Performance.pk }}">
                                     <i class="fa-solid fa-trash" title="View Appointment"></i>
                                 </a>
@@ -142,23 +142,23 @@
 
 /* Status-specific colors */
 .status-select.status-pending {
-    background-color: #fff3cd;
-    color: #856404;
+    background-color: #FFC107;
+    color: #6c5101;
 }
 
 .status-select.status-accepted {
-    background-color: #d1edff;
-    color: #004085;
+    background-color: #0D6EFD;
+    color: #013063;
 }
 
 .status-select.status-declined {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #DC3545;
+    color: #591219;
 }
 
 .status-select.status-completed {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: #198754;
+    color: #0b4118;
 }
 
 /* Hover effects */
@@ -547,7 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <a class="action-link edit-Lesson" href="" data-Lesson-id="{{ Lesson.pk }}">
                                     <i class="fa-solid fa-eye" title="View Appointment"></i>
                                 </a>
-                                |
+                                
                                 <a class="action-link delete-Lesson" href="" data-Lesson-id2="{{ Lesson.pk }}">
                                     <i class="fa-solid fa-trash" title="Delete Lesson"></i>
                                 </a>
@@ -572,54 +572,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
     </div>
 </div>
-
-<style>
-/* Style for status buttons */
-.status-select {
-    padding: 4px 8px;
-    border-radius: 12px;
-    border: none;
-    font-size: 0.85em;
-    font-weight: 500;
-    cursor: pointer;
-    outline: none;
-    min-width: 100px;
-    transition: all 0.2s ease;
-}
-
-/* Status-specific colors */
-.status-select.status-pending {
-    background-color: #fff3cd;
-    color: #856404;
-}
-
-.status-select.status-accepted {
-    background-color: #d1edff;
-    color: #004085;
-}
-
-.status-select.status-declined {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-.status-select.status-completed {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-/* Hover effects */
-.status-select:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    opacity: 0.9;
-}
-
-/* Mobile card specific styling */
-.instrument-card .status-select {
-    width: 100%;
-    max-width: 120px;
-}
 
 
 </style>

@@ -12,7 +12,7 @@
                 <div class="form-group">
                     <select id="id_video_tutorial" name="video_tutorial" class="form-control" required>
                         {% for video in Tutorials %}
-                        <option value="{{ video.pk }}" {% if video.pk == Technique.video.pk %}selected{% endif %}>
+                        <option value="{{ video.pk }}" {% if video.pk == Technique.video_tutorial.pk %}selected{% endif %}>
                             {{ video.title }}
                         </option>
                         {% endfor %}

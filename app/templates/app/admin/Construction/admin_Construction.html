@@ -142,7 +142,7 @@
                             </div>
                             <div class="instrument-detail">
                                 <span class="detail-label">Description:</span>
-                                <span class="detail-value">{{ step.description|truncatewords:12 }}</span>
+                                <span class="detail-value">{{ step.description }}</span>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -171,7 +171,7 @@
                                 <th>Title</th>
                                 <th>Order</th>
                                 <th>Description</th>
-                                <th>Date Created</th>
+                               
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -181,13 +181,12 @@
                                 <td>{{ step.instrument.name }}</td>
                                 <td>{{ step.title }}</td>
                                 <td>{{ step.order }}</td>
-                                <td>{{ step.description|truncatewords:9 }}</td>
-                                <td>{{ step.created_at|date:"M d, Y" }}</td>
+                                <td>{{ step.description|truncatewords:5 }}</td>
                                 <td>
                                     <a class="action-link edit-Step" href="" data-step-id="{{ step.pk }}">
                                         <i class="fa-solid fa-pen" title="Edit Step"></i>
                                     </a>
-                                    |
+                                    
                                     <a class="action-link delete-Step" href="" data-step-id2="{{ step.pk }}">
                                         <i class="fa-solid fa-trash" title="Delete Step"></i>
                                     </a>

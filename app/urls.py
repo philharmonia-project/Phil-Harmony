@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from . import views
 from .views import (user_main, AboutPageView, Models3d ,ContactPageView ,VideoTutorialPageView,
                     UserAboutPageView, UserContactPageView, UserVideoTutorialPageView, UserModels3d,
-                    register, login_view, logout_view, FrontPageView, increment_video_view,
+                    register, login_view, logout_view, FrontPageView, increment_video_view,LoginInstrumentDetail,
                     admin_main, set_user_as_admin, remove_user_as_admin, delete_user,  
                     admin_instrument, InstrumentDetailView, UpdateInstrument, DeleteInstrument, CreateInstrument,
                     admin_History, CreatePage, UpdatePage, DeletePage,
@@ -84,6 +84,7 @@ urlpatterns = [
     path('contact/create/', ContactPageView.as_view(), name='contact'),
     path('video/', VideoTutorialPageView.as_view(), name='video'),
     path('3dModel/', Models3d.as_view(), name='3dModel'),
+    path('LoginInstrumentDetail/<int:pk>/', LoginInstrumentDetail.as_view(), name='LoginInstrumentDetail'),
 
 # For User 
     path('user_home/', user_main, name='user_home'),

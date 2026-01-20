@@ -139,7 +139,7 @@
                         <div class="card-body">
                             <div class="instrument-detail">
                                 <span class="detail-label">Description:</span>
-                                <span class="detail-value">{{ item.description|truncatewords:12 }}</span>
+                                <span class="detail-value">{{ item.description }}</span>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -176,13 +176,13 @@
                             <tr>
                                 <td><i class="{{ item.get_full_icon_class }}"></i></td>
                                 <td>{{ item.title }}</td>
-                                <td>{{ item.description|truncatewords:10 }}</td>
+                                <td>{{ item.description|truncatewords:5 }}</td>
                                 <td>{{ item.created_at|date:"M d, Y" }}</td>
                                 <td>
                                     <a class="action-link edit-Importance" href="" data-Importance-id="{{ item.pk }}">
                                         <i class="fa-solid fa-pen" title="Edit Item"></i>
                                     </a>
-                                    |
+                                    
                                     <a class="action-link delete-Importance" href="" data-Importance-id2="{{ item.pk }}">
                                         <i class="fa-solid fa-trash" title="Delete Item"></i>
                                     </a>

@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/instrumentdetailed.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>{{ instrument.name }} | Philippine Musical Instrument Documentation</title>
+</head>
+<body>
+
+<header class="header-detail-navbar">
+    <div class="logo-detail">
+        <img src="{% static 'images/phil.png' %}" alt="Website Logo">
+    </div>
+    <nav class="navbar-detail" id="main-detail-navbar">
+        <a href="{% url 'frontpage' %}"><i class="fas fa-home"></i> <span class="nav-detail-text">Home</span></a>
+        <a href="#Introduction-detail"><i class="fas fa-info-circle"></i> <span class="nav-detail-text">Introduction</span></a>
+        <a href="{% url 'video' %}"><i class="fas fa-video"></i> <span class="nav-detail-text">Video Tutorial</span></a>
+    </nav>
+    <button class="mobile-detail-menu-btn" id="mobile-detail-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="main-detail-navbar">
+        <span class="bar-detail"></span>
+        <span class="bar-detail"></span>
+        <span class="bar-detail"></span>
+    </button>
+</header>
+
+<!-- Back to top button -->
+<div class="back-detail-to-top" id="backDetailToTop">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<header class="document-detail-header">
+    <div class="custom-detail-shape-divider-bottom-1748425796">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-detail-fill"></path>
+            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-detail-fill"></path>
+            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-detail-fill"></path>
+        </svg>
+    </div>
+    <div class="header-detail-decoration"></div>
+    <div class="header-detail-decoration"></div>
+    
+    <div class="header-detail-content">
+        <h1 class="document-detail-title">{{ instrument.name }}</h1>
+        <p class="document-detail-subtitle">Traditional {{ instrument.category }} from the Philippines with rich cultural heritage and unique sound characteristics</p>
+        
+        <div class="document-detail-meta">
+            <div class="meta-detail-item">
+                <i class="fas fa-map-marker-alt meta-detail-icon"></i>
+                <span>{{ instrument.province }}, {{ region.name }}</span>
+            </div>
+            <div class="meta-detail-item">
+                <i class="fas fa-eye meta-detail-icon"></i>
+                <span>{{ instrument.views }} views</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="header-detail-image-container">
+        {% if instrument.image %}
+        <img src="{{ instrument.image.url }}" alt="{{ instrument.name }}" class="header-detail-image">
+        {% else %}
+        <img src="{% static 'images/phil.png' %}" alt="{{ instrument.name }}" class="header-detail-image">
+        {% endif %}
+    </div>
+</header>
+
+<div class="main-content-wrapper">
+    <!-- Left Side - Main Content -->
+    <div class="document-detail-container">
+        <div class="document-detail-body">
+            <!-- All your dynamic content from database goes here - unchanged -->
+            <!-- Introduction -->
+            <section id="Introduction-detail" class="document-detail-section">
+                <div class="section-detail-header">
+                    <h2 class="section-detail-title">Introduction</h2>
+                </div>
+                <p>{{ instrument.description }}</p><br>
+                <p>The <strong>{{ instrument.name }}</strong> is a traditional <span class="tooltip-detail">{{ instrument.category }}
+                    <span class="tooltip-detail-text">Classification based on how sound is produced (string, percussion, wind, etc.)</span>
+                </span> instrument originating from <strong>{{ region.name }}</strong> province in the Philippines. This distinctive instrument has played a significant role in indigenous musical traditions for centuries.</p>
+                
+                <div class="media-detail-gallery">
+                    {% for image in instrument.images.all %}
+                    <div class="media-detail-card">
+                        <img src="{{ image.image.url }}" 
+                             alt="{{ image.get_view_type_display }} view of {{ instrument.name }}" 
+                             class="media-detail-image">
+                        <div class="media-detail-caption">
+                            {% if image.caption %}
+                                {{ image.caption }}
+                            {% else %}
+                                {{ image.get_view_type_display }} view of {{ instrument.name }}
+                                {% if image.view_type == 'front' %}showing its distinctive shape{% endif %}
+                                {% if image.view_type == 'side' %}demonstrating its proportions{% endif %}
+                                {% if image.view_type == 'detail' %}highlighting craftsmanship details{% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <!-- Fallback placeholder cards when no images exist -->
+                    <div class="media-detail-card">
+                        <img src="{% static 'images/phil.png' %}" 
+                             alt="Front view of {{ instrument.name }}" 
+                             class="media-detail-image">
+                        <div class="media-detail-caption">Front view showing the {{ instrument.name }}'s distinctive shape</div>
+                    </div>
+                    <div class="media-detail-card">
+                        <img src="{% static 'images/phil.png' %}" 
+                             alt="Side view of {{ instrument.name }}" 
+                             class="media-detail-image">
+                        <div class="media-detail-caption">Side profile demonstrating the instrument's proportions</div>
+                    </div>
+                    <div class="media-detail-card">
+                        <img src="{% static 'images/phil.png' %}" 
+                             alt="Detail view of {{ instrument.name }}" 
+                             class="media-detail-image">
+                        <div class="media-detail-caption">Close-up of intricate craftsmanship details</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            
+            <!-- Audio Samples -->
+            <section class="document-detail-section">
+                <div class="section-detail-header">
+                    <h2 class="section-detail-title">Sound Characteristics</h2>
+                    <span class="section-detail-subtitle">Experience the unique tonal qualities</span>
+                </div>
+                
+                <p>The sample sound of the {{ instrument.name }} echoes the soul of tradition, its tones flowing with warmth and character. Each note carries the spirit of Filipino heritage, shaped by the hands that bring it to life.</p>
+                
+                {% for sound in instrument.sound_set.all|slice:":2" %}
+                <div class="audio-detail-section">
+                   <div class="audio-detail-player">
+                        <h3>{{ sound.title }}</h3>
+                        {% if sound.sound_sample %}
+                            <audio controls style="width: 100%">
+                                <source src="{{ sound.sound_sample.url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            {% if forloop.first and instrument.province %}
+                                <p class="audio-detail-description"><small>Recorded in {{ instrument.province }} using traditional playing techniques</small></p>
+                            {% else %}
+                                <p class="audio-detail-description"><small>Modern interpretation blending traditional and contemporary styles</small></p>
+                            {% endif %}
+                        {% else %}
+                            <p>No audio file for this instrument</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="audio-detail-section">
+                    <p>No audio samples available for this instrument yet.</p>
+                </div>
+                {% endfor %}
+            </section>
+                        
+            {% if instrument.video_tutorials.all %}
+                <!-- Video Tutorial -->
+                <section class="document-detail-section">
+                    <div class="section-detail-header">
+                        <h2 class="section-detail-title">Performance Techniques</h2>
+                        <span class="section-detail-subtitle">Master the traditional playing methods</span>
+                    </div>
+                    {% for video in instrument.video_tutorials.all|slice:":1" %}
+                    <p>{{ video.description }}</p>
+                    <br>
+                    <p>The {{ instrument.name }} is traditionally played using specialized techniques passed down through generations. Below is a comprehensive tutorial demonstrating proper posture, hand positioning, and rhythmic patterns.</p>
+                    
+                    <div class="video-detail-section">
+                        <div class="video-detail-container">
+                            {% if video.video_file %}
+                                <video width="100%" controls>
+                                    <source src="{{ video.video_file.url }}" type="video/mp4" frameborder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allowfullscreen>
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% endif %}
+                        </div>
+                        <div class="video-detail-info">
+                            <h3>{{ video.title }}</h3>
+                            <p><small>
+                                Uploaded: {{ video.uploaded_at|date:"F j, Y" }} | 
+                                Views: {{ video.views }}
+                            </small></p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="technique-detail-section">
+                        <h3>Step-by-Step Playing Guide</h3>
+                            <div class="technique-detail-steps">
+                                {% for step in video.technique_steps.all %}
+                                <div class="technique-detail-step">
+                                    <div class="step-detail-number">{{ step.step_number }}</div>
+                                    <div>
+                                        <strong>{{ step.title }}</strong>: 
+                                        {{ step.description|safe }}
+                                        {% for tooltip in step.tooltips.all %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                    </div>
+                </section>
+            {% endif %}
+                      
+            <!-- Materials and Construction -->
+            <section class="document-detail-section">
+                <div class="section-detail-header">
+                    <h2 class="section-detail-title">Materials & Construction</h2>
+                    <span class="section-detail-subtitle">Traditional craftsmanship techniques</span>
+                </div>
+                {% for materials in insmaterials %}
+                    <p>{{ materials.description }}</p> <br>
+                    <p>Authentic {{ instrument.name }} instruments are made using traditional craftsmanship and locally-sourced materials. Their construction reflects cultural practices and techniques that have been preserved and refined through the years.</p>
+                   
+                    <div class="materials-detail-grid">
+                        {% for mat in materials.materials.all %}
+                            <div class="material-detail-card">
+                                <div class="material-detail-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v4M6 6l-3 3m15-3l3 3m-9 9v4m-6-6l-3 3m15-3l3 3"></path>
+                                    </svg>
+                                </div>
+                                <h4 class="material-detail-name">{{ mat.name }}</h4>
+                                <p class="material-detail-description">{{ mat.description|default:"Primary material used in construction" }}</p>
+                            </div>
+                        {% empty %}
+                            <p>No instrument material available for this instrument yet.</p>
+                        {% endfor %}
+                    </div>
+                {% empty %}
+                    <p>No instrument material available for this instrument yet.</p>
+                {% endfor %}
+                <h3 style="margin-top: 30px;">Traditional Construction Process</h3>
+                <div class="construction-detail-timeline">
+                    {% for step in construction_steps %}
+                    <div class="construction-detail-step">
+                        <div class="step-detail-marker"></div>
+                        <div>
+                            <h4>{{ step.title }}</h4>
+                            <p>{{ step.description }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                        <p>No traditional construction process available for this instrument yet.</p>
+                    {% endfor %}
+                </div>
+            </section>
+            
+            <!-- Cultural Significance -->
+            {% if instrument.cultural_significance %}
+            <section class="document-detail-section">
+                <div class="section-detail-header">
+                    <h2 class="section-detail-title">Cultural Significance</h2>
+                    <span class="section-detail-subtitle">Role in traditions and society</span>
+                </div>
+                
+               <div class="cultural-detail-section">
+                    <p>
+                        The {{ instrument.name }} carries deep cultural significance in {{ region.name }} society. 
+                        More than a musical instrument, it is a symbol of identity, tradition, and ancestral memory. 
+                        Played during 
+                        <span class="tooltip-detail">important lifecycle events
+                            <span class="tooltip-detail-text">Birth, coming-of-age, marriage, and death ceremonies</span>
+                        </span>, 
+                        it embodies the values, beliefs, and shared history of the community.
+                    </p>     
+                    <p style="margin-top: 20px;">{{ instrument.cultural_significance.description|linebreaksbr }}</p>
+                </div>       
+            </section>
+            {% endif %}
+            
+            <!-- Related Instruments -->
+            <section class="document-detail-section">
+                <div class="section-detail-header">
+                    <h2 class="section-detail-title">Related Instruments</h2>
+                    <span class="section-detail-subtitle">Explore similar traditional instruments</span>
+                </div>
+                
+                <p>The {{ instrument.name }} belongs to a family of related instruments found throughout the Philippines and Southeast Asia. These instruments share similar construction techniques, playing methods, or cultural roles.</p>
+                
+                <div class="related-detail-section">
+                    <div class="related-detail-carousel">
+                        {% for related in instrument.category.instruments.all %}
+                            {% if related.id != instrument.id %}
+                                <div class="related-detail-card">
+                                    {% if related.image %}
+                                        <img src="{{ related.image.url }}" alt="{{ related.name }}" class="related-detail-image">
+                                    {% else %}
+                                        <img src="https://via.placeholder.com/300x200?text={{ related.name }}" alt="{{ related.name }}" class="related-detail-image">
+                                    {% endif %}
+                                    <div class="related-detail-info">
+                                        <div class="related-detail-name">{{ related.name }}</div>
+                                        <div class="related-detail-category">{{ related.category.name }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% empty %}
+                            <p>No related instruments found in the same category.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Fun Fact -->
+            {% if instrument.funfact %}
+            <div class="fun-detail-fact">
+                {{ instrument.funfact.description|linebreaksbr }}
+            </div>
+            {% endif %}
+        </div>
+
+        
+         <!-- Sources and References -->
+        <section class="document-detail-section sources-detail-section">
+            <div class="section-detail-header">
+                <h2 class="section-detail-title">Sources & References</h2>
+                <span class="section-detail-subtitle">Information sources and external links</span>
+            </div>
+            
+            <p>This documentation includes information gathered from various sources to provide comprehensive details about the {{ instrument.name }}. Below are the references and links used in compiling this information.</p>
+            
+            <div class="sources-detail-container">
+                <div class="sources-detail-dropdown" id="sourcesDropdown">
+                    <button class="sources-detail-toggle" type="button" aria-expanded="false" aria-controls="sourcesContent">
+                        <span class="sources-detail-toggle-text">Show Information Sources</span>
+                        <i class="fas fa-chevron-down sources-detail-icon"></i>
+                    </button>
+                    
+                    <div class="sources-detail-content" id="sourcesContent" aria-hidden="true">
+                        <div class="sources-detail-description">
+                            <p><strong>About these sources:</strong> This section contains links to external websites, research papers, videos, and other resources that were used to gather information about this instrument. These sources provide additional context, historical background, and multimedia content.</p>
+                        </div>
+                        
+                        <div class="sources-detail-list">
+                            {% if instrument.links.all %}
+                                {% for link in instrument.links.all %}
+                                <div class="source-detail-item {% if link.is_primary_source %}primary-source{% endif %}">
+                                    <div class="source-detail-header">
+                                        <div class="source-detail-type-badge source-type-{{ link.link_type }}">
+                                            <i class="{% if link.link_type == 'video' %}fas fa-video{% elif link.link_type == 'audio' %}fas fa-volume-up{% elif link.link_type == 'image' %}fas fa-image{% elif link.link_type == 'research' %}fas fa-file-alt{% elif link.link_type == 'museum' %}fas fa-university{% else %}fas fa-link{% endif %}"></i>
+                                            {{ link.get_link_type_display }}
+                                        </div>
+                                        {% if link.is_primary_source %}
+                                        <span class="source-detail-primary-badge">
+                                            <i class="fas fa-star"></i> Primary Source
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <h4 class="source-detail-title">{{ link.title }}</h4>
+                                    
+                                    <div class="source-detail-url">
+                                        <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer" class="source-detail-link">
+                                            <i class="fas fa-external-link-alt"></i>
+                                            {{ link.url|truncatechars:60 }}
+                                        </a>
+                                    </div>
+                                    
+                                    <div class="source-detail-meta">
+                                        <small class="text-muted">
+                                            Added: {{ link.date_added|date:"M d, Y" }}
+                                        </small>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="sources-detail-empty">
+                                    <i class="fas fa-info-circle"></i>
+                                    <p>No external sources have been added for this instrument yet.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <footer class="document-detail-footer">
+            <p>Documentation prepared by the Philharmonia Project • © {% now "Y" %}</p>
+            <p>All content and media are for educational purposes only</p>
+        </footer>
+        
+    </div>
+    
+
+    <!-- Right Side - Sticky Sidebar -->
+    <div class="fixed-sidebar">
+        <!-- Book Icon and Instruction -->
+        <div class="sidebar-section">
+            <div class="book-instruction">
+                <h3>Instrument History</h3>
+                <p>To explore the history and background of the {{ instrument.name }}, click the book icon below:</p>
+                <!-- Book Icon -->
+                <div class="book-detail-icon-container" id="bookDetailIcon">
+                  <div class="book-detail-icon" title="Click to view instrument history">
+                    <i class="fas fa-book"></i>
+                  </div>
+                  <span class="book-detail-icon-label">History</span>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Book Modal (Hidden by Default) -->
+<div class="book-detail-modal" id="bookDetailModal">
+    <div class="book-detail-cover">
+        <h1>History of the {{ instrument.name }}</h1>
+        <p>Click "Open Book" to begin</p>
+        <button id="openDetailBookBtn">Open Book</button>
+    </div>
+
+    <div class="book-detail-content">
+        <div class="book-detail">
+            <div class="book-detail-spine"></div>
+            <div class="pages-detail-container">
+                <!-- Left Page (back side visible during flip) -->
+                <div class="page-detail left-detail"></div>
+                
+                <!-- Right Pages (main content) -->
+                {% if instrument.pages.all %}
+                    {% for page in instrument.pages.all %}
+                    <div class="page-detail right-detail {% if forloop.first %}active-detail{% endif %}" id="page-detail-{{ forloop.counter }}">
+                        <div class="page-detail-content">
+                            <h2>{{ page.title }}</h2>
+                            <div class="page-detail-text">
+                                {% for section in page.sections.all %}
+                                    {% if section.section_type == 'description' %}
+                                    <div class="section-detail description-detail">
+                                        {% if section.title %}<h3>{{ section.title }}</h3>{% endif %}
+                                        <p>{{ section.content|linebreaks }}</p>
+                                    </div>
+                                    
+                                    {% elif section.section_type == 'bullet_points' %}
+                                    <div class="section-detail bullet-detail-points">
+                                        {% if section.title %}<h3>{{ section.title }}</h3>{% endif %}
+                                        <ul>
+                                            {% for point in section.content.splitlines %}
+                                                {% if point.strip %}
+                                                <li>{{ point }}</li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    
+                                    {% elif section.section_type == 'image' %}
+                                    <div class="section-detail image-detail">
+                                        {% if section.title %}<h3>{{ section.title }}</h3>{% endif %}
+                                        {% if section.image %}
+                                        <img src="{{ section.image.url }}" alt="{{ section.title|default:page.title }}" class="section-detail-image">
+                                        {% endif %}
+                                        {% if section.content %}
+                                        <p class="image-detail-caption">{{ section.content }}</p>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    {% elif section.section_type == 'quote' %}
+                                    <div class="section-detail quote-detail">
+                                        <blockquote>
+                                            {{ section.content }}
+                                            {% if section.title %}
+                                            <footer>— {{ section.title }}</footer>
+                                            {% endif %}
+                                        </blockquote>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="page-detail-nav">
+                                {% if not forloop.first %}
+                                <button class="prev-detail-page">← Previous</button>
+                                {% else %}
+                                <button class="close-detail-book">Close</button>
+                                {% endif %}
+                                {% if not forloop.last %}
+                                <button class="next-detail-page">Next →</button>
+                                {% else %}
+                                <button class="close-detail-book">Close</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="page-detail right-detail active-detail" id="page-detail-1">
+                        <div class="page-detail-content">
+                            <h2>Instrument History</h2>
+                            <div class="page-detail-text">
+                                <div class="section-detail description-detail">
+                                    <p>No instrument history for this instrument yet. Please wait for the admin to upload.</p>
+                                </div>
+                            </div>
+                            <div class="page-detail-nav">
+                                <button class="close-detail-book">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.chat-detail-messages {
+    background-color: #f8f9fa;
+}
+.message-detail-bubble {
+    max-width: 100%;
+    word-wrap: break-word;
+}
+/* Sources and References Section */
+.sources-detail-section {
+    background: var(--white);
+    padding: 40px;
+    border-top: 3px solid var(--light);
+}
+
+.sources-detail-container {
+    margin: 30px 0;
+}
+
+.sources-detail-dropdown {
+    border: 2px solid var(--light);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: var(--white);
+    box-shadow: var(--card-shadow);
+}
+
+.sources-detail-toggle {
+    width: 100%;
+    padding: 20px 25px;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sources-detail-toggle:hover {
+    background: var(--primary-light);
+}
+
+.sources-detail-toggle[aria-expanded="true"] {
+    background: var(--primary-light);
+}
+
+.sources-detail-toggle[aria-expanded="true"] .sources-detail-icon {
+    transform: rotate(180deg);
+}
+
+.sources-detail-icon {
+    transition: transform 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.sources-detail-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    background: var(--white);
+}
+
+.sources-detail-content[aria-hidden="false"] {
+    max-height: 800px;
+}
+
+.sources-detail-description {
+    padding: 25px;
+    background: var(--light);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.sources-detail-description p {
+    margin: 0;
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.sources-detail-list {
+    padding: 25px;
+    display: grid;
+    gap: 20px;
+}
+
+.source-detail-item {
+    padding: 20px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+    background: var(--white);
+}
+
+.source-detail-item:hover {
+    border-color: var(--accent);
+    box-shadow: var(--card-shadow);
+}
+
+.source-detail-item.primary-source {
+    border-left: 4px solid var(--accent);
+    background: linear-gradient(to right, rgba(255, 193, 7, 0.05), transparent);
+}
+
+.source-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.source-detail-type-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+}
+
+.source-type-info { background: var(--primary-light); }
+.source-type-video { background: #dc3545; }
+.source-type-audio { background: #28a745; }
+.source-type-image { background: #17a2b8; }
+.source-type-research { background: #6f42c1; }
+.source-type-museum { background: #e83e8c; }
+.source-type-other { background: #6c757d; }
+
+.source-detail-primary-badge {
+    background: var(--accent);
+    color: var(--dark);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.source-detail-title {
+    color: var(--primary);
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.source-detail-url {
+    margin-bottom: 10px;
+}
+
+.source-detail-link {
+    color: var(--secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    word-break: break-all;
+    transition: color 0.3s ease;
+}
+
+.source-detail-link:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.source-detail-meta {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-top: 10px;
+}
+
+.sources-detail-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+}
+
+.sources-detail-empty i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: var(--light);
+}
+
+.sources-detail-empty p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sources-detail-section {
+        padding: 30px 20px;
+    }
+    
+    .sources-detail-toggle {
+        padding: 15px 20px;
+        font-size: 1rem;
+    }
+    
+    .sources-detail-description,
+    .sources-detail-list {
+        padding: 20px;
+    }
+    
+    .source-detail-item {
+        padding: 15px;
+    }
+    
+    .source-detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .sources-detail-content[aria-hidden="false"] {
+        max-height: 1200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sources-detail-toggle {
+        padding: 12px 15px;
+    }
+    
+    .sources-detail-description,
+    .sources-detail-list {
+        padding: 15px;
+    }
+    
+    .source-detail-type-badge,
+    .source-detail-primary-badge {
+        font-size: 0.7rem;
+    }
+}
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+            const carousel = document.getElementById('relatedCarousel');
+            const indicatorsContainer = document.getElementById('carouselIndicators');
+            
+            // Only add swipe functionality and indicators on mobile
+            if (window.innerWidth <= 768) {
+                // Calculate number of slides for indicators
+                const cardCount = carousel.children.length;
+                const slidesCount = Math.ceil(cardCount / 2); // 2 cards per slide on mobile
+                
+                // Create indicators
+                for (let i = 0; i < slidesCount; i++) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'indicator';
+                    if (i === 0) indicator.classList.add('active');
+                    indicatorsContainer.appendChild(indicator);
+                }
+                
+                // Swipe functionality
+                let startX = 0;
+                let currentX = 0;
+                let isDragging = false;
+                
+                carousel.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                });
+                
+                carousel.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    currentX = e.touches[0].clientX;
+                });
+                
+                carousel.addEventListener('touchend', () => {
+                    if (!isDragging) return;
+                    
+                    const diff = startX - currentX;
+                    const threshold = 50; // Minimum swipe distance
+                    
+                    if (Math.abs(diff) > threshold) {
+                        if (diff > 0) {
+                            // Swiped left - next slide
+                            scrollToNextSlide();
+                        } else {
+                            // Swiped right - previous slide
+                            scrollToPrevSlide();
+                        }
+                    }
+                    
+                    isDragging = false;
+                });
+                
+                // Update indicators on scroll
+                carousel.addEventListener('scroll', updateIndicators);
+                
+                function scrollToNextSlide() {
+                    const scrollAmount = carousel.offsetWidth * 0.5; // 50% of container width (2 cards)
+                    carousel.scrollBy({
+                        left: scrollAmount,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                function scrollToPrevSlide() {
+                    const scrollAmount = carousel.offsetWidth * 0.5; // 50% of container width (2 cards)
+                    carousel.scrollBy({
+                        left: -scrollAmount,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                function updateIndicators() {
+                    const scrollPosition = carousel.scrollLeft;
+                    const slideWidth = carousel.offsetWidth * 0.5; // 2 cards per view
+                    const currentSlide = Math.round(scrollPosition / slideWidth);
+                    
+                    // Update active indicator
+                    const indicators = document.querySelectorAll('.indicator');
+                    indicators.forEach((indicator, index) => {
+                        if (index === currentSlide) {
+                            indicator.classList.add('active');
+                        } else {
+                            indicator.classList.remove('active');
+                        }
+                    });
+                }
+            }
+        });
+
+
+
+
+    // Sources Dropdown Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const sourcesDropdown = document.getElementById('sourcesDropdown');
+    if (sourcesDropdown) {
+        const toggle = sourcesDropdown.querySelector('.sources-detail-toggle');
+        const content = sourcesDropdown.querySelector('.sources-detail-content');
+        
+        toggle.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            this.setAttribute('aria-expanded', !isExpanded);
+            content.setAttribute('aria-hidden', isExpanded);
+            
+            // Update toggle text
+            const toggleText = this.querySelector('.sources-detail-toggle-text');
+            toggleText.textContent = isExpanded ? 'Show Information Sources' : 'Hide Information Sources';
+            
+            // Add smooth scroll to show the content
+            if (!isExpanded) {
+                setTimeout(() => {
+                    sourcesDropdown.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'nearest' 
+                    });
+                }, 300);
+            }
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!sourcesDropdown.contains(event.target) && content.getAttribute('aria-hidden') === 'false') {
+                toggle.setAttribute('aria-expanded', 'false');
+                content.setAttribute('aria-hidden', 'true');
+                const toggleText = toggle.querySelector('.sources-detail-toggle-text');
+                toggleText.textContent = 'Show Information Sources';
+            }
+        });
+    }
+    
+    // Add keyboard navigation for sources dropdown
+    const sourcesToggle = document.querySelector('.sources-detail-toggle');
+    if (sourcesToggle) {
+        sourcesToggle.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
+        });
+    }
+});
+</script>
+
+<script src="{% static 'js/instrumentdetailed.js' %}"></script>
+</body>
+</html>

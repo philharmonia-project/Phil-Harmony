@@ -579,6 +579,7 @@
 
 
 <!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ --><!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ -->
+<!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ --><!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ -->
 <div class="ins-body1" id="Instrument">
   <!-- New heading section -->
   <div class="instruments-intro">
@@ -630,8 +631,7 @@
           <span>{{ instrument.province }}</span>
         </div>
         <p>{{ instrument.description|truncatewords:10 }}</p>
-        <a class="detail-btn" href="#" data-toggle="modal" data-target="#loginInfoModal">VIEW DETAILS</a>
-
+        <a class="detail-btn" href="{% url 'LoginInstrumentDetail' instrument.pk %}">VIEW DETAILS</a>
       </div>
     </div>
     {% endfor %}
@@ -644,198 +644,6 @@
   </div>
 </div>
 </div>
-<!-- Enhanced Info Modal (Visual Design Only) -->
-<div id="loginInfoModal" class="custom-modal" aria-hidden="true">
-  <div class="custom-modal-content" role="alertdialog" aria-modal="true" aria-labelledby="modalTitle">
-    <button class="close-modal" aria-label="Close dialog">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 4L4 12" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/>
-        <path d="M4 4L12 12" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </button>
-    <div class="modal-graphic">
-      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 15V17M6 21H18C19.1046 21 20 20.1046 20 19V13C20 11.8954 19.1046 11 18 11H6C4.89543 11 4 11.8954 4 13V19C4 20.1046 4.89543 21 6 21Z" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
-        <path d="M16 11V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V11" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <h3 id="modalTitle" class="modal-title">Access Restricted</h3>
-    <p class="modal-message">Please log in to view full instrument details and features.</p>
-    <div class="modal-decoration">
-      <div class="decoration-line"></div>
-      <div class="decoration-dot"></div>
-      <div class="decoration-line"></div>
-    </div>
-  </div>
-</div>
-
-<style>
-.custom-modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.custom-modal.show {
-  opacity: 1;
-}
-
-.custom-modal-content {
-  background: white;
-  padding: 2.5rem;
-  border-radius: 16px;
-  max-width: 380px;
-  margin: 15vh auto;
-  text-align: center;
-  position: relative;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  transform: translateY(-30px) scale(0.95);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  opacity: 0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.custom-modal.show .custom-modal-content {
-  transform: translateY(0) scale(1);
-  opacity: 1;
-}
-
-.close-modal {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: #F3F4F6;
-  border: none;
-  border-radius: 50%;
-  padding: 0;
-  transition: all 0.2s ease;
-}
-
-.close-modal:hover {
-  background: #E5E7EB;
-}
-
-.modal-graphic {
-  margin: 0 auto 1.5rem;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #EEF2FF;
-  border-radius: 50%;
-}
-
-.modal-title {
-  color: #1F2937;
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-  font-weight: 600;
-  letter-spacing: -0.5px;
-}
-
-.modal-message {
-  color: #6B7280;
-  font-size: 1.05rem;
-  line-height: 1.5;
-  margin-bottom: 1.5rem;
-}
-
-.modal-decoration {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 1.5rem;
-}
-
-.decoration-line {
-  height: 1px;
-  width: 40px;
-  background: linear-gradient(90deg, transparent, #E5E7EB, transparent);
-}
-
-.decoration-dot {
-  width: 6px;
-  height: 6px;
-  background: #4F46E5;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.7; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@media (max-width: 480px) {
-  .custom-modal-content {
-    width: 90%;
-    margin: 10vh auto;
-    padding: 2rem 1.5rem;
-  }
-}
-</style>
-
-<script>
-document.querySelectorAll('[data-target="#loginInfoModal"]').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    e.preventDefault();
-    showModal();
-  });
-});
-
-document.querySelectorAll('.close-modal').forEach(btn => {
-  btn.addEventListener('click', function() {
-    hideModal();
-  });
-});
-
-window.addEventListener('click', function(e) {
-  if (e.target === document.getElementById('loginInfoModal')) {
-    hideModal();
-  }
-});
-
-document.addEventListener('keydown', function(e) {
-  const modal = document.getElementById('loginInfoModal');
-  if (e.key === 'Escape' && modal.style.display === 'block') {
-    hideModal();
-  }
-});
-
-function showModal() {
-  const modal = document.getElementById('loginInfoModal');
-  modal.style.display = 'block';
-  modal.setAttribute('aria-hidden', 'false');
-  void modal.offsetWidth; // Trigger reflow
-  modal.classList.add('show');
-}
-
-function hideModal() {
-  const modal = document.getElementById('loginInfoModal');
-  modal.classList.remove('show');
-  modal.setAttribute('aria-hidden', 'true');
-  setTimeout(() => {
-    modal.style.display = 'none';
-  }, 300);
-}
-</script>
 
 <!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ --><!-- /* INSTRUMENT WITH DETAILED CAROUSEL DESIGN */ -->
 
@@ -1008,8 +816,7 @@ function updateViewButtonState(button, type, isPlaying) {
     <h2 class="title-animate">Explore the Philippine Map</h2>
     <p class="subtitle">Discover traditional instruments from different regions by clicking on the map below.</p>
   </div>
-  
-  
+
   <!-- Main Content Area -->
   <div class="map-content">
     <!-- Interactive Map Visualization -->
@@ -1056,6 +863,10 @@ function updateViewButtonState(button, type, isPlaying) {
     <p>The Philippines has over <strong>180 ethnolinguistic groups</strong> with distinct musical traditions. This map showcases instruments from major cultural groups including <span class="cultural-tag">Luzon</span>, <span class="cultural-tag">Visayas</span>, <span class="cultural-tag">Mindanao</span>, and indigenous communities.</p>
   </div>
 </div>
+
+<script>
+    const DETAIL_URL_BASE = "{% url 'LoginInstrumentDetail' 0 %}".replace("0/", "");
+</script>
 <!-- MAP  --><!-- MAP  --><!-- MAP  --><!-- MAP  --><!-- MAP  -->
 
 

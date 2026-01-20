@@ -394,6 +394,7 @@
   .FrontLmodal-content .FrontLleft-section {
     background-color: #FAD7A1;
     color: #333;
+    background-image: url('/static/images/kul.jpg');
     padding: 30px 15px;
     flex: 1;
     text-align: center;
@@ -416,7 +417,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(250, 215, 161, 0.7);
+    background: rgba(144, 123, 92, 0.7);
     z-index: 0;
   }
 

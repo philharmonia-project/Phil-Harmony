@@ -146,12 +146,22 @@
                                            class="edit-input" required>
                                 </div>
                                 
-                                <div class="edit-form-group">
-                                    <label>Type:</label>
-                                    <input type="text" name="event_type" 
-                                           value="{{ appointment.event_type|default:'' }}" 
-                                           class="edit-input">
-                                </div>
+<div class="edit-form-group">
+    <label>Type:</label>
+    <select name="event_type" id="edit_event_type" class="edit-input">
+        <option value="" disabled {% if not appointment.event_type %}selected{% endif %}>Select Event Type</option>
+        <option value="Cultural Program" {% if appointment.event_type == "Cultural Program" %}selected{% endif %}>Cultural Program</option>
+        <option value="School Program" {% if appointment.event_type == "School Program" %}selected{% endif %}>School Program</option>
+        <option value="Festival" {% if appointment.event_type == "Festival" %}selected{% endif %}>Festival</option>
+        <option value="Community Event" {% if appointment.event_type == "Community Event" %}selected{% endif %}>Community Event</option>
+        <option value="Traditional Ceremony" {% if appointment.event_type == "Traditional Ceremony" %}selected{% endif %}>Traditional Ceremony</option>
+        <option value="Workshop" {% if appointment.event_type == "Workshop" %}selected{% endif %}>Workshop</option>
+        <option value="Lecture-Demonstration" {% if appointment.event_type == "Lecture-Demonstration" %}selected{% endif %}>Lecture-Demonstration</option>
+        <option value="Music Lesson" {% if appointment.event_type == "Music Lesson" %}selected{% endif %}>Music Lesson</option>
+        <option value="Private Event" {% if appointment.event_type == "Private Event" %}selected{% endif %}>Private Event</option>
+        <option value="Other" {% if appointment.event_type == "Other" %}selected{% endif %}>Other</option>
+    </select>
+</div>
                                 
                                 <div class="edit-form-group">
                                     <label>Location:</label>

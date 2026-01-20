@@ -27,103 +27,6 @@
               height: 0px; /* Hide horizontal scroll bar */
    }
   /* -----------------------NAVBAR--------------------------- */
-/* CLOCK */
-/* CSS */
-.analog-clock {
-    --clock-size: 60px;
-    width: var(--clock-size);
-    height: var(--clock-size);
-    border-radius: 50%;
-    background: var(--body-color1);
-    border: 3px solid var(--text-color1);
-    position: relative;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-}
-
-.clock-number {
-    position: absolute;
-    font-size: calc(var(--clock-size) * 0.15);
-    font-weight: bold;
-}
-
-.num-12 {
-    top: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.num-3 {
-    top: 50%;
-    right: 2px;
-    transform: translateY(-50%);
-}
-
-.num-6 {
-    bottom: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.num-9 {
-    top: 50%;
-    left: 2px;
-    transform: translateY(-50%);
-}
-
-.hand {
-    position: absolute;
-    transform-origin: bottom center;
-    left: 50%;
-}
-
-.hour-hand {
-    width: calc(var(--clock-size) * 0.05);
-    height: calc(var(--clock-size) * 0.3);
-    background: var(--text-color);
-    top: calc(50% - var(--clock-size) * 0.3);
-    margin-left: calc(var(--clock-size) * -0.025);
-}
-
-.minute-hand {
-    width: calc(var(--clock-size) * 0.033);
-    height: calc(var(--clock-size) * 0.42);
-    background: #666;
-    top: calc(50% - var(--clock-size) * 0.42);
-    margin-left: calc(var(--clock-size) * -0.0165);
-}
-
-.second-hand {
-    width: calc(var(--clock-size) * 0.016);
-    height: calc(var(--clock-size) * 0.47);
-    background: red;
-    top: calc(50% - var(--clock-size) * 0.47);
-    margin-left: calc(var(--clock-size) * -0.008);
-}
-
-.center-dot {
-    width: calc(var(--clock-size) * 0.1);
-    height: calc(var(--clock-size) * 0.1);
-    background: #333;
-    border-radius: 50%;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .analog-clock {
-        --clock-size: 50px;
-    }
-}
-
-@media (max-width: 480px) {
-    .analog-clock {
-        --clock-size: 40px;
-    }
-}
 
 
 /* LOGOUT BUTTON */
@@ -354,29 +257,63 @@
 
   /*=============== VARIABLES CSS ===============*/
   :root {
-    --header-height: 3.5rem;
+   --header-height: 3.5rem;
   
-  --first-color: hsl(228, 55%, 55%); 
-  --title-color: hsl(228, 15%, 25%);
-  --text-color: hsl(228, 4%, 27%); 
-  --text-color1: hsl(210, 70%, 45%); 
-  --text-color2: hsl(210, 67%, 35%); 
-  
-  --body-color1: hsl(228, 100%, 99%); 
-  --body-color: hsla(0, 0%, 98%, 0.914); 
-  --bg-color:  hsl(228, 100%, 99%);
-  --card-bg: hsl(228, 100%, 99%); 
-  --input-border: hsl(0, 0%, 80%); 
-  --shadow-color: hsla(228, 80%, 4%, .1);
-  --shadow-color1: rgba(0, 123, 255, 0.5);
-  --delete-bg: rgba(57, 198, 234, 0.1); 
-
-  /* reverse color */
-  --text-colorR: hsl(0, 92%, 48%);
-
-  /* Darker Color */
-  --bg-colorD: rgb(244, 244, 244);
-  
+    /* Primary Colors */
+    --first-color: #ff6b00; /* Updated: was hsl(228, 55%, 55%) */
+    --title-color: #2a2a2a; /* Updated: was hsl(228, 15%, 25%) */
+    --text-color: #333333; /* Updated: was hsl(228, 4%, 27%) */
+    --text-color1: #ff8b33; /* Updated: was hsl(210, 70%, 45%) */
+    --text-color2: #ff6b00; /* Updated: was hsl(210, 67%, 35%) */
+    
+    /* Background Colors */
+    --body-color1: #fdf0d5; /* Updated: was hsl(228, 100%, 99%) */
+    --body-color: rgba(244, 230, 204, 0.914); /* Updated: was hsla(0, 0%, 98%, 0.914) */
+    --bg-color: #fdf0d5; /* Updated: was hsl(228, 100%, 99%) */
+    --card-bg: #f9e9ca; /* Updated: was hsl(228, 100%, 99%) */
+    --input-border: hsl(0, 0%, 80%); /* Kept original as it's neutral */
+    
+    /* Shadow Colors */
+    --shadow-color: rgba(42, 42, 42, 0.1); /* Updated: was hsla(228, 80%, 4%, .1) */
+    --shadow-color1: rgba(255, 107, 0, 0.5); /* Updated: was rgba(0, 123, 255, 0.5) */
+    
+    /* Special Colors */
+    --delete-bg: rgba(255, 107, 0, 0.1); /* Updated: was rgba(57, 198, 234, 0.1) */
+    --bg-colorD: rgb(244, 244, 244); /* Kept original as neutral gray */
+    
+    /* Reverse Color - using new palette's secondary for contrast */
+    --text-colorR: #003049; /* Updated: was hsl(0, 92%, 48%) */
+    
+    /* New palette colors added for consistency */
+    --darks: #2a2a2a;
+    --primary: #ff6b00;
+    --primary-light: #ff8b33;
+    --secondary: #003049;
+    --secondary-light: #669bbc;
+    --accent: #ffc107;
+    --accent-dark: #f0b506;
+    --highlight: #669bbc;
+    --dark: #003049;
+    --light: #fdf0d5;
+    --light-transparent: rgba(253, 240, 213, 0.7);
+    --white: #ffffff;
+    --off-white: #fdf0d5;
+    --text: #000000;
+    --text-light: #333333;
+    --primary-color: #ff6b00;
+    --secondary-color: #003049;
+    --accent-color: #ff8b33;
+    --light-color: #fdf0d5;
+    --dark-color: #003049;
+    
+    /* Effects from new palette */
+    --transition: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --card-shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.15);
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    
+    /* Layout */
+    --border-radius: 12px;
   
     /*========== Font and typography ==========*/
     /*.5rem = 8px | 1rem = 16px ...*/
@@ -456,11 +393,11 @@
       the website, in dark theme
   ==========*/
   .dark-theme .sidebar__content::-webkit-scrollbar {
-    background-color: hsl(0, 0%, 85%);
+    background-color: var(--body-color1);
   }
   
   .dark-theme .sidebar__content::-webkit-scrollbar-thumb {
-    background-color: hsl(228, 16%, 40%);
+    background-color: var(--text-color1);
   }
   
   /*=============== REUSABLE CSS CLASSES ===============*/
@@ -588,11 +525,11 @@
   
   .sidebar__content::-webkit-scrollbar {
     width: .4rem;
-    background-color: hsl(228, 8%, 85%);
+    background-color: var(--body-color);
   }
   
   .sidebar__content::-webkit-scrollbar-thumb {
-    background-color: hsl(220, 4%, 28%);
+    background-color: var(--primary);
   }
   
   .sidebar__title {
