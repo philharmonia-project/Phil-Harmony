@@ -2295,6 +2295,7 @@ def user_main(request):
         from django.http import HttpResponse
         return HttpResponse(f"Error loading page: {str(e)}. Please contact admin.")
 
+
 class AppointmentView(LoginRequiredMixin, CreateView):
     template_name = 'app/user/appointment/Appointment.html'
 
@@ -2311,16 +2312,33 @@ class AppointmentView(LoginRequiredMixin, CreateView):
         return PerformanceAppointment if form_class == PerformanceAppointmentForm else LessonAppointment
 
     def form_valid(self, form):
+        # Handle "Other" event type for PerformanceAppointment
+        if isinstance(form, PerformanceAppointmentForm):
+            event_type = self.request.POST.get('event_type')
+
+            # Check if user selected "Other"
+            if event_type == 'Other':
+                # First try to get from event_type_final (hidden field)
+                event_type_final = self.request.POST.get('event_type_final', '').strip()
+
+                # If not there, try other_event_type field
+                if not event_type_final:
+                    event_type_final = self.request.POST.get('other_event_type', '').strip()
+
+                # Update the form instance with the custom value
+                if event_type_final:
+                    form.instance.event_type = event_type_final
+
         form.instance.user = self.request.user
         appointment = form.save()
-        
+
         # Return JSON for AJAX
         if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({
-                'success': True, 
-                'message': ''
+                'success': True,
+                'message': 'Appointment submitted successfully! We will contact you soon.'
             })
-        
+
         # For non-AJAX, you might want to handle differently
         messages.success(self.request, 'Appointment submitted successfully!')
         return super().form_valid(form)
@@ -2330,10 +2348,10 @@ class AppointmentView(LoginRequiredMixin, CreateView):
         if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             errors = {field: [str(e) for e in error] for field, error in form.errors.items()}
             return JsonResponse({
-                'success': False, 
+                'success': False,
                 'errors': errors
             }, status=400)
-        
+
         # Show validation errors in normal POST
         return self.render_to_response(self.get_context_data(form=form))
 

@@ -323,7 +323,7 @@
         <i class="fas fa-chevron-right"></i>
       </button>
       <button href="javascript:void(0);" class="create-Performance btn btn-outline">
-        <span>SCHEDULE APPOINTMENT</span>
+        <span>SCHEDULE INVITATIONS</span>
         <i class="fas fa-play"></i>
       </button>
     </div>
@@ -415,10 +415,74 @@ document.addEventListener("DOMContentLoaded", () => {
     return cookieValue;
   }
 
+  // ---- Function to handle "Other" event type functionality ----
+  function initializeOtherEventTypeHandler() {
+    const eventTypeSelect = document.getElementById('appoint_event_type_css');
+    const otherEventTypeContainer = document.getElementById('otherEventTypeContainer');
+    const otherEventTypeInput = document.getElementById('appoint_other_event_type_css');
+    const eventTypeFinalInput = document.getElementById('appoint_event_type_final');
+
+    // Only proceed if elements exist
+    if (!eventTypeSelect || !otherEventTypeContainer || !otherEventTypeInput || !eventTypeFinalInput) {
+      return;
+    }
+
+    // Function to update the hidden field with the correct value
+    function updateFinalEventTypeValue() {
+      if (eventTypeSelect.value === 'Other' && otherEventTypeInput.value.trim()) {
+        // User selected "Other" and typed something - use the typed text
+        eventTypeFinalInput.value = otherEventTypeInput.value.trim();
+      } else {
+        // User selected a predefined option - use that value
+        eventTypeFinalInput.value = eventTypeSelect.value;
+      }
+    }
+
+    // Handle event type dropdown change
+    eventTypeSelect.addEventListener('change', function() {
+      if (this.value === 'Other') {
+        // Show the other event type input
+        otherEventTypeContainer.style.display = 'block';
+        otherEventTypeInput.required = true;
+
+        // Add a small delay before focusing for smooth transition
+        setTimeout(() => {
+          otherEventTypeInput.focus();
+        }, 100);
+
+        // Clear the final value until user types something
+        eventTypeFinalInput.value = '';
+      } else {
+        // Hide the other event type input
+        otherEventTypeContainer.style.display = 'none';
+        otherEventTypeInput.required = false;
+        otherEventTypeInput.value = '';
+
+        // Update the final value with the selected option
+        eventTypeFinalInput.value = this.value;
+      }
+    });
+
+    // Handle typing in the "Other" input field
+    otherEventTypeInput.addEventListener('input', function() {
+      if (eventTypeSelect.value === 'Other') {
+        updateFinalEventTypeValue();
+      }
+    });
+
+    // Initialize the final value on page load
+    if (eventTypeSelect.value && eventTypeSelect.value !== 'Other') {
+      eventTypeFinalInput.value = eventTypeSelect.value;
+    }
+  }
+
   // Function to initialize appointment form handlers
   function initializeAppointmentForm() {
     console.log("Initializing appointment form handlers...");
-    
+
+    // Initialize the "Other" event type handler
+    initializeOtherEventTypeHandler();
+
     // ---- Tabs Animation ----
     const tabInputs = document.querySelectorAll('input[name="appoint-tab"]');
     tabInputs.forEach(input => {
@@ -434,20 +498,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // ---- Error Message Functions ----
     function showError(element, message, isSuccess = false, isDateConflict = false) {
       if (!element) return;
-      
+
       // Clear existing classes
       element.classList.remove('success-message', 'date-conflict-message');
-      
+
       // Add appropriate classes based on message type
       if (isSuccess) {
         element.classList.add('success-message');
       } else if (isDateConflict) {
         element.classList.add('date-conflict-message');
       }
-      
+
       element.innerHTML = message;
       element.classList.add('show');
-      
+
       // For success messages, don't auto-hide
       if (!isSuccess) {
         setTimeout(() => {
@@ -465,10 +529,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function markFieldAsError(field, hasError, isDateConflict = false) {
       if (!field) return;
-      
+
       // Remove existing error classes
       field.classList.remove('error', 'date-conflict-error');
-      
+
       if (hasError) {
         field.classList.add('error');
         if (isDateConflict) {
@@ -480,11 +544,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // ---- Date Validation Functions ----
     async function validateDate(dateInput, timeInput = null, appointmentType = 'performance') {
       if (!dateInput) return { isValid: false, errorMessage: "Date field not found", isDateConflict: false };
-      
+
       const selectedDate = new Date(dateInput.value);
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Reset time part for date-only comparison
-      
+
       let isValid = true;
       let errorMessage = '';
       let isDateConflict = false;
@@ -497,12 +561,12 @@ document.addEventListener("DOMContentLoaded", () => {
         isValid = false;
         errorMessage = "Cannot book appointments for past dates.";
       }
-      
+
       // If time is provided, validate datetime combination
       if (isValid && timeInput && timeInput.value) {
         const selectedDateTime = new Date(dateInput.value + 'T' + timeInput.value);
         const now = new Date();
-        
+
         if (selectedDateTime < now) {
           isValid = false;
           errorMessage = "Cannot book appointments for past date and time.";
@@ -529,7 +593,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function setupDateValidation(dateField, timeField, errorContainer, appointmentType = 'performance') {
       if (!dateField) return;
-      
+
       // Debounce function to prevent too many API calls
       let debounceTimer;
       dateField.addEventListener('change', function() {
@@ -537,7 +601,7 @@ document.addEventListener("DOMContentLoaded", () => {
         debounceTimer = setTimeout(async () => {
           const validation = await validateDate(dateField, timeField, appointmentType);
           markFieldAsError(dateField, !validation.isValid, validation.isDateConflict);
-          
+
           if (!validation.isValid) {
             showError(errorContainer, validation.errorMessage, false, validation.isDateConflict);
           } else {
@@ -553,7 +617,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const validation = await validateDate(dateField, timeField, appointmentType);
           markFieldAsError(dateField, !validation.isValid, validation.isDateConflict);
           markFieldAsError(timeField, !validation.isValid, validation.isDateConflict);
-          
+
           if (!validation.isValid) {
             showError(errorContainer, validation.errorMessage, false, validation.isDateConflict);
           } else {
@@ -568,7 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ---- Form Validation Before Submission ----
     async function validateFormBeforeSubmit(form, dateField, timeField, errorContainer, appointmentType = 'performance') {
       const validation = await validateDate(dateField, timeField, appointmentType);
-      
+
       if (!validation.isValid) {
         showError(errorContainer, validation.errorMessage, false, validation.isDateConflict);
         markFieldAsError(dateField, true, validation.isDateConflict);
@@ -576,7 +640,37 @@ document.addEventListener("DOMContentLoaded", () => {
         dateField.focus();
         return false;
       }
-      
+
+      // Validate "Other" event type
+      const eventTypeSelect = document.getElementById('appoint_event_type_css');
+      const otherEventTypeInput = document.getElementById('appoint_other_event_type_css');
+      const eventTypeFinalInput = document.getElementById('appoint_event_type_final');
+
+      if (eventTypeSelect && eventTypeSelect.value === 'Other') {
+        if (!otherEventTypeInput || !otherEventTypeInput.value.trim()) {
+          showError(errorContainer, "Please specify your event type when selecting 'Other'.", false);
+          if (otherEventTypeInput) {
+            markFieldAsError(otherEventTypeInput, true);
+            otherEventTypeInput.focus();
+          } else {
+            eventTypeSelect.focus();
+          }
+          return false;
+        }
+
+        // Ensure the final value is set
+        if (eventTypeFinalInput) {
+          eventTypeFinalInput.value = otherEventTypeInput.value.trim();
+        }
+      }
+
+      // Validate that event_type_final is not empty
+      if (eventTypeFinalInput && !eventTypeFinalInput.value.trim()) {
+        showError(errorContainer, "Please select or specify an event type.", false);
+        eventTypeSelect.focus();
+        return false;
+      }
+
       return true;
     }
 
@@ -598,21 +692,33 @@ document.addEventListener("DOMContentLoaded", () => {
       form.addEventListener('submit', async function(e) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         console.log("Form submission intercepted for:", formId);
-        
+
         // Clear previous errors
         clearError(errorElement);
         markFieldAsError(dateField, false);
         if (timeField) markFieldAsError(timeField, false);
 
-        // Validate date before submission (including availability check)
+        // Clear any "Other" event type field error
+        const otherEventTypeInput = document.getElementById('appoint_other_event_type_css');
+        if (otherEventTypeInput) {
+          markFieldAsError(otherEventTypeInput, false);
+        }
+
+        // Validate form before submission
         const isValid = await validateFormBeforeSubmit(form, dateField, timeField, errorElement, appointmentType);
         if (!isValid) {
           return;
         }
 
         const formData = new FormData(form);
+
+        // DEBUG: Log what's being sent
+        console.log("Form data being sent:");
+        for (let [key, value] of formData.entries()) {
+          console.log(`${key}: ${value}`);
+        }
 
         // Show loading state
         const submitButton = form.querySelector('button[type="submit"]');
@@ -637,30 +743,42 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(data => {
           console.log("Response received:", data);
-          
+
           // Restore button state
           submitButton.innerHTML = originalText;
           submitButton.disabled = false;
-          
+
           if (data.success) {
             // Clear form
             form.reset();
             markFieldAsError(dateField, false);
             if (timeField) markFieldAsError(timeField, false);
-            
+
+            // Hide "Other" event type container if it was shown
+            const otherEventTypeContainer = document.getElementById('otherEventTypeContainer');
+            if (otherEventTypeContainer) {
+              otherEventTypeContainer.style.display = 'none';
+            }
+
+            // Clear the hidden field
+            const eventTypeFinalInput = document.getElementById('appoint_event_type_final');
+            if (eventTypeFinalInput) {
+              eventTypeFinalInput.value = '';
+            }
+
             // Show success message with countdown
             let countdown = 5; // 5 seconds countdown
             const successMessage = data.message || "";
-            
+
             // Show initial success message
             showError(errorElement, `${successMessage}<br><small>Page will refresh in ${countdown} seconds...</small>`, true);
-            
+
             // Disable form inputs during countdown
-            const formInputs = form.querySelectorAll('input, textarea, button');
+            const formInputs = form.querySelectorAll('input, textarea, button, select');
             formInputs.forEach(input => {
               input.disabled = true;
             });
-            
+
             // Update countdown every second
             const countdownInterval = setInterval(() => {
               countdown--;
@@ -668,11 +786,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 showError(errorElement, `${successMessage}<br><small>Page will refresh in ${countdown} seconds...</small>`, true);
               } else {
                 clearInterval(countdownInterval);
-                
+
                 // Add smooth fade-out transition to modal
                 addPerformancemodal.style.transition = 'opacity 0.5s ease';
                 addPerformancemodal.style.opacity = '0';
-                
+
                 // Wait for fade-out transition to complete, then refresh
                 setTimeout(() => {
                   addPerformancemodalFormContainer.innerHTML = "";
@@ -680,24 +798,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 }, 500); // Wait for fade-out transition
               }
             }, 1000);
-            
+
           } else if (data.errors) {
             console.log("Form validation errors:", data.errors);
-            
+
             let messages = [];
             let hasDateError = false;
             let hasDateConflict = false;
-            
+
             for (const [field, errs] of Object.entries(data.errors)) {
               console.log(`Error field: ${field}, errors:`, errs);
-              
+
               // Show field-specific errors with better formatting
               if (field === 'event_date' || field === 'lesson_date') {
                 const errorText = errs.join(', ');
                 messages.push(errorText);
                 markFieldAsError(dateField, true);
                 hasDateError = true;
-                
+
                 // Check if this is a date conflict error
                 if (errorText.includes('already have an accepted')) {
                   hasDateConflict = true;
@@ -709,16 +827,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Handle other field errors
                 const fieldName = field.replace(/_/g, ' ');
                 messages.push(`<strong>${fieldName}:</strong> ${errs.join(', ')}`);
+
+                // Mark "Other" event type field as error if needed
+                if (field === 'other_event_type' && otherEventTypeInput) {
+                  markFieldAsError(otherEventTypeInput, true);
+                }
               }
             }
-            
+
             // Show all error messages with appropriate styling
             if (messages.length > 0) {
               showError(errorElement, messages.join('<br>'), false, hasDateConflict);
             } else {
               showError(errorElement, "Please correct the errors below.");
             }
-            
+
             // If there's a date error, focus on the date field
             if (hasDateError) {
               dateField.focus();
@@ -747,6 +870,19 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('.appoint-form-control.error, .appoint-form-control.date-conflict-error').forEach(field => {
           field.classList.remove('error', 'date-conflict-error');
         });
+
+        // Hide "Other" event type container
+        const otherEventTypeContainer = document.getElementById('otherEventTypeContainer');
+        if (otherEventTypeContainer) {
+          otherEventTypeContainer.style.display = 'none';
+        }
+
+        // Clear the hidden final field
+        const eventTypeFinalInput = document.getElementById('appoint_event_type_final');
+        if (eventTypeFinalInput) {
+          eventTypeFinalInput.value = '';
+        }
+
         // Close modal
         addPerformancemodal.classList.remove("show");
         addPerformancemodalFormContainer.innerHTML = "";

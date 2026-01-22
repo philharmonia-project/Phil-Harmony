@@ -624,23 +624,32 @@ body {
             <label class="appoint-floating-label" for="appoint_event_name_css">What's Your Event Called?</label>
           </div>
 
-          <!-- Event Type Dropdown -->
-          <div class="appoint-floating-label-group">
-            <select class="appoint-form-control" id="appoint_event_type_css" name="event_type" required>
-              <option value="" disabled selected>Select Event Type</option>
-              <option value="Cultural Program">Cultural Program</option>
-              <option value="School Program">School Program</option>
-              <option value="Festival">Festival</option>
-              <option value="Community Event">Community Event</option>
-              <option value="Traditional Ceremony">Traditional Ceremony</option>
-              <option value="Workshop">Workshop</option>
-              <option value="Lecture-Demonstration">Lecture-Demonstration</option>
-              <option value="Music Lesson">Music Lesson</option>
-              <option value="Private Event">Private Event</option>
-              <option value="Other">Other</option>
-            </select>
-            <label class="appoint-floating-label" for="appoint_event_type_css">Type of Event</label>
-          </div>
+<!-- Event Type Dropdown -->
+<div class="appoint-floating-label-group">
+  <select class="appoint-form-control" id="appoint_event_type_css" name="event_type" required>
+    <option value="" disabled selected>Select Event Type</option>
+    <option value="Cultural Program">Cultural Program</option>
+    <option value="School Program">School Program</option>
+    <option value="Festival">Festival</option>
+    <option value="Community Event">Community Event</option>
+    <option value="Traditional Ceremony">Traditional Ceremony</option>
+    <option value="Workshop">Workshop</option>
+    <option value="Lecture-Demonstration">Lecture-Demonstration</option>
+    <option value="Music Lesson">Music Lesson</option>
+    <option value="Private Event">Private Event</option>
+    <option value="Other">Other</option>
+  </select>
+  <label class="appoint-floating-label" for="appoint_event_type_css">Type of Event</label>
+</div>
+
+<!-- Other Event Type Input (Hidden by default) -->
+<div class="appoint-floating-label-group" id="otherEventTypeContainer" style="display: none;">
+  <input class="appoint-form-control" type="text" id="appoint_other_event_type_css" name="other_event_type" placeholder=" ">
+  <label class="appoint-floating-label" for="appoint_other_event_type_css">Please specify your event type</label>
+</div>
+
+<!-- Hidden field to store the final value that goes to database -->
+<input type="hidden" id="appoint_event_type_final" name="event_type_final">
 
           <div class="appoint-floating-label-group">
             <input class="appoint-form-control" type="text" id="appoint_event_location_css" name="event_location" placeholder=" " required>
