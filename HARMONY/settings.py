@@ -141,9 +141,9 @@ else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": "Philharmonia_db",
-            "USER": "Philharmonia_user",
-            "PASSWORD": "Philharmonia",
+            "NAME": "Philharmonia_dbv2",
+            "USER": "postgres",
+            "PASSWORD": "123",
             "HOST": "localhost",
             "PORT": "5432",
         }

@@ -2238,22 +2238,40 @@ def user_main(request):
         # Use get_or_create to ensure these exist
         contact, _ = ContactPage.objects.get_or_create(
             pk=1,
-            defaults={'title': 'Contact Us', 'content': 'Default contact information'}
+            defaults={
+                'header_title': 'Contact Philharmonia',
+                'header_description': 'Have questions about Philippine traditional instruments? Want to collaborate or share your knowledge? Reach out to us!',
+                'location_address': 'National Music Museum\nManila, Philippines 1000',
+                'landline_phone': '+63 2 8123 4567',
+                'mobile_phone': '+63 917 123 4567',
+                'primary_email': 'info@philharmonia.ph',
+                'secondary_email': 'support@philharmonia.ph',
+                'weekdays_hours': 'Monday to Friday: 9:00 AM - 6:00 PM',
+                'saturday_hours': 'Saturday: 10:00 AM - 4:00 PM',
+                'sunday_hours': 'Sunday: Closed',
+            }
         )
         
         taglines, _ = Tagline.objects.get_or_create(
-            pk=1, 
-            defaults={'text': 'Welcome to Philharmonia'}
+            pk=1,
+            defaults={'icon': 'music', 'title': 'PHILHARMONIA MUSIC'}
         )
         
         homepages, _ = HomePage.objects.get_or_create(
             pk=1,
-            defaults={'title': 'Home', 'content': 'Welcome to our site'}
+            defaults={
+                'main_heading': 'Experience Traditional Filipino',
+                'highlight_word': 'Music',
+                'description': 'Explore our web-based platform featuring an interactive map, visual galleries, educational tutorials, and 3D models all dedicated to preserving and promoting traditional Filipino music and heritage.'
+            }
         )
         
         footer_settings, _ = FooterSettings.objects.get_or_create(
             pk=1,
-            defaults={'copyright_text': '© 2024 Philharmonia'}
+            defaults={
+                'follow_us_title': 'Follow Us',
+                'follow_us_description': 'Stay connected and follow us on our social media platforms'
+            }
         )
         
         social_links = SocialMediaLink.objects.all()
